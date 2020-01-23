@@ -1,0 +1,27 @@
+{
+	"title": "笔记",
+	"author": "hzz",
+	"description": "记录个人的一些笔记",
+	"language": "zh-hans",
+	"links": {
+		"siderbar": {
+			"GitHub": "https://github.com/babyhzz"
+		}
+	},
+	"plugins": [
+		"-lunr",
+		"-search",
+		"search-pro",
+		"back-to-top-button",
+		"chapter-fold",
+		"code",
+		"github",
+		"splitter",
+		"-sharing"
+	],
+	"pluginsConfig": {
+		"github": {
+			"url": "https://github.com/babyhzz/notebook"
+		}
+	}
+}
