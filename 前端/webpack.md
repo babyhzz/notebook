@@ -316,7 +316,7 @@ module.exports = config;
 
  webpack 的配置文件，是**导出一个对象的 JavaScript 文件**。此对象，由 webpack 根据对象定义的属性进行解析。webpack 配置是标准的 Node.js CommonJS 模块。
 
- ``` js
+ ```js
 var path = require('path');
 
 module.exports = {
@@ -381,6 +381,7 @@ webpack 可以监听文件变化，当它们修改后会重新编译。
 
 创建 import 或 require 的别名，来确保模块引入变得更简单。
 ```js
+// Node.js中提供了两个与文件操作相关全局可用变量__dirname和__filename，__dirname表示当前文件所在的目录，__filename表示正在执行脚本的文件名。
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -394,22 +395,24 @@ module.exports = {
   }
 };
 ```
-
 #### resolve.extensions
 自动解析确定的扩展，能够使用户在引入模块时不带扩展。默认为['.wasm', '.mjs', '.js', '.json']。
 
 #### resolve.mainFields
-决定在 package.json 中使用哪个字段导入模块。根据 webpack 配置中指定的 target 不同，默认值也会有所不同。
+ 当从 npm 包中导入模块时（例如，`import * as D3 from "d3"`） ，决定在 package.json 中使用哪个字段导入模块。根据 webpack 配置中指定的 target 不同，默认值也会有所不同。
 target为web默认值为 ['browser', 'module', 'main']
 
 #### resolve.mainFiles
-解析目录时要使用的文件名
+解析目录时要使用的文件名，默认`mainFiles: ["index"]`
+
+这也是在React开发者，我们创建一个目录，在目录中创建index.js，我们只需要import这个目录即可
 
 #### resolve.modules
+
 告诉 webpack 解析模块时应该搜索的目录。默认是node_modules。
 
-
 ### devServer
+
 来自webpack-dev-server的选项
 
 #### devServer.before
@@ -439,6 +442,7 @@ module.exports = {
 ```
 请求到 /api/users 现在会被代理到请求 http://localhost:3000/api/users。
 如果你不想始终传递 /api ，则需要重写路径：
+
 ```js
 module.exports = {
   //...
@@ -453,6 +457,7 @@ module.exports = {
 };
 ```
 ### module
+
 如何处理项目中的不同类型模块。
 #### module.noParse
 防止 webpack 解析那些任何与给定正则表达式相匹配的文件。忽略的文件中不应该含有 import, require, define 的调用，或任何其他导入机制。忽略大型的 library 可以提高构建性能。
@@ -467,5 +472,106 @@ module.exports = {
 #### module.rules
 创建模块时，匹配请求的规则数组。这些规则能够修改模块的创建方式。这些规则能够对模块(module)应用 loader，或者修改解析器(parser)。
 
+# 常用Loader
+### file-loader
+解析文件的 `import/require()` ，转换成一个url，并且输出到指定目录。CSS中的url会转换成require。outputPath指的是输出到打包的目录，若使用cdn，需要配置publicPath，公网地址。
 
+### url-loader
+类似于 file-loader，但如果文件大小小于某个值，它可以返回一个base64的URI。Options中的fallback指定超过阈值，使用的loader，默认是file-loader。
 
+### expose-loader
+暴露模块变量导出到全局，如下配置，则 `window.$` 可以使用
+``` js
+require("expose-loader?$!jquery");
+```
+或者
+``` js
+module: {
+  rules: [{
+    test: require.resolve('jquery'),
+    use: [{
+      loader: 'expose-loader',
+      options: '$'
+    }]
+  }]
+}
+```
+
+# 常用plugin
+### ProvidePlugin
+自动加载模块，而不必到处 import 或 require 。
+
+``` js
+new webpack.ProvidePlugin({
+  identifier: 'module1',
+  // ...
+});
+
+new webpack.ProvidePlugin({
+  identifier: ['module1', 'property1'],
+  // ...
+});
+```
+
+示例
+``` js
+new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery'
+});
+new webpack.ProvidePlugin({
+  _map: ['lodash', 'map']
+});
+``` 
+
+### @babel/plugin-proposal-class-properties
+
+若要使用提案的类属性语法，需要该插件支持
+``` js
+class Bork {
+    //Property initializer syntax
+    instanceProperty = "bork";
+    boundFunction = () => {
+      return this.instanceProperty;
+    };
+
+    //Static class properties
+    static staticProperty = "babelIsCool";
+    static staticFunction = function() {
+      return Bork.staticProperty;
+    };
+  }
+```
+
+### CleanWebpackPlugin
+每次构建前，清理/dist文件夹
+
+### CopyWebpackPlugin
+拷贝文件或者文件夹到build目录
+
+### BannerPlugin
+webpack内部插件，为每个编译生成的chunk文件头部添加banner（头部声明）
+
+### DefinePlugin
+webpack内部插件，DefinePlugin 允许创建一个在编译时可以配置的**全局常量**。（一个是环境变量，一个是常量）
+
+在生产/开发构建中使用不同的服务 URL(Service URL)：
+```js
+new webpack.DefinePlugin({
+  'SERVICE_URL': JSON.stringify('http://dev.example.com')
+});
+```
+### IgnorePlugin
+import 或 require 调用时，忽略哪些文件。如moment忽略语言包的导入，防止导入过多无用的语言包。
+
+### DllPlugin & DllReferencePlugin
+
+DLLPlugin 和 DLLReferencePlugin 用某种方法实现了拆分 bundles，同时还大大提升了构建的速度。
+
+##### DllPlugin
+这个插件是在一个额外的独立的 webpack 设置中创建一个只有 dll 的 bundle(dll-only-bundle)。 这个插件会生成一个名为 manifest.json 的文件，这个文件是用来让 DLLReferencePlugin 映射到相关的依赖上去的。
+
+##### DllReferencePlugin
+这个插件是在 webpack 主配置文件中设置的， 这个插件把只有 dll 的 bundle(们)(dll-only-bundle(s)) 引用到需要的预编译的依赖。
+
+> 将不会变的三方dll库，如 vue, React 打包到dll文件中，然后通过manifest文件关联，只需打包我们自己的代码。
