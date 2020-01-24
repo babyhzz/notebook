@@ -1,4 +1,4 @@
-# 基础
+## 基础
 
 本质上，webpack 是一个现代 JavaScript 应用程序的静态模块打包器(module bundler)。当 webpack 处理应用程序时，它会递归地构建一个依赖关系图(dependency graph)，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个 bundle。
 
@@ -312,7 +312,7 @@ const config = {
 module.exports = config;
 ```
 
-# 配置详解(configuration)
+## 配置详解(configuration)
 
  webpack 的配置文件，是**导出一个对象的 JavaScript 文件**。此对象，由 webpack 根据对象定义的属性进行解析。webpack 配置是标准的 Node.js CommonJS 模块。
 
@@ -472,7 +472,7 @@ module.exports = {
 #### module.rules
 创建模块时，匹配请求的规则数组。这些规则能够修改模块的创建方式。这些规则能够对模块(module)应用 loader，或者修改解析器(parser)。
 
-# 常用Loader
+## 常用Loader
 ### file-loader
 解析文件的 `import/require()` ，转换成一个url，并且输出到指定目录。CSS中的url会转换成require。outputPath指的是输出到打包的目录，若使用cdn，需要配置publicPath，公网地址。
 
@@ -497,7 +497,7 @@ module: {
 }
 ```
 
-# 常用plugin
+## 常用plugin
 ### ProvidePlugin
 自动加载模块，而不必到处 import 或 require 。
 
