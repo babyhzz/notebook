@@ -1,3 +1,174 @@
+## 虚拟DOM
+### Virtual DOM
+
+virtual dom 只是一个简单的 JS 对象，至少包含 tag（标签名），props（属性），children（子元素）三个属性。
+
+```js
+{
+  tag: "div",
+  props: { },
+  children: [
+    "Hello World",
+    {
+      tag: "ul",
+      props: {},
+      children: [{
+        tag: "li",
+        props: {
+          id: 1,
+          class: "li-1"
+        },
+        children: ["第", 1]
+      }]
+    }
+  ]
+}
+```
+
+对应如下：
+
+```html
+<div>
+  Hello World
+  <ul>
+    <li id="1" class="li-1">
+      第1
+    </li>
+  </ul>
+</div>
+```
+
+### Virtual DOM 好处
+
+1. 将页面状态抽象为 JS 对象，配合不同的渲染工具，使跨平台渲染成为可能，如浏览器渲染、服务端渲染、移动端渲染
+2. 在页面更新的时候可以将多次比较的结果合并成一次进行页面更新，减少渲染次数，提高渲染效率。
+
+### 页面呈现的三个阶段
+
+- JS 计算 (Scripting)
+- 生成渲染树 (Rendering)
+- 绘制页面 (Painting)
+  ![页面呈现三个阶段](img/页面呈现三个阶段.jpg)
+
+### Virtual DOM 生成真实 DOM
+
+借助 JSX 编译器，可以将文件中的 HTML 转化成函数的形式，然后再利用这个函数生成 Virtual DOM
+
+```js
+function render() {
+  return (
+    <div>
+      Hello World
+      <ul>
+        <li id="1" class="li-1">
+          第1
+        </li>
+      </ul>
+    </div>
+  );
+}
+```
+
+这个函数经过 JSX 编译后，会输出下面的内容：
+
+```js
+function render() {
+  return h(
+    "div",
+    null,
+    "Hello World",
+    h("ul", null, h("li", { id: "1", class: "li-1" }, "\u7B2C1"))
+  );
+}
+```
+
+这里的 h 是一个函数，可以起任意的名字。这个名字通过 babel 进行配置：
+
+```js
+// .babelrc文件
+{
+  "plugins": [
+    ["transform-react-jsx", {
+      "pragma": "h"    // 这里可配置任意的名称
+    }]
+  ]
+}
+```
+
+我们只需要定义 h 函数，就能构造出 Virtual DOM
+
+```js
+function flatten(arr) {
+  return [].concat.apply([], arr);
+}
+
+function h(tag, props, ...children) {
+  return {
+    tag,
+    props: props || {},
+    children: flatten(children) || []
+  };
+}
+```
+
+执行 h 函数后，最终会得到如下的 Virtual DOM 对象：
+
+```js
+{
+  tag: "div",
+  props: { },
+  children: [
+    "Hello World",
+    {
+      tag: "ul",
+      props: {},
+      children: [{
+        tag: "li",
+        props: {
+          id: 1,
+          class: "li-1"
+        },
+        children: ["第", 1]
+      }]
+    }
+  ]
+}
+```
+
+下一步，通过遍历 vdom 对象，生成真实的 dom
+
+```js
+// 创建dom元素
+function createElement(vdom) {
+  // 如果vdom是字符串或者数字类型，则创建文本节点，比如“Hello World”
+  if (typeof vdom === "string" || typeof vdom === "number") {
+    return doc.createTextNode(vdom);
+  }
+
+  const { tag, props, children } = vdom;
+
+  // 1. 创建元素
+  const element = doc.createElement(tag);
+
+  // 2. 属性赋值
+  setProps(element, props);
+
+  // 3. 创建子元素
+  // appendChild在执行的时候，会检查当前的this是不是dom对象，因此要bind一下
+  children.map(createElement).forEach(element.appendChild.bind(element));
+
+  return element;
+}
+
+// 属性赋值
+function setProps(element, props) {
+  for (let key in props) {
+    element.setAttribute(key, props[key]);
+  }
+}
+```
+## 项目ICON的引入
+
 ## 最佳实践
 
 ### 多用 Function Component
@@ -269,6 +440,7 @@ CategorySelector.defaultProps = {
 <ServiceItem key={item.uuid} item={item} className={customStyle} />
 ```
 
-## 参考
-
-https://segmentfault.com/a/1190000018107137
+## Ant Design最佳实践
+### Modal处理
+### Table的onChange事件处理
+### 容器组件、展示组件分配
