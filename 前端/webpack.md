@@ -80,7 +80,7 @@ module.exports = config;
 
 ### 入口(Entry Point)
 
-##### 单个入口（简写）语法
+#### 单个入口（简写）语法
 
 用法：
 
@@ -102,7 +102,7 @@ const config = {
 ```
 > 当你向 entry 传入一个数组时会发生什么？向 entry 属性传入「文件路径(file path)数组」将创建“多个主入口(multi-main entry)”。在你想要多个依赖文件一起注入，并且将它们的依赖导向(graph)到**一个chunk**时，传入数组的方式就很有用。
 
-**对象语法**
+#### 对象语法
 
 > entry: {[entryChunkName: string]: string | Array\<string\>}
 
