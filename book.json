@@ -17,8 +17,7 @@
 		"code",
 		"github",
 		"splitter",
-		"-sharing",
-		"page-treeview"
+		"-sharing"
 	],
 	"pluginsConfig": {
 		"github": {
