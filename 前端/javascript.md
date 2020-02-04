@@ -1,3 +1,14 @@
+# Object常用方法
+
+#### Object.is 浅比较
+比较两个值是否严格相等，相等判断还有 ==、===，== 会存在类型转换的问题，=== 严格的相等判断。Object.is与===类似，只有个别区别：
+```js
++0===-0 //true
+NaN===NaN //false
+Object.is(+0,-0); //false
+Object.is(NaN,NaN); //true
+```
+
 # Blob及相关文件操作对象
 - [细说Web API中的Blob](https://juejin.im/post/59e35d0e6fb9a045030f1f35)
 - [[HTML5] FileReader对象](https://www.cnblogs.com/hhhyaaon/p/5929492.html)
