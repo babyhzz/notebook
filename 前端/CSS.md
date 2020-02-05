@@ -1,3 +1,19 @@
+# 常用样式
+#### 清除浮动(antd版)
+```css
+.clearfix {
+  zoom: 1;
+}
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: '';
+}
+.clearfix::after {
+  clear: both;
+}
+```
+
 ## 布局
 ### 两行布局，上面固定，下面占满
 ```html
