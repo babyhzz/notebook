@@ -206,77 +206,13 @@ Child.prototype.constructor = Child;
 
 - Child.prototype = new Parent()，Parent构造函数重复调用了两次（另一处调用是Child构造函数中的Parent.call(this)），浪费效率，且如果Parent构造函数有副作用，重复调用可能造成不良后果
 
-
 # 异步
 
-### Promise（ES6）
+#### Promise、async/await
+- [深入理解async/await](https://www.cnblogs.com/youma/p/10475214.html)
 
-##### 语法
+> 个人理解，Promise只是一种异步处理方案，支持链式调用，解决回调地狱问题。而async/await则是Promise的语法糖
 
-``` javascript
-new Promise( function(resolve, reject) {...} /* executor */  );
-```
-executor是带有 resolve 和 reject 两个参数的函数 。Promise构造函数执行时**立即**调用executor 函数， resolve 和 reject 两个函数作为参数传递给executor（executor 函数在Promise构造函数返回所建promise实例对象前被调用）。resolve 和 reject 函数被调用时，分别将promise的状态改为resolved（完成）或rejected（失败）。executor 内部通常会执行一些**异步**操作，一旦异步操作执行完毕(可能成功/失败)，要么调用resolve函数来将promise状态改成resolved，要么调用reject 函数将promise的状态改为rejected。如果在executor函数中抛出一个错误，那么该promise 状态为rejected。executor函数的返回值被忽略。
-
-then() 方法返回一个 Promise。它最多需要有两个参数：Promise 的成功和失败情况的回调函数。
-``` javascript
-p.then(onResolved[, onRejected]);
-
-p.then(value => {
-  // resolved
-}, reason => {
-  // rejection
-});
-```
-+ onResolved 可选
-当 Promise 变成接受状态（resolved）时调用的函数。该函数有一个参数，即接受的最终结果（the resolved  value）。如果该参数不是函数，则会在内部被替换为 (x) => x，即原样返回 promise 最终结果的函数
-+ onRejected 可选
-当 Promise 变成拒绝状态（rejected）时调用的函数。该函数有一个参数，即拒绝的原因（rejection reason）。  如果该参数不是函数，则会在内部被替换为一个 "Thrower" 函数 (it throws an error it received as argument)。
-
-##### then方法返回值
-
-**如果 then 中的回调函数**：
-
-+ 返回了一个值，那么 then 返回的 Promise 将会成为**接受**状态，并且将返回的值作为接受状态的回调函数的参数值。
-+ 没有返回任何值，那么 then 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 undefined。
-+ 抛出一个错误，那么 then 返回的 Promise 将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值。
-+ 返回一个已经是接受状态的 Promise，那么 then 返回的 Promise 也会成为接受状态，并且将那个 Promise 的接受状态的回调函数的参数值作为该被返回的Promise的接受状态回调函数的参数值。
-+ 返回一个已经是拒绝状态的 Promise，那么 then 返回的 Promise 也会成为拒绝状态，并且将那个 Promise 的拒绝状态的回调函数的参数值作为该被返回的Promise的拒绝状态回调函数的参数值。
-+ 返回一个未定状态（pending）的 Promise，那么 then 返回 Promise 的状态也是未定的，并且它的终态与那个 Promise 的终态相同；同时，它变为终态时调用的回调函数参数与那个 Promise 变为终态时的回调函数的参数是相同的。
-
-##### 示例
-
-``` javascript
-Promise.resolve('foo')
-  // 1. resovled状态Promise，直接传入下面then
-  .then(function(string) {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        string += 'bar';
-        resolve(string);
-      }, 1);
-    });
-  })
-  // 2. 等待上一步回调函数返回的Promise resolved，传入值foobar到string，
-  .then(function(string) {
-    setTimeout(function() {
-      string += 'baz';
-      console.log(string);
-    }, 1)
-    return string;
-  })
-  // 3. 上一步then回调函数相当于直接返回一个值，故返回一个resolved的Promise
-  .then(function(string) {
-    console.log("Last Then:  oops... didn't bother to instantiate and return " +
-                "a promise in the prior then so the sequence may be a bit " +
-                "surprising");
-    console.log(string);
-  });
-
-// 依次打印:
-// Last Then: oops... didn't bother to instantiate and return a promise in the prior then so the sequence may be a bit surprising
-// foobar
-// foobarbaz
-```
-
+- async修饰的函数返回一个Promise对象，表示其中可能含有异步操作。await后面一般接一个Promise对象，会等着它resolve。
+- 如果等到的是reject的promise呢，如何捕捉，用try catch
 

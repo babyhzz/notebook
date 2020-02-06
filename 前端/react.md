@@ -7,7 +7,7 @@
 3. 数据转换：需不改变原数据
 4. 高阶函数：函数作为参数或者返回函数，或者两者都有
 5. 递归
-6. 组合：较小的函数组合成更大的函数，js中较常用的就是链接。React中常见如下：
+6. 组合：较小的函数组合成更大的函数。React中常见如下：
 ```js
 const name = compose(
     splitmyName,
@@ -15,6 +15,8 @@ const name = compose(
     comvertUpperCase,
     returnName
 )
+// compose简单的实现方式：
+const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
 ```
 
 #### 组件核心概念：
@@ -38,6 +40,36 @@ const name = compose(
 作用：能让你在组件更新DOM和refs之前，从DOM中捕获一些信息（如滚动位置）
 触发时机：组件Update时，在render之后，更新DOM和refs之前。
 
+### 父子组件在生命周期中的加载顺序
+#### mount阶段
+```
+Parent getDerivedStateFromProps
+Parent render
+Child getDerivedStateFromProps
+Child render
+Child componentDidMount
+Parent componentDidMount
+```
+
+可见在render时，先render父组件，然后在render子组件。didmount回调，则先触发子组件mount，再触发父组件mount。
+
+#### update阶段（parent组件state变化）
+```
+Parent getDerivedStateFromProps
+Parent render
+Child getDerivedStateFromProps
+Child shouldComponentUpdate
+Child render
+Child componentDidUpdate
+Parent componentDidUpdate
+```
+
+可见父组件update时，先出发父组件的render，然后是子组件的render，didupdate回调，子组件先出发，父组件后触发
+
+#### unmount阶段
+先出发父组件unmount，然后触发子组件unmount
+
+
 ### 常见问题
 #### 当外部的 props 改变时，如何再次执行请求数据、更改状态等操作
 - componentDidUpdate 中发数据请求
@@ -46,8 +78,9 @@ const name = compose(
 #### 如果setState更新的值不变，还会触发生命周期钩子吗？
 哪怕每次都设置同样的值，还是会触发更新
 
-# React 高级指引
+# React 高级及深入
 - [官网 Render Props](https://zh-hans.reactjs.org/docs/render-props.html)
+- [【React深入】从Mixin到HOC再到Hook(很好的文章)](https://juejin.im/post/5cad39b3f265da03502b1c0a)
 
 #### Render Props
 - 具有 render prop 的组件接受一个函数，该函数返回一个 React 元素并调用它而不是实现自己的渲染逻辑。
@@ -78,6 +111,77 @@ const name = compose(
 ```
 
 注意render函数每次都是一个新的对象，即使子组件是PureComponent，也达不到优化效果，所以可以将render func提取为一个实例方法。
+
+#### 从Mixin模式到HOC
+Mixin模式同Vue的Mixin，即代码的混入。React目前不推荐用Mixin方式，会带来如下问题：
+- Mixin可能会项目依赖，互相耦合，代码维护性较差
+- 不同的Mixin可能会冲突
+- Mixin很多时，组件是可以感知的，增加组件的复杂性
+
+##### HOC实现方式
+HOC可以看作是装饰者模式在React中的一种实现。HOC的两种实现方式：属性代理、反向继承
+
+```js
+/* 
+* 属性代理，感觉这种用的比较多
+* 对比原生组件增强的项：
+* 1. 可操作所有传入的props
+* 2. 可操作组件的生命周期
+* 3. 可操作组件的static方法
+* 4. 获取refs
+*/
+function proxyHOC(WrappedComponent) {
+  return class extends Component {
+    render() {
+      return <WrappedComponent {...this.props} />;
+    }
+  }
+}
+
+/* 
+* 反向继承，这种目前还没有看到有使用
+* 对比原生组件增强的项：
+* 1. 可操作所有传入的props
+* 2. 可操作组件的生命周期
+* 3. 可操作组件的static方法
+* 4. 获取refs
+* 5. 可操作state
+* 6. 可以渲染劫持
+*/
+function inheritHOC(WrappedComponent) {
+  return class extends WrappedComponent {
+    render() {
+      return super.render();
+    }
+  }
+}
+```
+
+#### HOC可以干什么
+- 组合渲染
+- 条件渲染
+- 操作props
+- 获取ref
+- 状态管理，如可以把Input的value放在HOC中
+- 操作State，只能在反向继承中实现
+- 渲染劫持，只要改变了原组件的渲染，我们都将它称之为一种渲染劫持
+
+#### compose 和 Decorators
+假设现在我们有logger，visible，style等多个HOC，现在要同时增强一个Input组件。
+```js
+// 第一种，难以阅读
+logger(visible(style(Input)))
+// 第二种，提供一个compose函数，与第一种类似
+const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
+compose(logger,visible,style)(Input);
+// 第三种
+@logger
+@visible
+@style
+class Input extends Component {
+  // ...
+}
+```
 
 # React Hooks
 - [30分钟精通React Hooks](https://juejin.im/post/5be3ea136fb9a049f9121014)
@@ -169,175 +273,15 @@ TODO 仔细看下官方的FAQ!
 ##### 该如何测量 DOM 节点？
 使用callback ref方式, 使用useCallback, 依赖项为[]
 
-## 虚拟DOM
-### Virtual DOM
+# React虚拟DOM
 
-virtual dom 只是一个简单的 JS 对象，至少包含 tag（标签名），props（属性），children（子元素）三个属性。
-
-```js
-{
-  tag: "div",
-  props: { },
-  children: [
-    "Hello World",
-    {
-      tag: "ul",
-      props: {},
-      children: [{
-        tag: "li",
-        props: {
-          id: 1,
-          class: "li-1"
-        },
-        children: ["第", 1]
-      }]
-    }
-  ]
-}
-```
-
-对应如下：
-
-```html
-<div>
-  Hello World
-  <ul>
-    <li id="1" class="li-1">
-      第1
-    </li>
-  </ul>
-</div>
-```
-
-### Virtual DOM 好处
-
-1. 将页面状态抽象为 JS 对象，配合不同的渲染工具，使跨平台渲染成为可能，如浏览器渲染、服务端渲染、移动端渲染
-2. 在页面更新的时候可以将多次比较的结果合并成一次进行页面更新，减少渲染次数，提高渲染效率。
-
-### 页面呈现的三个阶段
+#### 页面呈现的三个阶段
 
 - JS 计算 (Scripting)
 - 生成渲染树 (Rendering)
 - 绘制页面 (Painting)
   ![页面呈现三个阶段](img/页面呈现三个阶段.jpg)
 
-### Virtual DOM 生成真实 DOM
-
-借助 JSX 编译器，可以将文件中的 HTML 转化成函数的形式，然后再利用这个函数生成 Virtual DOM
-
-```js
-function render() {
-  return (
-    <div>
-      Hello World
-      <ul>
-        <li id="1" class="li-1">
-          第1
-        </li>
-      </ul>
-    </div>
-  );
-}
-```
-
-这个函数经过 JSX 编译后，会输出下面的内容：
-
-```js
-function render() {
-  return h(
-    "div",
-    null,
-    "Hello World",
-    h("ul", null, h("li", { id: "1", class: "li-1" }, "\u7B2C1"))
-  );
-}
-```
-
-这里的 h 是一个函数，可以起任意的名字。这个名字通过 babel 进行配置：
-
-```js
-// .babelrc文件
-{
-  "plugins": [
-    ["transform-react-jsx", {
-      "pragma": "h"    // 这里可配置任意的名称
-    }]
-  ]
-}
-```
-
-我们只需要定义 h 函数，就能构造出 Virtual DOM
-
-```js
-function flatten(arr) {
-  return [].concat.apply([], arr);
-}
-
-function h(tag, props, ...children) {
-  return {
-    tag,
-    props: props || {},
-    children: flatten(children) || []
-  };
-}
-```
-
-执行 h 函数后，最终会得到如下的 Virtual DOM 对象：
-
-```js
-{
-  tag: "div",
-  props: { },
-  children: [
-    "Hello World",
-    {
-      tag: "ul",
-      props: {},
-      children: [{
-        tag: "li",
-        props: {
-          id: 1,
-          class: "li-1"
-        },
-        children: ["第", 1]
-      }]
-    }
-  ]
-}
-```
-
-下一步，通过遍历 vdom 对象，生成真实的 dom
-
-```js
-// 创建dom元素
-function createElement(vdom) {
-  // 如果vdom是字符串或者数字类型，则创建文本节点，比如“Hello World”
-  if (typeof vdom === "string" || typeof vdom === "number") {
-    return doc.createTextNode(vdom);
-  }
-
-  const { tag, props, children } = vdom;
-
-  // 1. 创建元素
-  const element = doc.createElement(tag);
-
-  // 2. 属性赋值
-  setProps(element, props);
-
-  // 3. 创建子元素
-  // appendChild在执行的时候，会检查当前的this是不是dom对象，因此要bind一下
-  children.map(createElement).forEach(element.appendChild.bind(element));
-
-  return element;
-}
-
-// 属性赋值
-function setProps(element, props) {
-  for (let key in props) {
-    element.setAttribute(key, props[key]);
-  }
-}
-```
 ## 项目ICON的引入
 
 # React最佳实践
@@ -386,7 +330,10 @@ const MenuItem = ({
 
 ##### 避免使用无谓的标签和样式
 
-## Ant Design最佳实践
-### Modal处理
-### Table的onChange事件处理
-### 容器组件、展示组件分配
+# Ant Design最佳实践
+#### Modal处理
+#### Table的onChange事件处理
+#### 容器组件、展示组件分配
+
+# React SSR
+- [React SSR 详解【近 1W 字】+ 2个项目实战](https://juejin.im/post/5def0816f265da33aa6aa7fe#heading-1)
