@@ -1,3 +1,8 @@
+# JavaScript语言特点
+
++ 值类型有：number, string, boolean, undefined, null, symbol 6个
++ 存在变量提升和函数提升 
+
 # Object常用方法
 
 #### Object.is 浅比较
