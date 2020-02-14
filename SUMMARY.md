@@ -1,5 +1,5 @@
 # 目录
-- [前端](前端/FE.md)
++ [前端](前端/FE.md)
   - [Javascript](前端/javascript.md)
   - [CSS](前端/CSS.md)
   - [Typescript](前端/typescript.md)
@@ -7,5 +7,9 @@
   - [React](前端/react.md)
   - [性能优化](前端/性能优化.md) 
 
-- [后端](后端/BE.md)
-  - [Javascript](前端/javascript.md)
++ [后端](后端/BE.md)
+  - [Java](后端/Java.md)
+  - [算法](后端/算法.md)
+  - [设计模式](后端/设计模式.md)
+  - [架构](后端/架构.md)
+  - [maven](后端/maven.md)
