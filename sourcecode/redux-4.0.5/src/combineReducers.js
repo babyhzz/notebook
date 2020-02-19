@@ -110,9 +110,13 @@ function assertReducerShape(reducers) {
  * @returns {Function} A reducer function that invokes every reducer inside the
  * passed object, and builds a state object with the same shape.
  */
+// 每个 reducer 只负责管理全局 state 中它负责的一部分。
+// 每个 reducer 的 state 参数都不同，分别对应它管理的那部分 state 数据
 export default function combineReducers(reducers) {
   const reducerKeys = Object.keys(reducers)
   const finalReducers = {}
+
+  // 找出所有是函数的reducer
   for (let i = 0; i < reducerKeys.length; i++) {
     const key = reducerKeys[i]
 
@@ -137,6 +141,7 @@ export default function combineReducers(reducers) {
 
   let shapeAssertionError
   try {
+    // 保证每个reducer有初始值，对于任意类型action都有返回值
     assertReducerShape(finalReducers)
   } catch (e) {
     shapeAssertionError = e
@@ -147,6 +152,7 @@ export default function combineReducers(reducers) {
       throw shapeAssertionError
     }
 
+    // 忽略...
     if (process.env.NODE_ENV !== 'production') {
       const warningMessage = getUnexpectedStateShapeWarningMessage(
         state,
@@ -159,9 +165,11 @@ export default function combineReducers(reducers) {
       }
     }
 
-    let hasChanged = false
+    let hasChanged = false  
     const nextState = {}
+    // 遍历，调用每一个reducer
     for (let i = 0; i < finalReducerKeys.length; i++) {
+      // 根据它们的 key 来筛选出 state 中的一部分数据并处理
       const key = finalReducerKeys[i]
       const reducer = finalReducers[key]
       const previousStateForKey = state[key]
@@ -171,6 +179,7 @@ export default function combineReducers(reducers) {
         throw new Error(errorMessage)
       }
       nextState[key] = nextStateForKey
+      // 这里在遍历中，只要有任何一个子state变化，hasChanged为true
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }
     hasChanged =
