@@ -17,6 +17,8 @@ import compose from './compose'
  * @returns {Function} A store enhancer applying the middleware.
  */
 export default function applyMiddleware(...middlewares) {
+
+  // 返回一个高阶函数
   return createStore => (...args) => {
     const store = createStore(...args)
     let dispatch = () => {
@@ -33,9 +35,28 @@ export default function applyMiddleware(...middlewares) {
     const chain = middlewares.map(middleware => middleware(middlewareAPI))
     dispatch = compose(...chain)(store.dispatch)
 
+    // applyMiddleware主要是对dispatch的装饰
     return {
       ...store,
       dispatch
     }
   }
 }
+
+
+/*************************redux thunk源码*****************************/
+// function createThunkMiddleware(extraArgument) {
+//   return ({ dispatch, getState }) => (next) => (action) => {
+//     if (typeof action === 'function') {
+//       return action(dispatch, getState, extraArgument);
+//     }
+
+//     return next(action);
+//   };
+// }
+
+// const thunk = createThunkMiddleware();
+// thunk.withExtraArgument = createThunkMiddleware;
+
+// export default thunk;
+/*************************redux thunk源码*****************************/
