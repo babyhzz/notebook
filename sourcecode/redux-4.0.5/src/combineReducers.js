@@ -110,8 +110,8 @@ function assertReducerShape(reducers) {
  * @returns {Function} A reducer function that invokes every reducer inside the
  * passed object, and builds a state object with the same shape.
  */
-// 每个 reducer 只负责管理全局 state 中它负责的一部分。
-// 每个 reducer 的 state 参数都不同，分别对应它管理的那部分 state 数据
+// 把一个由多个不同 reducer 函数作为 value 的 object，合并成一个最终的 reducer 函数
+// 合并后的 reducer 可以调用各个子 reducer，并把它们返回的结果合并成一个 state 对象。
 export default function combineReducers(reducers) {
   const reducerKeys = Object.keys(reducers)
   const finalReducers = {}

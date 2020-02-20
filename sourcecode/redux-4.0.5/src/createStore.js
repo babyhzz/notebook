@@ -40,6 +40,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
     )
   }
 
+  // 适配两个参数情形，且第二个参数为enhancer
   if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
     enhancer = preloadedState
     preloadedState = undefined
@@ -50,6 +51,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
       throw new Error('Expected the enhancer to be a function.')
     }
 
+    // enhancer 高阶函数
     return enhancer(createStore)(reducer, preloadedState)
   }
 
@@ -59,9 +61,9 @@ export default function createStore(reducer, preloadedState, enhancer) {
 
   let currentReducer = reducer
   let currentState = preloadedState
-  let currentListeners = []
-  let nextListeners = currentListeners
-  let isDispatching = false
+  let currentListeners = []             // 当前订阅列表
+  let nextListeners = currentListeners  // 新的订阅列表
+  let isDispatching = false             // 作为锁来用
 
   /**
    * This makes a shallow copy of currentListeners so we can use
@@ -70,6 +72,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * This prevents any bugs around consumers calling
    * subscribe/unsubscribe in the middle of a dispatch.
    */
+  // 保证正在执行的不被修改
   function ensureCanMutateNextListeners() {
     if (nextListeners === currentListeners) {
       nextListeners = currentListeners.slice()
@@ -89,7 +92,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
           'Pass it down from the top reducer instead of reading it from the store.'
       )
     }
-
+    // 由此可看出，此处直接返回了内部对象，非副本，理论上可修改内部state，但是不会进行事件通知
     return currentState
   }
 
@@ -182,6 +185,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * return something else (for example, a Promise you can await).
    */
   function dispatch(action) {
+    // 判断是否是一个简单对象，即__proto__ === Object.prototype
     if (!isPlainObject(action)) {
       throw new Error(
         'Actions must be plain objects. ' +
@@ -189,6 +193,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
       )
     }
 
+    // 判断action.type是否存在
     if (typeof action.type === 'undefined') {
       throw new Error(
         'Actions may not have an undefined "type" property. ' +
@@ -207,6 +212,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
       isDispatching = false
     }
 
+    // 通知每一个listener
     const listeners = (currentListeners = nextListeners)
     for (let i = 0; i < listeners.length; i++) {
       const listener = listeners[i]
@@ -282,6 +288,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
   // When a store is created, an "INIT" action is dispatched so that every
   // reducer returns their initial state. This effectively populates
   // the initial state tree.
+  // 创建一个基础状态state tree
   dispatch({ type: ActionTypes.INIT })
 
   return {
