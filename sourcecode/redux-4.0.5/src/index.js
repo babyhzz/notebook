@@ -25,7 +25,7 @@ if (
       'or setting mode to production in webpack (https://webpack.js.org/concepts/mode/) ' +
       'to ensure you have the correct code for your production build.'
   )
-}
+} 
 
 export {
   createStore,

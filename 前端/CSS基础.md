@@ -1,6 +1,7 @@
-# 常用样式
+## 常用技巧
 
-#### 清除浮动(antd版)
+### 清除浮动(antd版)
+
 ```css
 .clearfix {
   zoom: 1;
@@ -15,7 +16,19 @@
 }
 ```
 
+### 包裹的两个元素左右分开
+
+可以使用如下样式：
+
+```css
+display: flex;
+justify-content: space-between;
+```
+
+
+
 ## 布局
+
 ### 两行布局，上面固定，下面占满
 ```html
 <div class="outer">
@@ -80,6 +93,7 @@ float 具有“破坏性”，它会导致父元素“坍塌”，这将不是�
 ```
 
 ### float 三列布局
+
 ![float三列布局](img/float三列布局.png)
 中间的 div 宽度还是整个宽度，但不会覆盖左右浮动部分
 

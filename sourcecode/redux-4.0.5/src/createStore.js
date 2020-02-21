@@ -132,7 +132,8 @@ export default function createStore(reducer, preloadedState, enhancer) {
           'See https://redux.js.org/api-reference/store#subscribelistener for more details.'
       )
     }
-
+    
+    // listener的订阅状态
     let isSubscribed = true
 
     ensureCanMutateNextListeners()

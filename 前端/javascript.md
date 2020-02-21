@@ -104,6 +104,7 @@ Car.call(obj)
 3. 将Car函数中的this指针指向obj，obj有了Car构造函数中的属性和方法
 
 #### Object.create
+
 Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
 ```js
 Object.create =  function (o) {

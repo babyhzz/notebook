@@ -1,4 +1,5 @@
 # React基础
+
 - React的条件渲染可用三元表达式或者if/else
 - PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
 - JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
