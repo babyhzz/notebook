@@ -277,19 +277,13 @@ dispatch({ type: ActionTypes.INIT })
 
 是因为我们的初始状态currentState为undefined，发了这样一个action是为了拿到state的初始状态对象。
 
-#### enhancer
+### applyMiddleware & enhancer
 
+> 这部分是Redux的精华，也是十分难以理解的地方。重点理解。
 
+通过enhancer的调用方式`enhancer(createStore)(reducer, preloadedState)`，我们可以看出，enhancer是返回一个以createStore为参数的加强版本的createStore函数。而applyMiddleware就是用来适配middleware返回enhancer函数的。
 
-### combineReducers.js
-
-
-
-
-
-### applyMiddleware
-
-最难理解的一个函数，需要和enhancer结合着看
+最难理解的一个函数，	
 
 ```js
 export default function applyMiddleware(...middlewares) {
@@ -308,6 +302,7 @@ export default function applyMiddleware(...middlewares) {
       getState: store.getState,
       dispatch: (...args) => dispatch(...args)
     }
+
     const chain = middlewares.map(middleware => middleware(middlewareAPI))
     dispatch = compose(...chain)(store.dispatch)
 
@@ -320,7 +315,111 @@ export default function applyMiddleware(...middlewares) {
 }
 ```
 
+温习一下compose函数：
 
+```js
+compose(f, g) = (...args) => f(g(..args));
+// 这里我们把参数换成next，next可以认为是增强版本的dispatch函数
+compose(f, g) = next => f(g(next));
+```
+
+现在看如下两行关键代码：
+
+```js
+// 一个中间件最简单的形式：store => next => action => next(action)
+// 通过如下一层计算，每个函数变成：next => action => next(action)
+// 即传入一个dispatch函数，返回一个dispatch函数
+const chain = middlewares.map(middleware => middleware(middlewareAPI))
+// 如下这句代码可以看作通过中间件对dispatch函数做了层层增强后的dispatch函数
+// next可看作是上一个中间件修饰生成的dispatch函数，初始的next函数就是store.dispatch
+// dispatch修饰是从右到左，dispatch的执行是从左到右
+dispatch = compose(...chain)(store.dispatch)
+```
+
+
+
+### combineReducers.js
+
+参数reducers是一个对象，类似如下形式，返回一个新的代理所有reducers的函数。
+
+```json
+{
+	key1: reducer1(),
+  key2: reducer2()
+}
+```
+
+代码如下，只保留关键代码：
+
+```js
+export default function combineReducers(reducers) {
+  const reducerKeys = Object.keys(reducers)
+  const finalReducers = {}
+
+  // 找出所有是函数的reducer
+  for (let i = 0; i < reducerKeys.length; i++) {
+    const key = reducerKeys[i]
+
+    if (typeof reducers[key] === 'function') {
+      finalReducers[key] = reducers[key]
+    }
+  }
+  const finalReducerKeys = Object.keys(finalReducers)
+
+  let shapeAssertionError
+  try {
+    // 保证每个reducer有初始值，对于任意类型action都有返回值
+    assertReducerShape(finalReducers)
+  } catch (e) {
+    shapeAssertionError = e
+  }
+
+  // 返回一个代理所有的reducer的函数
+  return function combination(state = {}, action) {
+    if (shapeAssertionError) {
+      throw shapeAssertionError
+    }
+
+    let hasChanged = false  
+    const nextState = {}
+    // 遍历，执行每一个reducer
+    for (let i = 0; i < finalReducerKeys.length; i++) {
+      // 根据它们的 key 来筛选出 state 中的一部分数据并处理
+      const key = finalReducerKeys[i]
+      // 找到对应的reducer
+      const reducer = finalReducers[key]
+      const previousStateForKey = state[key]
+      const nextStateForKey = reducer(previousStateForKey, action)
+
+      nextState[key] = nextStateForKey
+      // 只要有任何一个子state变化，hasChanged为true
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+    }
+    hasChanged =
+      hasChanged || finalReducerKeys.length !== Object.keys(state).length
+    return hasChanged ? nextState : state
+  }
+}
+
+```
+
+### compose.js
+
+组合函数
+
+```js
+export default function compose(...funcs) {
+  if (funcs.length === 0) {
+    return arg => arg
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0]
+  }
+
+  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+}
+```
 
 
 
@@ -332,7 +431,7 @@ function createThunkMiddleware(extraArgument) {
     if (typeof action === 'function') {
       return action(dispatch, getState, extraArgument);
     }
-
+		// next可看作是上一个中间件修饰生成的dispatch函数
     return next(action);
   };
 }
