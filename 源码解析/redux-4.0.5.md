@@ -421,6 +421,33 @@ export default function compose(...funcs) {
 }
 ```
 
+### bindActionCreators.js
+
+这是一个辅助函数，可以将一个actionCreators映射成一个个自动dispatch的函数
+
+```js
+function bindActionCreator(actionCreator, dispatch) {
+  return function() {
+    return dispatch(actionCreator.apply(this, arguments))
+  }
+}
+
+export default function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === 'function') {
+    return bindActionCreator(actionCreators, dispatch)
+  }
+
+  const boundActionCreators = {}
+  for (const key in actionCreators) {
+    const actionCreator = actionCreators[key]
+    if (typeof actionCreator === 'function') {
+      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch)
+    }
+  }
+  return boundActionCreators
+}
+```
+
 
 
 ## redux-thunk 源码
