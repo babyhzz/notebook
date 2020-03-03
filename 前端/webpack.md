@@ -377,11 +377,13 @@ webpack 可以监听文件变化，当它们修改后会重新编译。
 ### resolve
 
 设置模块如何被解析。
-#### resolve.alias
+#### resolve.alias 
 
 创建 import 或 require 的别名，来确保模块引入变得更简单。
 ```js
-// Node.js中提供了两个与文件操作相关全局可用变量__dirname和__filename，__dirname表示当前文件所在的目录，__filename表示正在执行脚本的文件名。
+// Node.js中提供了两个与文件操作相关全局可用变量__dirname和__filename
+// __dirname表示当前文件所在的目录，__filename表示正在执行脚本的文件名。
+// ？？？是否有误？？？
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -522,7 +524,7 @@ new webpack.ProvidePlugin({
 new webpack.ProvidePlugin({
   _map: ['lodash', 'map']
 });
-``` 
+```
 
 ### @babel/plugin-proposal-class-properties
 

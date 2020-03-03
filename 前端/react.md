@@ -1,14 +1,16 @@
-# React基础
+## React基础
 
 - React的条件渲染可用三元表达式或者if/else
 - PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
 - JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
 - Router的传值：通过match，location中获取，params（this.props.match.params）和location（query对象，search：?a=1 后面这一串）
 
-# React面试知识点
+## React面试知识点
+
 - [你要的 React 面试知识点，都在这了](https://juejin.im/post/5cf0733de51d4510803ce34e)
 
-#### 函数式编程核心概念：
+### 函数式编程核心概念：
+
 1. 不可变性（Immutability）：参数不可变
 2. 纯函数（Pure Function）：视参数为不可变数据，没有副作用
 3. 数据转换：需不改变原数据
@@ -32,12 +34,14 @@ const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
 - 容器组件：获取处理数据、订阅Redux存储的组件。可包含展示组件和其他容器组件。注意容器组件里可以再包含容器组件。
 - 高阶组件：将组件作为参数生成另一个组件的组件。
 
-# React生命周期
+## React生命周期
+
 - [你真的了解 React 生命周期吗](https://juejin.im/post/5df648836fb9a016526eba01)
 
 ![React生命周期](img/reactlifecycle.png)
 
 #### static getDerivedStateFromProps(nextProps,prevState)
+
 返回一个对象来更新state，null则表示不更新。静态函数，无法访问组件内部方法。  
 作用：将父组件的props映射到子组件的state上，这样子组件更新state时，不会影响父组件的props。   
 触发时机：组件实例化、update时（props、state、forceUpdate）
