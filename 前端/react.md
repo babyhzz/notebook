@@ -1,9 +1,21 @@
-## React基础
+# React基础
 
 - React的条件渲染可用三元表达式或者if/else
 - PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
 - JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
 - Router的传值：通过match，location中获取，params（this.props.match.params）和location（query对象，search：?a=1 后面这一串）
+
+
+
+## Context的使用
+
+[官网Context介绍](https://zh-hans.reactjs.org/docs/context.html#contextprovider)
+
+
+
+
+
+
 
 ## React面试知识点
 
