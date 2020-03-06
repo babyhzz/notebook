@@ -11,9 +11,13 @@
 
 [官网Context介绍](https://zh-hans.reactjs.org/docs/context.html#contextprovider)
 
+总结的来说，为了后代所有子节点都能使用全局属性。总共分三步：
 
+- 创建Context，React.createContext()
+- 用Context.Provider包裹并提供值
+- Class组件用声明一个静态属性来接受，或者在返回的Render中用Context.Consumer消费
 
-
+但使用之前考虑是否需要这样，更常用的方法将组件通过props传入。
 
 
 

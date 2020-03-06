@@ -46,11 +46,13 @@ function createTransitionManager() {
     }
   }
 
+  // 闭包，管理所有的观察者
   let listeners = [];
 
   function appendListener(fn) {
     let isActive = true;
 
+    // 创建了一个fn的代理
     function listener(...args) {
       if (isActive) fn(...args);
     }

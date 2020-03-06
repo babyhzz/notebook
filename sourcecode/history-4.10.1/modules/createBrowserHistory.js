@@ -103,15 +103,17 @@ function createBrowserHistory(props = {}) {
       setState();
     } else {
       const action = 'POP';
-
+      // 弹出提示，是否切换
       transitionManager.confirmTransitionTo(
         location,
         action,
         getUserConfirmation,
         ok => {
           if (ok) {
+            // OK 切换，并调用listeners
             setState({ action, location });
           } else {
+            // 否则还原之前的pop
             revertPop(location);
           }
         }
@@ -120,12 +122,14 @@ function createBrowserHistory(props = {}) {
   }
 
   function revertPop(fromLocation) {
+    // 获取即将去到的location
     const toLocation = history.location;
 
     // TODO: We could probably make this more reliable by
     // keeping a list of keys we've seen in sessionStorage.
     // Instead, we just default to 0 for keys we don't know.
 
+    // 找到history中的对应的key，找不到则证明是第一个，第一个是没有key的
     let toIndex = allKeys.indexOf(toLocation.key);
 
     if (toIndex === -1) toIndex = 0;
@@ -137,6 +141,7 @@ function createBrowserHistory(props = {}) {
     const delta = toIndex - fromIndex;
 
     if (delta) {
+      // 强制切换
       forceNextPop = true;
       go(delta);
     }
@@ -301,6 +306,7 @@ function createBrowserHistory(props = {}) {
 
   function listen(listener) {
     const unlisten = transitionManager.appendListener(listener);
+    // 控制监听函数的添加： listenerCount为1的时候添加监听，为0的时候解除监听
     checkDOMListeners(1);
 
     return () => {

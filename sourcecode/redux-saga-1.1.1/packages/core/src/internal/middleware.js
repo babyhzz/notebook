@@ -10,6 +10,7 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
     check(channel, is.channel, 'options.channel passed to the Saga middleware is not a channel')
   }
 
+  // 返回sagaMiddleware
   function sagaMiddleware({ getState, dispatch }) {
     boundRunSaga = runSaga.bind(null, {
       ...options,
@@ -20,11 +21,13 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
       sagaMonitor,
     })
 
+    // 按redux要求返回一个函数
     return next => action => {
       if (sagaMonitor && sagaMonitor.actionDispatched) {
         sagaMonitor.actionDispatched(action)
       }
       const result = next(action) // hit reducers
+      // 监听action的起点
       channel.put(action)
       return result
     }

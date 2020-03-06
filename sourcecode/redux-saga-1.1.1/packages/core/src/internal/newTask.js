@@ -134,6 +134,7 @@ export default function newTask(env, mainTask, parentContext, parentEffectId, me
 
       See discussions in #1704
      */
+    // 当前任务cancelled或者主任务cancelled并且当前任务正在运行
     isCancelled: () => status === CANCELLED || (status === RUNNING && mainTask.status === CANCELLED),
     isAborted: () => status === ABORTED,
     result: () => taskResult,
