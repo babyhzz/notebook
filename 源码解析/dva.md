@@ -1,5 +1,107 @@
 ## 使用
 
+### 主流程
+
+```js
+// 1. Initialize
+const app = dva();
+
+// 2. Plugins
+// app.use({});
+
+// 3. Model
+app.model(require('./models/example').default);
+
+// 4. Router
+app.router(require('./router').default);
+
+// 5. Start
+app.start('#root');
+```
+
+
+
+### router
+
+```js
+import React from 'react';
+import { Router, Route, Switch } from 'dva/router';
+import IndexPage from './routes/IndexPage';
+import Products from './routes/Products';
+
+function RouterConfig({ history }) {
+  return (
+    <Router history={history}>
+      <Switch>
+        <Route path="/" exact component={IndexPage} />
+        <Route path="/products" exact component={Products} />
+      </Switch>
+    </Router>
+  );
+}
+
+export default RouterConfig;
+```
+
+### model
+
+```js
+export default {
+
+  namespace: 'example',
+
+  state: {},
+
+  subscriptions: {
+    setup({ dispatch, history }) {  // eslint-disable-line
+    },
+  },
+
+  effects: {
+    *fetch({ payload }, { call, put }) {  // eslint-disable-line
+      yield put({ type: 'save' });
+    },
+  },
+
+  reducers: {
+    save(state, action) {
+      return { ...state, ...action.payload };
+    },
+  },
+  
+	subscriptions: {
+    init({ dispatch, history }) {
+      // history库中回调listener，出入location和action两个参数
+      // 一旦注册，每次路由变化都会回调
+      // location: {pathname, search, hash, query, state, key}
+      history.listen((location, action) => {
+        console.log(location);
+        console.log(action);
+      })
+    }
+  }
+};
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 在Umi中的使用
 
 [model注册](https://umijs.org/zh/guide/with-dva.html#model-%E6%B3%A8%E5%86%8C)

@@ -1,0 +1,10 @@
+.DS_Store
+/coverage
+/.changelog
+/examples/**/.umi
+/examples/**/.umi-production
+/website/dist
+/node_modules
+/packages/**/node_modules
+/packages/**/dist
+/lerna-debug.log

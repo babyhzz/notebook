@@ -53,6 +53,7 @@ const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
 ## React生命周期
 
 - [你真的了解 React 生命周期吗](https://juejin.im/post/5df648836fb9a016526eba01)
+- [官网生命周期](https://zh-hans.reactjs.org/docs/react-component.html#the-component-lifecycle)
 
 ![React生命周期](img/reactlifecycle.png)
 
@@ -66,6 +67,21 @@ const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
 接收父组件传递过来的 props 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 componentDidUpdate。必须和 componentDidUpdate 一起使用，否则会报错。   
 作用：能让你在组件更新DOM和refs之前，从DOM中捕获一些信息（如滚动位置）
 触发时机：组件Update时，在render之后，更新DOM和refs之前。
+
+#### componentDidUpdate(prevProps, prevState, snapshot)
+当组件更新后，可以在此处对 DOM 进行操作。如果你对更新前后的 props 进行了比较，也可以选择在此处进行网络请求。（例如，当 props 未发生变化时，则不会执行网络请求）。
+你也可以在 componentDidUpdate() 中直接调用 setState()，但请注意它必须被包裹在一个条件语句里，正如上述的例子那样进行处理，否则会导致**死循环**。
+
+```
+componentDidUpdate(prevProps) {
+  // 典型用法（不要忘记比较 props）：
+  if (this.props.userID !== prevProps.userID) {
+    this.fetchData(this.props.userID);
+  }
+}
+```
+
+
 
 ### 父子组件在生命周期中的加载顺序
 #### mount阶段
