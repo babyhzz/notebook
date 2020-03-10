@@ -1,76 +1,24 @@
-# React基础
+## React基础
 
-- React的条件渲染可用三元表达式或者if/else
-- PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
-- JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
-- Router的传值：通过match，location中获取，params（this.props.match.params）和location（query对象，search：?a=1 后面这一串）
+### 1. 生命周期
 
-
-
-## Context的使用
-
-[官网Context介绍](https://zh-hans.reactjs.org/docs/context.html#contextprovider)
-
-总结的来说，为了后代所有子节点都能使用全局属性。总共分三步：
-
-- 创建Context，React.createContext()
-- 用Context.Provider包裹并提供值
-- Class组件用声明一个静态属性来接受，或者在返回的Render中用Context.Consumer消费
-
-但使用之前考虑是否需要这样，更常用的方法将组件通过props传入。
-
-
-
-## React面试知识点
-
-- [你要的 React 面试知识点，都在这了](https://juejin.im/post/5cf0733de51d4510803ce34e)
-
-### 函数式编程核心概念：
-
-1. 不可变性（Immutability）：参数不可变
-2. 纯函数（Pure Function）：视参数为不可变数据，没有副作用
-3. 数据转换：需不改变原数据
-4. 高阶函数：函数作为参数或者返回函数，或者两者都有
-5. 递归
-6. 组合：较小的函数组合成更大的函数。React中常见如下：
-```js
-const name = compose(
-    splitmyName,
-    countEachName,
-    comvertUpperCase,
-    returnName
-)
-// compose简单的实现方式：
-const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
-```
-
-#### 组件核心概念：
-- 受控组件/非受控组件：受控组件是在 React 中处理输入表单的一种技术。自己维护表单状态称为受控组件，通过ref访问表单为非受控组件。
-- 展示组件：无状态，纯函数，没有任何副作用。
-- 容器组件：获取处理数据、订阅Redux存储的组件。可包含展示组件和其他容器组件。注意容器组件里可以再包含容器组件。
-- 高阶组件：将组件作为参数生成另一个组件的组件。
-
-## React生命周期
 
 - [你真的了解 React 生命周期吗](https://juejin.im/post/5df648836fb9a016526eba01)
 - [官网生命周期](https://zh-hans.reactjs.org/docs/react-component.html#the-component-lifecycle)
 
 ![React生命周期](img/reactlifecycle.png)
 
-#### static getDerivedStateFromProps(nextProps,prevState)
+#### constructor(props)
 
-返回一个对象来更新state，null则表示不更新。静态函数，无法访问组件内部方法。  
-作用：将父组件的props映射到子组件的state上，这样子组件更新state时，不会影响父组件的props。   
-触发时机：组件实例化、update时（props、state、forceUpdate）
+应在其他语句之前调用super(props)，不然this.props在构造函数中会出现未定义。可以在constructor中初始化state，也可以在外部直接定义，效果是一样的。函数也可以直接使用箭头函数形式，也不需要在constructor中bind，基本上来说，构造函数可以不需要。
 
-#### getSnapshotBeforeUpdate(prevProps, prevState)
-接收父组件传递过来的 props 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 componentDidUpdate。必须和 componentDidUpdate 一起使用，否则会报错。   
-作用：能让你在组件更新DOM和refs之前，从DOM中捕获一些信息（如滚动位置）
-触发时机：组件Update时，在render之后，更新DOM和refs之前。
+#### componentDidMount()
+
+会在组件挂载后调用（插入到DOM数中），一般在这里进行数据获取然后调用setState赋值。如果有一些依赖DOM节点的大小和位置，可在这里处理。如Ant Design中Table的高度获取。
 
 #### componentDidUpdate(prevProps, prevState, snapshot)
-当组件更新后，可以在此处对 DOM 进行操作。如果你对更新前后的 props 进行了比较，也可以选择在此处进行网络请求。（例如，当 props 未发生变化时，则不会执行网络请求）。
-你也可以在 componentDidUpdate() 中直接调用 setState()，但请注意它必须被包裹在一个条件语句里，正如上述的例子那样进行处理，否则会导致**死循环**。
+
+当组件更新后立即执行，首次渲染不会执行。 当组件更新后，可以在此处对 DOM 进行操作。如果你对更新前后的 props 进行了比较，也可以选择在此处进行网络请求。（例如，当 props 未发生变化时，则不会执行网络请求）。 
 
 ```
 componentDidUpdate(prevProps) {
@@ -81,9 +29,49 @@ componentDidUpdate(prevProps) {
 }
 ```
 
+你也可以在 `componentDidUpdate()` 中直接调用 `setState()`，但请注意它必须被包裹在一个条件语句里，正如上述的例子那样进行处理，否则会导致**死循环**。如果实现了 `getSnapshotBeforeUpdate() `生命周期函数，将作为第三个参数传入。
+
+#### componentWillUnmount()
+
+会在组件卸载及销毁之前直接调用。在此方法中执行必要的**清理操作**，例如，清除 timer，取消网络请求或清除在 `componentDidMount()` 中创建的订阅等。 
+
+#### static getDerivedStateFromProps(props, state)
+
+会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它应返回一个对象来更新 state，如果返回 null 则不更新任何内容。 返回一个对象来更新state，null则表示不更新。静态函数，无法访问组件内部方法。
+
+`getDerivedStateFromProps` 的存在只有一个目的：让组件在 **props 变化**时更新 state。比如根据props变化加载外部数据。 
+
+#### shouldComponentUpdate(nextProps, nextState)
+
+判断 React 组件的输出是否受**当前** state 或 props 更改的影响。默认行为是 state 每次发生变化组件都会重新渲染。大部分情况下，你应该遵循默认行为。首次渲染或使用 `forceUpdate()` 时不会调用该方法。 
+
+我们不建议在 `shouldComponentUpdate()` 中进行深层比较或使用 `JSON.stringify()`。这样非常影响效率，且会损害性能。 
+
+> 官网意思是，不要过分依赖这个，后续可能改变这个功能，尽量使用PureComponent。
+
+#### getSnapshotBeforeUpdate(prevProps, prevState)
+接收父组件传递过来的 props 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 componentDidUpdate。必须和 componentDidUpdate 一起使用，否则会报错。   
+作用：能让你在组件更新DOM和refs之前，从DOM中捕获一些信息（如滚动位置）
+触发时机：组件Update时，在render之后，更新DOM和refs之前。
+
+### 2. 生命周期的思考
+
+#### props变化时重置内部state
+
+- key属性，key变化时会创建一个新的组件而不是更新一个既有的组件，会重置所有内部state
+- 使用getDerivedStateFromProps，比较前后props变化，可重置部分状态
+- ref方式调用内部方法，但是这个通常不建议
+
+#### 缓存基于当前 props 计算后的结果
+
+使用memoize-one技术，仅缓存最近一次的结果，因为组件会碰到经常render的情况，而render中根据属性计算结果。使用缓存技术，可以保证相关的参数没有改变，不必重新计算，直接使用缓存。
+
+
+
 
 
 ### 父子组件在生命周期中的加载顺序
+
 #### mount阶段
 ```
 Parent getDerivedStateFromProps
@@ -120,6 +108,65 @@ Parent componentDidUpdate
 
 #### 如果setState更新的值不变，还会触发生命周期钩子吗？
 哪怕每次都设置同样的值，还是会触发更新
+
+
+
+
+
+### React概念
+
+- React的条件渲染可用三元表达式或者if/else
+- PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
+- JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
+- Router的传值：通过match，location中获取，params（this.props.match.params）和location（query对象，search：?a=1 后面这一串）
+
+
+
+## Context的使用
+
+[官网Context介绍](https://zh-hans.reactjs.org/docs/context.html#contextprovider)
+
+总结的来说，为了后代所有子节点都能使用全局属性。总共分三步：
+
+- 创建Context，React.createContext()
+- 用Context.Provider包裹并提供值
+- Class组件用声明一个静态属性来接受，或者在返回的Render中用Context.Consumer消费
+
+但使用之前考虑是否需要这样，更常用的方法将组件通过props传入。
+
+
+
+## React面试知识点
+
+- [你要的 React 面试知识点，都在这了](https://juejin.im/post/5cf0733de51d4510803ce34e)
+
+### 函数式编程核心概念：
+
+1. 不可变性（Immutability）：参数不可变
+2. 纯函数（Pure Function）：视参数为不可变数据，没有副作用
+3. 数据转换：需不改变原数据
+4. 高阶函数：函数作为参数或者返回函数，或者两者都有
+5. 递归
+6. 组合：前面的一个函数的值作为后面一个函数的输入（管道？）。React中常见如下：
+```js
+const name = compose(
+    splitmyName,
+    countEachName,
+    comvertUpperCase,
+    returnName
+)
+// compose简单的实现方式：
+const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
+```
+
+#### 组件核心概念：
+- 受控组件/非受控组件：受控组件是在 React 中处理输入表单的一种技术。自己维护表单状态称为受控组件，通过ref访问表单为非受控组件。
+- 展示组件：无状态，纯函数，没有任何副作用。
+- 容器组件：获取处理数据、订阅Redux存储的组件。可包含展示组件和其他容器组件。注意容器组件里可以再包含容器组件。
+- 高阶组件：将组件作为参数生成另一个组件的组件。
+
+## React生命周期
+
 
 # React 高级及深入
 - [官网 Render Props](https://zh-hans.reactjs.org/docs/render-props.html)
