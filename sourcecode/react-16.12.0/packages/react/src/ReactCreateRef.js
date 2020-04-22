@@ -8,6 +8,7 @@
 
 import type {RefObject} from 'shared/ReactTypes';
 
+// hucheng: createRef返回的是一个包含current属性的对象
 // an immutable object with a single mutable value
 export function createRef(): RefObject {
   const refObject = {

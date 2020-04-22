@@ -9,6 +9,7 @@ import {REACT_FORWARD_REF_TYPE, REACT_MEMO_TYPE} from 'shared/ReactSymbols';
 
 import warningWithoutStack from 'shared/warningWithoutStack';
 
+// hucheng: forwardRef参数是一个函数，用来抓取接收到的ref
 export default function forwardRef<Props, ElementType: React$ElementType>(
   render: (props: Props, ref: React$Ref<ElementType>) => React$Node,
 ) {
