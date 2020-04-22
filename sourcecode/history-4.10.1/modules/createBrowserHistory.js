@@ -46,6 +46,8 @@ function createBrowserHistory(props = {}) {
     getUserConfirmation = getConfirmation,
     keyLength = 6
   } = props;
+
+  // 读取basename，添加前缀的/，去掉结尾的/
   const basename = props.basename
     ? stripTrailingSlash(addLeadingSlash(props.basename))
     : '';
@@ -54,6 +56,7 @@ function createBrowserHistory(props = {}) {
     const { key, state } = historyState || {};
     const { pathname, search, hash } = window.location;
 
+    // 获取hostname后面的内容
     let path = pathname + search + hash;
 
     warning(
@@ -66,6 +69,8 @@ function createBrowserHistory(props = {}) {
         '".'
     );
 
+    // strip：脱去
+    // 去除path中的base那么前缀
     if (basename) path = stripBasename(path, basename);
 
     return createLocation(path, state, key);

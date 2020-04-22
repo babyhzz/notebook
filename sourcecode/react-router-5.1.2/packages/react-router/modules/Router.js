@@ -24,6 +24,7 @@ class Router extends React.Component {
     // on the initial render. If there are, they will replace/push when
     // they mount and since cDM fires in children before parents, we may
     // get a new location before the <Router> is mounted.
+    // 这个hack不是很理解？？？
     this._isMounted = false;
     this._pendingLocation = null;
 
