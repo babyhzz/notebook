@@ -118,6 +118,7 @@ function legacyCreateRootFromDOMContainer(
   const shouldHydrate =
     forceHydrate || shouldHydrateDueToLegacyHeuristic(container);
   // First clear any existing content.
+  // hucheng：移除所有内部节点
   if (!shouldHydrate) {
     let warned = false;
     let rootSibling;
@@ -180,6 +181,7 @@ function legacyRenderSubtreeIntoContainer(
   let fiberRoot;
   if (!root) {
     // Initial mount
+    // hucheng: 首次渲染创建FiberRoot
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
       container,
       forceHydrate,

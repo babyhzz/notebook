@@ -111,6 +111,8 @@ function defineRefPropWarningGetter(props, displayName) {
 const ReactElement = function(type, key, ref, self, source, owner, props) {
   const element = {
     // This tag allows us to uniquely identify this as a React Element
+    // hucheng：所有我们写的代码里面，转义过来都是REACT_ELEMENT_TYPE类型，只不过type不一样
+    // 对于forwardRef创建的组件的type，则是一个对象
     $$typeof: REACT_ELEMENT_TYPE,
 
     // Built-in properties that belong on the element

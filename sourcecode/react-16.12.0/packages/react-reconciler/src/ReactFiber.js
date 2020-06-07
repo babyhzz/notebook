@@ -159,11 +159,12 @@ export type Fiber = {|
   // This is effectively the parent, but there can be multiple parents (two)
   // so this is only the parent of the thing we're currently processing.
   // It is conceptually the same as the return address of a stack frame.
-  return: Fiber | null,
+  return: Fiber | null, // 父节点
 
   // Singly Linked List Tree Structure.
-  child: Fiber | null,
-  sibling: Fiber | null,
+  // hucheng：单向链表
+  child: Fiber | null,  // 第一个子节点
+  sibling: Fiber | null,  // 兄弟节点
   index: number,
 
   // The ref last used to attach this node.
@@ -175,6 +176,7 @@ export type Fiber = {|
   memoizedProps: any, // The props used to create the output.
 
   // A queue of state updates and callbacks.
+  // hucheng：记录组件状态的改变
   updateQueue: UpdateQueue<any> | null,
 
   // The state used to create the output

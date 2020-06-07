@@ -130,11 +130,14 @@ function createPortal(
 }
 
 const ReactDOM: Object = {
+  // hucheng: 此方法在ReactDOM中
   createPortal,
 
   // Legacy
   findDOMNode,
+  // hucheng: 服务端渲染用
   hydrate,
+  // hucheng: render方法
   render,
   unstable_renderSubtreeIntoContainer,
   unmountComponentAtNode,

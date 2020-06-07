@@ -125,6 +125,7 @@ export type Update<State> = {
 };
 
 export type UpdateQueue<State> = {
+  // hucheng: 
   baseState: State,
 
   firstUpdate: Update<State> | null,
@@ -203,9 +204,15 @@ export function createUpdate(
   suspenseConfig: null | SuspenseConfig,
 ): Update<*> {
   let update: Update<*> = {
+    // hucheng 更新的过期时间???
     expirationTime,
     suspenseConfig,
 
+    // hucheng:
+    // export const UpdateState = 0;
+    // export const ReplaceState = 1;
+    // export const ForceUpdate = 2;
+    // export const CaptureUpdate = 3;
     tag: UpdateState,
     payload: null,
     callback: null,

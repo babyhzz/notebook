@@ -1,16 +1,16 @@
-## React基础
 
-### 1. 生命周期
+
+# 生命周期
 
 
 - [你真的了解 React 生命周期吗](https://juejin.im/post/5df648836fb9a016526eba01)
 - [官网生命周期](https://zh-hans.reactjs.org/docs/react-component.html#the-component-lifecycle)
 
-![React生命周期](img/reactlifecycle.png)
+![React生命周期](../../前端/img/reactlifecycle.png)
 
 #### constructor(props)
 
-应在其他语句之前调用super(props)，不然this.props在构造函数中会出现未定义。可以在constructor中初始化state，也可以在外部直接定义，效果是一样的。函数也可以直接使用箭头函数形式，也不需要在constructor中bind，基本上来说，构造函数可以不需要。
+应在其他语句之前调用super(props)，不然this.props在构造函数中会出现未定义。可以在constructor中定义state以及函数的bind，我比较喜欢使用Class Fields语法来实现，需要babel支持。
 
 #### componentDidMount()
 
@@ -20,7 +20,7 @@
 
 当组件更新后立即执行，首次渲染不会执行。 当组件更新后，可以在此处对 DOM 进行操作。如果你对更新前后的 props 进行了比较，也可以选择在此处进行网络请求。（例如，当 props 未发生变化时，则不会执行网络请求）。 
 
-```
+```jsx
 componentDidUpdate(prevProps) {
   // 典型用法（不要忘记比较 props）：
   if (this.props.userID !== prevProps.userID) {
@@ -50,29 +50,19 @@ componentDidUpdate(prevProps) {
 > 官网意思是，不要过分依赖这个，后续可能改变这个功能，尽量使用PureComponent。
 
 #### getSnapshotBeforeUpdate(prevProps, prevState)
+
 接收父组件传递过来的 props 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 componentDidUpdate。必须和 componentDidUpdate 一起使用，否则会报错。   
 作用：能让你在组件更新DOM和refs之前，从DOM中捕获一些信息（如滚动位置）
 触发时机：组件Update时，在render之后，更新DOM和refs之前。
 
-### 2. 生命周期的思考
-
-#### props变化时重置内部state
-
-- key属性，key变化时会创建一个新的组件而不是更新一个既有的组件，会重置所有内部state
-- 使用getDerivedStateFromProps，比较前后props变化，可重置部分状态
-- ref方式调用内部方法，但是这个通常不建议
-
-#### 缓存基于当前 props 计算后的结果
-
-使用memoize-one技术，仅缓存最近一次的结果，因为组件会碰到经常render的情况，而render中根据属性计算结果。使用缓存技术，可以保证相关的参数没有改变，不必重新计算，直接使用缓存。
 
 
 
 
-
-### 父子组件在生命周期中的加载顺序
+# 父子组件生命周期
 
 #### mount阶段
+
 ```
 Parent getDerivedStateFromProps
 Parent render
@@ -85,6 +75,7 @@ Parent componentDidMount
 可见在render时，先render父组件，然后在render子组件。didmount回调，则先触发子组件mount，再触发父组件mount。
 
 #### update阶段（parent组件state变化）
+
 ```
 Parent getDerivedStateFromProps
 Parent render
@@ -98,56 +89,42 @@ Parent componentDidUpdate
 可见父组件update时，先出发父组件的render，然后是子组件的render，didupdate回调，子组件先出发，父组件后触发
 
 #### unmount阶段
+
 先出发父组件unmount，然后触发子组件unmount
 
 
-### 常见问题
+
+# 常见问题
+
 #### 当外部的 props 改变时，如何再次执行请求数据、更改状态等操作
-- componentDidUpdate 中发数据请求
-- 组件绑定一个key属性，当key变化时，会创建一个新的组件重新走生命周期，而不是更新一个既有的组件。
+
+- componentDidUpdate 中发数据请求，注意if判断
+- 组件绑定一个key属性，当key变化时，会卸载原来组件重新创建组件。
 
 #### 如果setState更新的值不变，还会触发生命周期钩子吗？
+
 哪怕每次都设置同样的值，还是会触发更新
 
+#### props变化时重置内部state
 
+- key属性，key变化时会创建一个新的组件而不是更新一个既有的组件，会重置所有内部state
+- 使用getDerivedStateFromProps，比较前后props变化，可重置部分状态
+- ref方式调用内部方法，但是这个通常不建议
 
+#### 缓存基于当前 props 计算后的结果
 
+**实用**，特别是在列表过滤。使用memoize-one技术，仅缓存最近一次的结果，因为组件会碰到经常render的情况，而render中根据属性计算结果。使用缓存技术，可以保证相关的参数没有改变，不必重新计算，直接使用缓存。
 
-### React概念
+#### 条件渲染
 
-- React的条件渲染可用三元表达式或者if/else
-- PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo
-- JSX语法是通过React.createElement转义，React.cloneElement复制组件，给组件传值或者添加属性
-- Router的传值：通过match，location中获取，params（this.props.match.params）和location（query对象，search：?a=1 后面这一串）
+可使用 && 运算符，react 对与false，true，null都渲染为空
 
+#### PureComponent
 
+PureComponent实现了shouldComponentUpdate，对于props和state的浅比较，对于函数式组件的React.memo（Hook中的memo如何运作？）
 
-## Context的使用
+#### 组合函数
 
-[官网Context介绍](https://zh-hans.reactjs.org/docs/context.html#contextprovider)
-
-总结的来说，为了后代所有子节点都能使用全局属性。总共分三步：
-
-- 创建Context，React.createContext()
-- 用Context.Provider包裹并提供值
-- Class组件用声明一个静态属性来接受，或者在返回的Render中用Context.Consumer消费
-
-但使用之前考虑是否需要这样，更常用的方法将组件通过props传入。
-
-
-
-## React面试知识点
-
-- [你要的 React 面试知识点，都在这了](https://juejin.im/post/5cf0733de51d4510803ce34e)
-
-### 函数式编程核心概念：
-
-1. 不可变性（Immutability）：参数不可变
-2. 纯函数（Pure Function）：视参数为不可变数据，没有副作用
-3. 数据转换：需不改变原数据
-4. 高阶函数：函数作为参数或者返回函数，或者两者都有
-5. 递归
-6. 组合：前面的一个函数的值作为后面一个函数的输入（管道？）。React中常见如下：
 ```js
 const name = compose(
     splitmyName,
@@ -159,95 +136,26 @@ const name = compose(
 const compose = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
 ```
 
-#### 组件核心概念：
-- 受控组件/非受控组件：受控组件是在 React 中处理输入表单的一种技术。自己维护表单状态称为受控组件，通过ref访问表单为非受控组件。
+#### 组件类型
+
 - 展示组件：无状态，纯函数，没有任何副作用。
-- 容器组件：获取处理数据、订阅Redux存储的组件。可包含展示组件和其他容器组件。注意容器组件里可以再包含容器组件。
-- 高阶组件：将组件作为参数生成另一个组件的组件。
 
-## React生命周期
-
-
-# React 高级及深入
-- [官网 Render Props](https://zh-hans.reactjs.org/docs/render-props.html)
-- [【React深入】从Mixin到HOC再到Hook(很好的文章)](https://juejin.im/post/5cad39b3f265da03502b1c0a)
+- 容器组件：获取处理数据、订阅Redux存储的组件，可包含展示组件和其他容器组件。
 
 #### Render Props
+
 - 具有 render prop 的组件接受一个函数，该函数返回一个 React 元素并调用它而不是实现自己的渲染逻辑。
 - render prop 是一个用于告知组件需要渲染什么内容的函数 prop。
-- 任何被用于告知组件需要渲染什么内容的函数 prop 在技术上都可以被称为 “render prop”.
+- 任何被用于告知组件需要渲染什么内容的函数 prop 在技术上都可以被称为 “render prop”。
 
-```jsx
-<DataProvider render={data => (
-  <h1>Hello {data.target}</h1>
-)}/>
-```
-> 自己理解：DataProvider是一个有状态组件，自己去获取数据，有自己的state数据，但是需要复用，复用时显示内容不一样，所以需要提供一个函数，
-> 参数为暴露出来的数据，返回值则为根据数据render的内容。类似Vue的作用域插槽。
+> children也可以是函数，作为Render Props。比如可以实现一个vue slot的应用场景，如果没有children则按照默认渲染，若有则按照children规定方式渲染
 
-也可以使用children prop，但children prop不需要直接放在属性位置，我们也可以直接放在元素内部。此时的children是一个函数。
-> 注意 `this.props.children` 可以任何数据（组件、字符串、函数等等）
 
-```js
-<Mouse children={mouse => (
-  <p>鼠标的位置是 {mouse.x}，{mouse.y}</p>
-)}/>
 
-<Mouse>
-  {mouse => (
-    <p>鼠标的位置是 {mouse.x}，{mouse.y}</p>
-  )}
-</Mouse>
-```
-
-注意render函数每次都是一个新的对象，即使子组件是PureComponent，也达不到优化效果，所以可以将render func提取为一个实例方法。
-
-#### 从Mixin模式到HOC
-Mixin模式同Vue的Mixin，即代码的混入。React目前不推荐用Mixin方式，会带来如下问题：
-- Mixin可能会项目依赖，互相耦合，代码维护性较差
-- 不同的Mixin可能会冲突
-- Mixin很多时，组件是可以感知的，增加组件的复杂性
-
-##### HOC实现方式
-HOC可以看作是装饰者模式在React中的一种实现。HOC的两种实现方式：属性代理、反向继承
-
-```js
-/* 
-* 属性代理，感觉这种用的比较多
-* 对比原生组件增强的项：
-* 1. 可操作所有传入的props
-* 2. 可操作组件的生命周期
-* 3. 可操作组件的static方法
-* 4. 获取refs
-*/
-function proxyHOC(WrappedComponent) {
-  return class extends Component {
-    render() {
-      return <WrappedComponent {...this.props} />;
-    }
-  }
-}
-
-/* 
-* 反向继承，这种目前还没有看到有使用
-* 对比原生组件增强的项：
-* 1. 可操作所有传入的props
-* 2. 可操作组件的生命周期
-* 3. 可操作组件的static方法
-* 4. 获取refs
-* 5. 可操作state
-* 6. 可以渲染劫持
-*/
-function inheritHOC(WrappedComponent) {
-  return class extends WrappedComponent {
-    render() {
-      return super.render();
-    }
-  }
-}
-```
+# 高阶组件HOC
 
 #### HOC可以干什么
+
 - 组合渲染
 - 条件渲染
 - 操作props
@@ -257,7 +165,9 @@ function inheritHOC(WrappedComponent) {
 - 渲染劫持，只要改变了原组件的渲染，我们都将它称之为一种渲染劫持
 
 #### compose 和 Decorators
+
 假设现在我们有logger，visible，style等多个HOC，现在要同时增强一个Input组件。
+
 ```js
 // 第一种，难以阅读
 logger(visible(style(Input)))
@@ -274,6 +184,7 @@ class Input extends Component {
 ```
 
 # React Hooks
+
 - [30分钟精通React Hooks](https://juejin.im/post/5be3ea136fb9a049f9121014)
 - [【React深入】从Mixin到HOC再到Hook](https://juejin.im/post/5cad39b3f265da03502b1c0a)
 - [React Hooks 详解 【近 1W 字】+ 项目实战](https://juejin.im/post/5dbbdbd5f265da4d4b5fe57d)
@@ -281,32 +192,38 @@ class Input extends Component {
 - [HOOK FAQ 可以多领会](https://react.docschina.org/docs/hooks-faq.html)
 
 #### 为什么要搞一个Hooks
+
 1. 复用一个有状态的组件太麻烦，官方解决方案：Render Props 和 HOC（提供获取信息功能）。
 2. 生命周期钩子函数逻辑乱，比如异步数据请求，有时我们需要在componentDidMount和componentDidUpdate中做同样的事情。
 3. class this指向问题
 
-#### State Hook
+#### useState
+
 ```js
 const [count, setCount] = useState(0);
 ```
-多个state，写多个useState。
-setXXX更改state状态，也可以使用函数式方式，参数为上一状态的state。
 
-#### Effect Hook
+- useState初始状态可以是一个函数，只在初始渲染时调用
+- setCount可以使用函数式更新，参数为先前的state
+
+#### useEffect
+
 之前class组件，对于一些副作用，我们会写在 componentDidMount/componentDidUpdate/componentWillUnmount 中，但是现在使用一个
 useEffect 即可，三合一！
 
 要点：
+
 1. React首次渲染和以后的每次渲染都会调用传给useEffect的函数，而之前需要在componentDidMount和componentDidUpdate中分别实现。
 2. useEffect中的函数是异步执行的，不会阻塞浏览器更新视图。而之前的componentDidMount和componentDidUpdate都是同步的（当然是可以加async/await处理异步任务的）。
 3. useEffect清除副作用，返回一个函数即可。它会在调用一个新的 effect 之前对前一个 effect 进行清理。注意前一个effect的清理函数保持着之前的状态。
 4. useEffect的第二个参数，可以条件执行effect，只要值没有发送变化则不用执行effect，注意hook是利用Object.is进行浅比较。若传一个空数组，
-则表示只运行一次的 effect（仅在组件挂载和卸载时执行）
+   则表示只运行一次的 effect（仅在组件挂载和卸载时执行）
 5. 每次渲染都有自己独立的props和state
 6. 可以使用多个Effect关注分离点，也就是说可以写多个useEffect，功能不一样的可以分离
 7. useEffect 在全部渲染完毕后才会执行，而useLayoutEffect 会在 浏览器 layout 之后，painting 之前执行
 
 执行时机：useEffect 会在第一次渲染之后和每次更新之后都会执行
+
 ```js
 // Mount with { friend: { id: 100 } } props
 ChatAPI.subscribeToFriendStatus(100, handleStatusChange);     // 运行第一个 effect
@@ -324,12 +241,73 @@ ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // 清除最后一
 ```
 
 #### 其他Hooks
+
+##### useContext
+
+```js
+const value = useContext(MyContext);
+```
+
+当组件上层最近的 更新时，该 Hook 会触发重渲染，并使用最新传递给 MyContext provider 的 context value 值。即使祖先使用 [`React.memo`](https://react.docschina.org/docs/react-api.html#reactmemo) 或 [`shouldComponentUpdate`](https://react.docschina.org/docs/react-component.html#shouldcomponentupdate)，也会在组件本身使用 `useContext` 时重新渲染。 
+
 ##### useLayoutEffect
+
+它会在所有的 DOM 变更之后同步调用 effect。可以使用它来读取 DOM 布局并同步触发重渲染。在浏览器执行绘制之前，`useLayoutEffect` 内部的更新计划将被同步刷新。 
+
+> 这个还不清楚用途所在，是否时我一直的疑问？比如子组件didMount时，父组件还没有didMount，因此子组件的didMount无法计算出子组件的高度？
+
 ##### useCallback
-依赖项变化时会回调, 类似vue的watch
+
+memoized回调函数，当作为属性传递给子组件时，子组件若使用引用相等去优化时很有用
+
+```js
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);
+```
+
+##### useMemo
+
+仅在依赖发生改变时触发
+
+```js
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+
+##### useRef
+
+传入的初始值为refContainer的current属性的初始值
+
+```js
+const refContainer = useRef(initialValue);
+```
+
+##### useImperativeHandle
+
+ 可以让你在使用 `ref` 时自定义暴露给父组件的实例值。 
+
+```js
+function FancyInput(props, ref) {
+  const inputRef = useRef();
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current.focus();
+    }
+  }));
+  return <input ref={inputRef} ... />;
+}
+FancyInput = forwardRef(FancyInput);
+```
+
+
 
 #### 自定义Hook
+
 把相同的Hook逻辑提取到一个自定义Hook中
+
 ```js
 import React, { useState, useEffect } from 'react';
 
@@ -354,14 +332,36 @@ function useFriendStatus(friendID) {
 ```
 
 要点：
+
 1. 自定义Hook以use开头.
 2. 使用相同Hook中的state不会被共享
 3. 必须把hooks写在函数最外面，不允许在if/else等条件语句中，保证hooks的执行顺序一致.
 
 #### HOOK FAQ
-TODO 仔细看下官方的FAQ!
+
 ##### 该如何测量 DOM 节点？
-使用callback ref方式, 使用useCallback, 依赖项为[]
+
+获取 DOM 节点的位置或是大小的基本方式是使用 [callback ref](https://react.docschina.org/docs/refs-and-the-dom.html#callback-refs)。每当 ref 被附加到一个另一个节点，React 就会调用 callback。
+
+> 在这个案例中，我们没有选择使用 `useRef`，因为当 ref 是一个对象时它并不会把当前 ref 的值的 *变化* 通知到我们。使用 callback ref 可以确保 [即便子组件延迟显示被测量的节点](https://codesandbox.io/s/818zzk8m78) (比如为了响应一次点击)，我们依然能够在父组件接收到相关的信息，以便更新测量结果。 
+
+注意到我们传递了 `[]` 作为 `useCallback` 的依赖列表。这确保了 ref callback 不会在再次渲染时改变，因此 React 不会在非必要的时候调用它。 
+
+##### 定义在useEffect中的函数
+
+尽量将useEffect调用函数写在useEffect内部，可以更清晰的发现依赖变量。
+
+##### 如何实现shouldComponentUpdate
+
+使用React.memo来包裹一个函数式组件。
+
+##### 如何惰性创建昂贵对象
+
+useMemo允许记住一次昂贵的计算。
+
+state初始值的函数式方式加载。
+
+
 
 # React虚拟DOM
 
@@ -370,7 +370,7 @@ TODO 仔细看下官方的FAQ!
 - JS 计算 (Scripting)
 - 生成渲染树 (Rendering)
 - 绘制页面 (Painting)
-  ![页面呈现三个阶段](img/页面呈现三个阶段.jpg)
+  ![页面呈现三个阶段](../../前端/img/页面呈现三个阶段.jpg)
 
 
 
