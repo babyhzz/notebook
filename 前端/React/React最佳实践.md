@@ -69,30 +69,3 @@ CategorySelector.defaultProps = {
 <ServiceItem key={item.uuid} item={item} className={customStyle} />
 
 ```
-
-
-
-# Ant Design最佳实践
-
-##### 1. Modal处理方式
-
-对于一个button关联一个modal的情况，可以将button和modal放在一个组件中，内部管理modal的显示与否
-
-```jsx
-class A extends Component {
-	state = { 
-    visible: false
-  }
-
-	render() {
-    return (
-    	<>
-      	<Button></Button>
-      	<Modal visible={this.state.visible}></Modal>
-      </>
-    )
-  }
-
-}
-```
-

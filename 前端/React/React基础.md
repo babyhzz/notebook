@@ -363,15 +363,6 @@ state初始值的函数式方式加载。
 
 
 
-# React虚拟DOM
-
-#### 页面呈现的三个阶段
-
-- JS 计算 (Scripting)
-- 生成渲染树 (Rendering)
-- 绘制页面 (Painting)
-  ![页面呈现三个阶段](../../前端/img/页面呈现三个阶段.jpg)
-
 
 
 
