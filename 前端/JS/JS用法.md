@@ -101,3 +101,15 @@ const baz = obj?.foo?.bar?.baz(); // 42
 **Object.getOwnPropertyNames(obj)**：返回一个数组，包含对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）
 
 **Object.getOwnPropertySymbols(obj)**：返回一个数组，包含对象自身的所有Symbol属性
+
+#### Object.is 和===
+
+都是比较两个值是否严格相等，只有个别有区别
+
+```js
++0===-0 //true
+NaN===NaN //false
+Object.is(+0,-0); //false
+Object.is(NaN,NaN); //true
+```
+
