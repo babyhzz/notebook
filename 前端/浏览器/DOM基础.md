@@ -129,15 +129,15 @@ load
 
 1. 偏移量-offset开头的
 
-<img src="../img/domoffset.png" alt="domoffset" style="zoom: 25%;" />
+<img src="img/domoffset.png" alt="domoffset" style="zoom: 25%;" />
 
 2. 客户区-client开头的
 
-<img src="../img/domclient.png" alt="domclient" style="zoom: 25%;" />
+<img src="img/domclient.png" alt="domclient" style="zoom: 25%;" />
 
 3. 滚动大小-scroll开头
 
-<img src="../img/domscroll.png" alt="domscroll" style="zoom: 25%;" />
+<img src="img/domscroll.png" alt="domscroll" style="zoom: 25%;" />
 
 4. window-inner、outer开头
 
