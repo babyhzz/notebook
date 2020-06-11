@@ -1,4 +1,5 @@
 # 如何学习
+
 1. node in action看5遍，然后去写
 2. 写一些小工具
 3. 学习express

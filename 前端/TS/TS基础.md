@@ -1,4 +1,5 @@
 ## 接口
+
 ``` ts
 interface Animal {
   name: string;

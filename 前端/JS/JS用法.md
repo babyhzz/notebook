@@ -113,3 +113,23 @@ Object.is(+0,-0); //false
 Object.is(NaN,NaN); //true
 ```
 
+#### 柯里化
+
+curry 的概念很简单：只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
+
+```js
+var add = function(x) {
+  return function(y) {
+   return x + y;
+  };
+};
+var increment = add(1);
+var addTen = add(10);
+
+increment(2);
+// 3
+addTen(2);
+// 12
+```
+
+这里我们定义了一个 add 函数，它接受一个参数并返回一个新的函数。调用add 之后，返回的函数就通过闭包的方式记住了 add 的第一个参数。
