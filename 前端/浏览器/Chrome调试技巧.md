@@ -8,3 +8,7 @@
 document.body.contentEditable = true
 ```
 
+### 代码覆盖率
+
+ctrl  + shift + p ，show coverage，点击菜单reload即可显示代码覆盖率
+
