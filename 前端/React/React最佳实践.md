@@ -7,7 +7,7 @@
 ##### 2. 多用 PureComponent
 
 如果组件需要维护 state 或使用生命周期方法，则优先使用 PureComponent，而不是 Component。
-Component 的默认行为是**不论 state 和 props 是否有变化**，都触发 render。而 PureComponent **会先对 state 和 props 进行浅比较**，不同的时候才会 render。
+Component 的默认行为是（调用 `this.setState` 时）**不论 state 和 props 是否有变化**，都触发 render。而 PureComponent **会先对 state 和 props 进行浅比较**，不同的时候才会 render。
 
 ##### 3. 遵循单一职责原则，使用 HOC / 装饰器 / Render Props 增加职责
 
