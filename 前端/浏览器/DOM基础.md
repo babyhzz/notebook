@@ -144,3 +144,7 @@ load
    window.innerWidth, window.innerHeight 可视区域的宽高
 
    window.outerWidth, window.outerHeight 整个窗口的宽高，包括导航工具栏以及F12调试面板都在内部	
+
+## DOM事件
+
+addEventListener和on系列函数可同时共存，on只能绑定一个，而addEventListener可以绑定多个。on只在冒泡阶段响应
