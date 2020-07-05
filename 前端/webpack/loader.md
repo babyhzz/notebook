@@ -1,0 +1,28 @@
+#### 如何减少webpack的打包时间
+
+优化Loader，babel
+
+HappyPack
+
+DllPlugin
+
+代码压缩
+
+其他：
+
+module.extensions
+
+resolve.alias
+
+module.noparse
+
+
+
+#### 如何让webpack打出来的包更小
+
+按需加载
+
+TreeShaking
+
+ScopeHosting
+
