@@ -148,3 +148,84 @@ load
 ## DOM事件
 
 addEventListener和on系列函数可同时共存，on只能绑定一个，而addEventListener可以绑定多个。on只在冒泡阶段响应
+
+## link标签
+
+ https://juejin.im/post/5cf517f3f265da1bb13f1c92 
+
+最常用是用来链接外部样式表
+
+```html
+<link href="main.css" rel="stylesheet">
+```
+
+还可以做其他事情提升页面的性能
+
+##### DNS Prefetch
+
+```html
+<link rel="dns-prefetch" href="//example.com">
+```
+
+DNS解析，简单来说就是把域名转化为ip地址。我们在网页里使用域名请求其他资源的时候，都会先被转化为ip地址，再发起链接。dns-prefeth使得转化工作提前进行了，缩短了请求资源的耗时。
+
+什么时候使用呢？当我们页面中使用了其他域名的资源时，比如我们的静态资源都放在cdn上，那么我们可以对cdn的域名进行预解析。浏览器的支持情况也不错。
+
+##### Preconnect
+
+预链接 
+
+```html
+<link rel="preconnect" href="//example.com">
+<link rel="preconnect" href="//cdn.example.com" crossorigin>
+```
+
+我们访问一个站点时，简单来说，都会经过以下的步骤：
+
+1. DNS解析
+2. TCP握手
+3. 如果为Https站点，会进行TLS握手
+
+使用preconnect后，浏览器会针对特定的域名，提前初始化链接(执行上述三个步骤)，节省了我们访问第三方资源的耗时。需要注意的是，我们一定要确保preconnect的站点是网页必需的，否则会浪费浏览器、网络资源。
+
+##### Prefetch
+
+预拉取
+
+```html
+<link rel="prefetch" href="//example.com/next-page.html" as="document" crossorigin="use-credentials">
+<link rel="prefetch" href="/library.js" as="script">
+```
+
+link标签里的as参数可以有以下取值： 
+
+```
+audio: 音频文件
+video: 视频文件  
+Track: 网络视频文本轨道 
+script: javascript文件
+style: css样式文件
+font: 字体文件   
+image: 图片   
+fetch: XHR、Fetch请求
+worker: Web workers
+embed: 多媒体<embed>请求 
+object:  多媒体<object>请求
+document: 网页
+```
+
+预拉取用于标识从当前网站跳转到下一个网站可能需要的资源，以及本网站应该获取的资源。这样可以在将来浏览器请求资源时提供更快的响应。
+
+如果正确使用了预拉取，那么用户在从当前页面前往下一个页面时，可以很快得到响应。但是如果错误地使用了预拉取，那么浏览器就会下载额外不需要的资源，影响页面性能，并且造成网络资源浪费。
+
+这里需要注意的是，使用了prefetch，<font color='red'>资源仅仅被提前下载，下载后不会有任何操作，比如解析资源。</font>
+
+##### Prerender
+
+预渲染
+
+```html
+<link rel="prerender" href="//example.com/next-page.html">
+```
+
+ prerender比prefetch更进一步。不仅仅会下载对应的资源，还会对资源进行解析。解析过程中，如果需要其他的资源，**可能**会直接下载这些资源。这样，用户在从当前页面跳转到目标页面时，浏览器可以更快的响应。 

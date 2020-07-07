@@ -277,6 +277,10 @@ const memoizedCallback = useCallback(
 const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
 ```
 
+把“创建”函数和依赖项数组作为参数传入 `useMemo`，它仅会在某个依赖项改变时才重新计算 memoized 值。这种优化有助于避免在每次渲染时都进行高开销的计算。 
+
+> 类似于memoize-one，避免每次都进行高开销的计算，useMemo仅在依赖项改变时，才重新计算。
+
 ##### useRef
 
 传入的初始值为refContainer的current属性的初始值
