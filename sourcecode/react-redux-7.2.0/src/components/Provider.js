@@ -4,12 +4,13 @@ import { ReactReduxContext } from './Context'
 import Subscription from '../utils/Subscription'
 
 function Provider({ store, context, children }) {
+  // contextValue只依赖store，store不变，contextValue不变
   const contextValue = useMemo(() => {
     const subscription = new Subscription(store)
     subscription.onStateChange = subscription.notifyNestedSubs
     return {
       store,
-      subscription
+      subscription,
     }
   }, [store])
 
@@ -38,10 +39,10 @@ if (process.env.NODE_ENV !== 'production') {
     store: PropTypes.shape({
       subscribe: PropTypes.func.isRequired,
       dispatch: PropTypes.func.isRequired,
-      getState: PropTypes.func.isRequired
+      getState: PropTypes.func.isRequired,
     }),
     context: PropTypes.object,
-    children: PropTypes.any
+    children: PropTypes.any,
   }
 }
 

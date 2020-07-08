@@ -1,12 +1,63 @@
 # 使用
 
-### Provider组件
+### Redux
 
-今天把这个弄完即可：
+有Redux源码可知，其核心在于createStore函数，并返回一个api对象
 
+```js
+export default function createStore(reducer, preloadedState, enhancer) {
+  
+  // ...
+  
+  return {
+    dispatch,
+    subscribe,
+    getState,
+    replaceReducer,
+    [$$observable]: observable
+  }
+}
+```
 
+使用方式如下：
 
+```js
+// store.js
+import { createStore } from 'redux'
 
+// 3. 下面store每dispatch一次reducer就会重新执行并计算一次state
+function reducer(state = {a: 1}, action) {
+  const { type, payload } = action
+  return payload
+}
+
+// 0. 创建一个store
+const store = createStore(reducer)
+
+// 1. 监听store中state的变更
+store.subscribe((state) => {
+  console.log(state)
+})
+
+// 2. 发送一个action来通知reducer修改state
+// {type: 'type1', payload: 1} 就是一个ation
+store.dispatch({
+  type: 'type1',
+  payload: {a: 2}
+})
+```
+
+### React Redux
+
+```jsx
+import { Provider } from 'react-redux'
+// redux方式创建一个store
+import store from './store'
+import App from './App.js'
+
+// 通过Provider组件注入到Context中，然后各组件通过connect高阶组件连接
+ReactDOM.render(<Provider store={store}><App /></Provider>)
+```
 
 
 
