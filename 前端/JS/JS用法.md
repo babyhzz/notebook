@@ -98,9 +98,18 @@ const baz = obj?.foo?.bar?.baz(); // 42
 
 **Object.keys(obj)**：返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol），同类型还有**Object.entries**、**Object.values**
 
-**Object.getOwnPropertyNames(obj)**：返回一个数组，包含对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）
+**Object.getOwnPropertyNames(obj)**： 返回一个由指定对象的所有**自身**属性的属性名（包括不可枚举属性但不包括Symbol值作为名称的属性）组成的数组 
 
 **Object.getOwnPropertySymbols(obj)**：返回一个数组，包含对象自身的所有Symbol属性
+
+>  在JavaScript中，对象的属性分为可枚举和不可枚举之分，它们是由属性的enumerable值决定的。 
+>
+> ```
+> Object.defineProperty(kxy, "sex", {
+>     value: "female",
+>     enumerable: false
+> });
+> ```
 
 #### Object.is 和===
 

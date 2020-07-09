@@ -39,9 +39,10 @@
 
   - Webpack
     - [webpack](前端/webpack/webpack.md)
-    - [webpack 基础](前端/webpack/webpack基础.md)
+    - [配置](前端/webpack/配置.md)
     - [plugin](前端/webpack/plugin.md)
     - [loader](前端/webpack/loader.md)
+    - [优化](前端/webpack/优化.md)
 
 - 源码
 

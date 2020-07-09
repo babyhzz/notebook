@@ -268,7 +268,7 @@ module.exports = {
 
 1、在 build 下创建 `webpack.dll.config.js`
 
-```
+```js
 const path = require('path')
 const webpack = require('webpack')
 module.exports = {
@@ -302,21 +302,19 @@ module.exports = {
     }),
   ],
 }
-复制代码
 ```
 
 2、在 `webpack.prod.conf.js` 的 plugin 后面加入配置
 
-```
+```js
 new webpack.DllReferencePlugin({
   manifest: require('../dist/vendor-manifest.json'),
 })
-复制代码
 ```
 
 3、`package.json`文件中添加快捷命令`(build:dll)`
 
-```
+```json
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
