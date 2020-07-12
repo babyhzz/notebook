@@ -5,7 +5,7 @@
 ![原型](img/原型.jpg)
 
 明确如下几点：  
-1. 每个对象都有一个[[prototype]]属性，这个属性是隐藏属性，不能直接访问，所以有的浏览器提供了一个__proto__属性来访问，然而这不是一个标准的访问方法，所以ES5中用Object.getPrototypeOf函数获得一个对象的[[prototype]]。ES6中，使用Object.setPrototypeOf可以直接修改一个对象的[[prototype]]。
+1. 每个对象都有一个[[prototype]]属性，这个属性是隐藏属性，不能直接访问，所以有的浏览器提供了一个__proto__属性来访问，然而这不是一个标准的访问方法，所以ES5中用 `Object.getPrototypeOf` 函数获得一个对象的[[prototype]]。ES6中，使用Object.setPrototypeOf可以直接修改一个对象的[[prototype]]。
 2. 在JS中万物皆对象，方法是对象，方法的原型也是对象。对象具有__proto__属性，可称为隐式原型，一个对象的隐式原型指向构造函数的原型。
 3. 方法这个特殊的对象，除了__proto__属性，还有自己**特有**的属性——原型属性（prototype），这个属性指向一个对象，包含所有实例共享的属性和方法。这个对象我们也叫原型对象，原型对象有一个属性constructor，指向原构造函数。
 
@@ -124,6 +124,7 @@ function Child(name, type) {
   this.type = type;  // Child扩展属性
 }
 // Child继承Parent方法（原型继承）
+// 注意此处可以进行原型扩展
 Child.prototype = Object.create(Parent.prototype);  
 // Child扩展方法
 Child.prototype.speak = function() { 
@@ -136,17 +137,6 @@ Child.prototype.constructor = Child;
 #### 补充：
 对于组合继承代码中的Child.prototype = Object.create(Parent.prototype)，还有两种常见的类似写法是Child.prototype = Parent.prototype和Child.prototype = new Parent()，但这两种写法都是有缺陷的，需要避免：
 
-- Child.prototype = Parent.prototype，修改Child.prototype就等于修改Parent.prototype，会干扰所有Parent实例。
+- Child.prototype = Parent.prototype，<font color="red"> 修改Child.prototype就等于修改Parent.prototype</font>，会干扰所有Parent实例。
 
 - Child.prototype = new Parent()，Parent构造函数重复调用了两次（另一处调用是Child构造函数中的Parent.call(this)），浪费效率，且如果Parent构造函数有副作用，重复调用可能造成不良后果
-
-# 异步
-
-#### Promise、async/await
-- [深入理解async/await](https://www.cnblogs.com/youma/p/10475214.html)
-
-> 个人理解，Promise只是一种异步处理方案，支持链式调用，解决回调地狱问题。而async/await则是Promise的语法糖
-
-- async修饰的函数返回一个Promise对象，表示其中可能含有异步操作。await后面一般接一个Promise对象，会等着它resolve。
-- 如果等到的是reject的promise呢，如何捕捉，用try catch
-

@@ -6,10 +6,8 @@
 
     - [浏览器基础](前端/浏览器/浏览器基础.md)
     - [浏览器缓存](前端/浏览器/浏览器缓存.md)
-    - [性能监控](前端/浏览器/性能监控.md)
     - [DOM 基础](前端/浏览器/DOM基础.md)
     - [页面加载流程](前端/浏览器/页面加载流程.md)
-    - [异步](前端/浏览器/异步.md)
     - [Chrome 调试技巧](前端/浏览器/Chrome调试技巧.md)
 
   - React
@@ -18,7 +16,7 @@
     - [React 最佳实践](前端/React/React最佳实践.md)
     - [React 虚拟 DOM](前端/React/React虚拟DOM.md)
     - [React 事件机制](前端/React/React事件机制.md)
-    - [开发实战 +1](前端/React/开发实战.md)
+    - [开发实战](前端/React/开发实战.md)
 
   - JS
 
@@ -26,6 +24,7 @@
     - [JS 用法](前端/JS/JS用法.md)
     - [ES6](前端/JS/ES6.md)
     - [Javascript](前端/JS/javascript.md)
+    - [异步](前端/JS/异步.md)
 
   - CSS 基础
 
@@ -38,11 +37,15 @@
     - [TS 基础](前端/TS/TS基础.md)
 
   - Webpack
+
     - [webpack](前端/webpack/webpack.md)
     - [配置](前端/webpack/配置.md)
     - [plugin](前端/webpack/plugin.md)
     - [loader](前端/webpack/loader.md)
     - [优化](前端/webpack/优化.md)
+
+  - 性能优化
+    - [雅虎军规](前端/性能优化/雅虎军规.md)
 
 - 源码
 
