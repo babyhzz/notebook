@@ -140,3 +140,4 @@ Child.prototype.constructor = Child;
 - Child.prototype = Parent.prototype，<font color="red"> 修改Child.prototype就等于修改Parent.prototype</font>，会干扰所有Parent实例。
 
 - Child.prototype = new Parent()，Parent构造函数重复调用了两次（另一处调用是Child构造函数中的Parent.call(this)），浪费效率，且如果Parent构造函数有副作用，重复调用可能造成不良后果
+
