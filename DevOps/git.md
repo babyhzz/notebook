@@ -23,6 +23,9 @@ git fetch -p # 获取被删减后的远程分支（更新远程分支）
 **idea添加忽略文件到.gitignore 不起作用**
 原因：idea 对应的目录或者文件已经被 git 跟踪，此时再加入.gitignore后就无效了
 执行如下命令：
-git rm -r --cached .idea   　　　　--删除文件夹
-git rm --cached demo-project.iml  --删除单个文件
+
+```makefile
+git rm -r --cached .idea   　　　　# 删除文件夹
+git rm --cached demo-project.iml  # 删除单个文件
+```
 

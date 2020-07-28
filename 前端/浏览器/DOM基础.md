@@ -30,7 +30,7 @@ DTD声明节点            Node.NOTATION_NODE(12)
 ```js
 nodeType = 1  // Node.ELEMENT_NODE
 nodeName = 'BODY'
-nodeValye = null
+nodeValue = null
 ```
 
 ### 属性节点
