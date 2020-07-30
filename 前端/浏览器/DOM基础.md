@@ -38,7 +38,7 @@ nodeValue = null
 ```js
 nodeType = 2 // Node.ATTRIBUTE_NODE
 nodeName = [属性名]
-nodeValye = [属性值]
+nodeValue = [属性值]
 ```
 
 ### 文本节点
@@ -46,7 +46,7 @@ nodeValye = [属性值]
 ```js
 nodeType = 3 // Node.ATTRIBUTE_NODE
 nodeName = '#text' // 注释节点此位置为 "#comment"
-nodeValye = [文本值]
+nodeValue = [文本值]
 ```
 
 > node.firstChild 会返回第一个节点类型，而node.firstElementChild则只会选择元素节点返回
@@ -56,7 +56,7 @@ nodeValye = [文本值]
 ```js
 nodeType = 9 // Node.DOCUMENT_NODE
 nodeName = '#document' // 注释节点此位置为 "#comment"
-nodeValye = null
+nodeValue = null
 ```
 
 
@@ -77,73 +77,84 @@ document仍在加载。
 
 文档和所有子资源已完成加载。状态表示load事件即将被触发。
 
-
-
-示例：
-
 ```html
-<div class="controls">
-  <button id="reload" type="button">Reload</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
 
-<div class="event-log">
-  <label>Event log:</label>
-  <textarea readonly class="event-log-contents" rows="8" cols="30"></textarea>
-</div>
-```
+  <body>
+    <div class="controls">
+      <button id="reload" type="button">Reload</button>
+    </div>
 
-```js
-const log = document.querySelector('.event-log-contents');
-const reload = document.querySelector('#reload');
+    <div class="event-log">
+      <label>Event log:</label>
+      <textarea readonly class="event-log-contents" rows="8" cols="30"></textarea>
+    </div>
 
-reload.addEventListener('click', () => {
-  log.textContent ='';
-  window.setTimeout(() => {
-      window.location.reload(true);
-  }, 200);
-});
+    <script>
+      const log = document.querySelector(".event-log-contents");
+      const reload = document.querySelector("#reload");
 
-window.addEventListener('load', (event) => {
-    log.textContent = log.textContent + 'load\n';
-});
+      reload.addEventListener("click", () => {
+        log.textContent = "";
+        window.setTimeout(() => {
+          window.location.reload(true);
+        }, 200);
+      });
 
-document.addEventListener('readystatechange', (event) => {
-    log.textContent = log.textContent + `readystate: ${document.readyState}\n`;
-});
+      window.addEventListener("load", (event) => {
+        log.textContent = log.textContent + "load\n";
+      });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    log.textContent = log.textContent + `DOMContentLoaded\n`;
-});
-```
+      document.addEventListener("readystatechange", (event) => {
+        log.textContent = log.textContent + `readystate: ${document.readyState}\n`;
+      });
 
-```
-readystate: interactive
-DOMContentLoaded
-readystate: complete
-load
+      document.addEventListener("DOMContentLoaded", (event) => {
+        log.textContent = log.textContent + `DOMContentLoaded\n`;
+      });
+    </script>
+  </body>
+</html>
+
 ```
 
 
 
 ## DOM高度宽度等属性
 
-1. 偏移量-offset开头的
+**偏移量-offset开头的**
 
-<img src="img/domoffset.png" alt="domoffset" style="zoom: 25%;" />
+所有的offset都是以DOM节点的offsetParent进行定位的，和定位上下文有关，及父元素position属性是否为absolute/relative 。
 
-2. 客户区-client开头的
+<img src="img/domoffset.png" alt="domoffset" style="zoom: 75%;" />
 
-<img src="img/domclient.png" alt="domclient" style="zoom: 25%;" />
+**客户区-client开头的**
 
-3. 滚动大小-scroll开头
+客户区client相对于offset，其widthd和height不包括border边框
 
-<img src="img/domscroll.png" alt="domscroll" style="zoom: 25%;" />
+<img src="img/domclient.png" alt="domclient" style="zoom: 75%;" />
 
-4. window-inner、outer开头
+**滚动大小-scroll开头**
 
-   window.innerWidth, window.innerHeight 可视区域的宽高
 
-   window.outerWidth, window.outerHeight 整个窗口的宽高，包括导航工具栏以及F12调试面板都在内部	
+
+<img src="img/domscroll.png" alt="domscroll" style="zoom: 75%;" />
+
+**window-inner、outer开头**
+
+window.innerWidth, window.innerHeight 可视区域的宽高
+
+window.outerWidth, window.outerHeight 整个窗口的宽高，**包括导航工具栏以及F12调试面板都在内部**	
+
+
+
+
 
 ## DOM事件
 
