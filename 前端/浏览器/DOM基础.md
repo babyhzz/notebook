@@ -23,7 +23,7 @@ DTD声明节点            Node.NOTATION_NODE(12)
 
 其中Node为js内建接口，枚举节点类型。
 
-### 元素节点
+#### 元素节点
 
 以body为例：
 
@@ -33,7 +33,7 @@ nodeName = 'BODY'
 nodeValue = null
 ```
 
-### 属性节点
+#### 属性节点
 
 ```js
 nodeType = 2 // Node.ATTRIBUTE_NODE
@@ -41,17 +41,17 @@ nodeName = [属性名]
 nodeValue = [属性值]
 ```
 
-### 文本节点
+#### 文本节点
 
 ```js
-nodeType = 3 // Node.ATTRIBUTE_NODE
+nodeType = 3 // Node.TEXT_NODE
 nodeName = '#text' // 注释节点此位置为 "#comment"
 nodeValue = [文本值]
 ```
 
 > node.firstChild 会返回第一个节点类型，而node.firstElementChild则只会选择元素节点返回
 
-### 文档节点
+#### 文档节点
 
 ```js
 nodeType = 9 // Node.DOCUMENT_NODE
@@ -124,6 +124,11 @@ document仍在加载。
 
 ```
 
+> readystate: interactive
+> DOMContentLoaded
+> readystate: complete
+> load
+
 
 
 ## DOM高度宽度等属性
@@ -153,12 +158,6 @@ window.innerWidth, window.innerHeight 可视区域的宽高
 window.outerWidth, window.outerHeight 整个窗口的宽高，**包括导航工具栏以及F12调试面板都在内部**	
 
 
-
-
-
-## DOM事件
-
-addEventListener和on系列函数可同时共存，on只能绑定一个，而addEventListener可以绑定多个。on只在冒泡阶段响应
 
 ## link标签
 
