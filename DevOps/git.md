@@ -14,6 +14,10 @@ git branch --set-upstream-to=origin/[远程分支] [本地分支] 	# 设置远�
 # git pull 将本地仓库和远程仓库（本地的）更新到远程的最新版本
 
 git fetch -p # 获取被删减后的远程分支（更新远程分支）
+
+git checkout -b [本地分支] origin/[远程分支]	# 从指定远程分支创建一个本地分支并关联远程分支
+
+git push origin [本地分支]:[远程分支]	# 将本地分支推送到远程并创建远程分支
 ```
 
 

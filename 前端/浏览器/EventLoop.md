@@ -1,7 +1,7 @@
 # 微任务宏任务
 
 **宏任务**：可以认为每次执行栈（call stack）中执行的代码是一个宏任务（包括每次从事件队列中获取一个事件回调并放到执行栈中），宏任务和渲染是交叉进行，**渲染线程会将宏任务对DOM的修改做优化**。
-注意setTimeout的回调属于下一次宏任务。  包括script代码、setTimeout、setInterval、I/O、UI交互事件、postMessage、MessageChannel等
+注意setTimeout的回调属于下一次宏任务。  包括script代码、setTimeout、setInterval、I/O、UI交互事件、postMessage、MessageChannel、RequestAnimationFrame等
 
 **微任务**：宏任务之后，渲染之前，会将期间产生的所有微任务都执行。Promise中的then触发时（即Resolve时），将会插入微任务队列。如Promise.then、MutationObserver、process.nextTick（Node.js环境）
 

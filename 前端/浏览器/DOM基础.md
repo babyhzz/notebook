@@ -139,6 +139,15 @@ document仍在加载。
 
 <img src="img/domoffset.png" alt="domoffset" style="zoom: 75%;" />
 
+**谈谈offsetParent**
+
+我们看到上面的定位信息都是基于offsetParent进行定位的，offsetParent具体对应关系如下：
+
+1. 如果当前元素的祖先级元素没有进行CSS定位（position为absolute或relative），offsetParent为body。
+2. 如果当前元素的祖先级元素中有CSS定位（position为absolute或relative），offsetParent取最近的那个祖先级元素。
+
+
+
 **客户区-client开头的**
 
 客户区client相对于offset，其widthd和height不包括border边框
