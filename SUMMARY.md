@@ -34,7 +34,7 @@
 
   - CSS 基础
 
-    - [DOM 基础](前端/CSS/DOM基础.md)
+    - [CSS 基础](前端/CSS/CSS基础.md)
     - [Flex](前端/CSS/Flex.md)
     - [BFC](前端/CSS/BFC.md)
 

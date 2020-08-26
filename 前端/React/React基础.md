@@ -254,7 +254,44 @@ const value = useContext(MyContext);
 
 它会在所有的 DOM 变更之后同步调用 effect。可以使用它来读取 DOM 布局并同步触发重渲染。在浏览器执行绘制之前，`useLayoutEffect` 内部的更新计划将被同步刷新。 
 
-> 这个还不清楚用途所在，是否时我一直的疑问？比如子组件didMount时，父组件还没有didMount，因此子组件的didMount无法计算出子组件的高度？
+> useEffect是异步执行的，会在合适的时机渲染，而useLayoutEffect是在浏览器绘制之前执行，会阻塞渲染。
+
+经典的例子，[地址这里](https://stackblitz.com/edit/react-14js76?file=index.js)：
+
+```jsx
+import React, { useEffect, useState, useLayoutEffect, useRef } from 'react';
+import { render } from 'react-dom';
+
+function App() {
+  const [count, setCount] = useState(0);
+  
+  // 换成useLayoutEffect查看
+  useEffect(() => {
+    if (count === 0) {
+      const randomNum = 10 + Math.random()*200
+      setCount(10 + Math.random()*200);
+    }
+  }, [count]);
+
+  return (
+    <>
+      <div>{count}</div>
+      <button onClick={() => setCount(0)}>点击</button>
+    </>
+  );
+}
+
+render(<App />, document.getElementById('root'));
+
+```
+
+当点击`div`的时候，页面会更新一串随机数。当你连续点击时，你会发现这串数字在发生抖动。原因在于，当你每次点击`div`，`count`会更新为`0`，之后`useEffect`内又把`count`改为一串随机数。所以**页面会先渲染成0，然后再渲染成随机数，由于更新很快，所以出现了闪烁**。
+
+**将 useEffect 改为 useLayoutEffect**：相比使用` useEffect`，当你点击 `div`，`count `更新为` 0`，此时页面并不会渲染，而是等待 `useLayoutEffect` 内部状态修改后，才会去更新页面，所以页面不会闪烁。 
+
+因此`useLayoutEffect` 相比 `useEffect`，通过同步执行状态更新可解决一些特性场景下的页面闪烁问题。
+
+ 
 
 ##### useCallback
 
@@ -364,11 +401,3 @@ function useFriendStatus(friendID) {
 useMemo允许记住一次昂贵的计算。
 
 state初始值的函数式方式加载。
-
-
-
-
-
-
-
-## 项目ICON的引入
