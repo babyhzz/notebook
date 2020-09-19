@@ -1,4 +1,5 @@
 # 原型链
+
 - [js中__proto__和prototype的区别和关系？](https://www.zhihu.com/question/34183746/answer/58068402)
 - [JavaScript实现继承的三种方式](https://segmentfault.com/a/1190000016525951)
 
@@ -60,6 +61,7 @@ Number instanceof Number //false
 ```
 
 ### 继承
+
 JavaScript中主要有三种实现继承的方式，分别是
 - 构造函数继承
 - 原型继承

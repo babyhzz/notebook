@@ -63,3 +63,36 @@ var p = new SuperMan();
 > 		__proto__: Object
 
 我们可以看到：子类继承父类的实例属性。子类的proto为Person对象，并把子类的函数放入其中。
+
+## Array
+
+ES5的Array常用有如下方法：
+
+- concat()
+- join() 所有元素放入一个字符串，并以指定连接符连接
+- pop()
+- push()
+- shift()
+- unshift()
+- slice()
+- splice()
+- sort()
+- reverse()
+
+ES6的Array新增常用方法如下：
+
+- Array.of, Array.from 类数组对象
+- find, findIndex
+- includes，indexOf
+- flat 扁平化数组, flatMap 先映射再扁平化数组
+
+技巧：
+
+```js
+// 去除重复元素
+Array.from(new Set([1,2,4,5,6,5,5,5]))
+// 字符字典
+Array.from(new Set("d3243dadsad22142121fdfs"))
+// ["d", "3", "2", "4", "a", "s", "1", "f"]
+```
+
