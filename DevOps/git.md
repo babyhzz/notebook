@@ -20,33 +20,38 @@
 
 Git 的核心概念分为四个区块，分别是远程仓库、本地版本库、暂存区以及工作区，下面这张图能清晰的描述出这四个区块之间的关系。
 
-![Git 核心区块](Git学习笔记.assets/16fa2c170fa35547)
+![Git 核心区块](git.assets/16fa2c170fa35547)
+
+## 基本概念
+
+git的分支说起，git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。git 是如何知道你当前在哪个分支上工作的呢？
+ 其实答案也很简单，它保存着一个名为 HEAD 的特别指针。在 git 中，它是一个指向你正在工作中的本地分支的指针，可以将 HEAD 想象为当前分支的别名。
 
 ## 远程分支
 
 git clone 命令会为你自动将远程主机命名为 origin，拉取它的所有数据，创建一个指向它的 master 分支的指针，并且在本地将其命名为 origin/master。同时Git 也会给你一个与 origin 的master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础。
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azA4dGl6ZXNqMzBudzBlb3Q5NS5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azA4dGl6ZXNqMzBudzBlb3Q5NS5qcGc)
 
 远程库有人推送，提交了C0和C1：
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azBsOTZzbHlqMzBvbTA2bjc0Yi5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azBsOTZzbHlqMzBvbTA2bjc0Yi5qcGc)
 
 本地提交了D0和D1：
 
 只要你不与 origin 服务器连接，你的 origin/master 指针就不会移动。
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azBsenVsbG5qMzBvaDA4OXdlbS5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azBsenVsbG5qMzBvaDA4OXdlbS5qcGc)
 
 如果要同步远程库到你的工作，运行 git fetch origin 命令
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azByZG5pNGRqMzBtazBmdmRnZS5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azByZG5pNGRqMzBtazBmdmRnZS5qcGc)
 
 fetch 抓取到新的远程跟踪分支时，本地的工作区（workspace）不会自动生成一份可编辑的副本，抓取结果是直接送到版本库（Repository）中
 
 如果想要在 origin/master 分支上工作，可以新建分支 test 并将其建立在远程跟踪分支之上：
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azMzcnp2b3FqMzBtbDBiaW14Zi5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azMzcnp2b3FqMzBtbDBiaW14Zi5qcGc)
 
 如果想把拉取的结果合并到本地分支，需要手动合并。使用如下命令：
 
@@ -55,7 +60,7 @@ $ git chekout master
 $ git merge origin/master
 ```
 
-![img](Git学习笔记.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azE3enBuaHhqMzBvaTA5dWFhYy5qcGc)
+![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azE3enBuaHhqMzBvaTA5dWFhYy5qcGc)
 
 看到上面的合并结果会想到命令 git pull 。在大多数情况下它的含义是一个 git fetch 紧接着一个 git merge 命令。即 git pull 是 git fetch 和 git merge 的两步的和。
 
@@ -109,6 +114,14 @@ $ git merge FETCH_HEAD    # 将拉取下来的最新内容合并到当前所在�
 $ git pull <远程主机名> <远程分支名>:<本地分支名>
 ```
 
+使用rebase方式
+
+```bash
+$ git pull origin master --rebase # 将远程master分支与本地合并（rebase方式），本地master分支不会合并
+```
+
+
+
 ### git fetch
 
 ```bash
@@ -157,13 +170,20 @@ $ git branch -m <oldbranch> <newbranch> # 重命名本地分支
 -a = --all 所有
 ```
 
+### git checkout
+
+```bash
+# 在本地新建一个与远程的分支b相同(被合并的版本)的分支b
+$ git checkout -b b origin/b
+```
+
 ### git merge
 
 把一个分支或或某个commit的修改合并到现在的分支上
 
-![image-20201105102322966](Git学习笔记.assets/image-20201105102322966.png)
+![image-20201105102322966](git.assets/image-20201105102322966.png)
 
-![image-20201105102413091](Git学习笔记.assets/image-20201105102413091.png)
+![image-20201105102413091](git.assets/image-20201105102413091.png)
 
 两种模git式：
 
@@ -175,6 +195,10 @@ https://blog.csdn.net/qq_42780289/article/details/97945300
 
 
 
+![image-20201110105314686](git.assets/image-20201110105314686.png)
+
+下面是merge，按时间排序；上面是rebase，按逻辑排序
+
 ### git rebase
 
 **场景1：合并多次提交**
@@ -185,7 +209,7 @@ https://blog.csdn.net/qq_42780289/article/details/97945300
 
 如下图，修改同一个文件同一个问题修改3次
 
-<img src="Git学习笔记.assets/image-20201104165543527.png" alt="image-20201104165543527" style="zoom:50%;" />
+<img src="git.assets/image-20201104165543527.png" alt="image-20201104165543527" style="zoom:50%;" />
 
 执行如下命令进行commit合并，会弹出如下界面，其中会按提交历史倒叙排列：
 
@@ -194,7 +218,7 @@ $ git rebase -i HEAD~3
 $ git rebase -i [commit_id] # 以commit_id的提交为基线进行合并
 ```
 
-<img src="Git学习笔记.assets/image-20201104170037477.png" alt="image-20201104170037477" style="zoom:50%;" />
+<img src="git.assets/image-20201104170037477.png" alt="image-20201104170037477" style="zoom:50%;" />
 
 ```bash
 pick 07f3ddd modify b-1
@@ -232,43 +256,45 @@ s 5bfaf7e modify b-3
 
 然后弹出commit message的编辑界面，进行合并后的message编辑：
 
-<img src="Git学习笔记.assets/image-20201104172010128.png" alt="image-20201104172010128" style="zoom:50%;"/>
+<img src="git.assets/image-20201104172010128.png" alt="image-20201104172010128" style="zoom:50%;"/>
 
 将commit message修改成为 "commit b-all"，git log查看commit信息，可看到已合并成一次提交
 
-<img src="Git学习笔记.assets/image-20201104172458053.png" alt="image-20201104172458053" style="zoom:50%;" />
+<img src="git.assets/image-20201104172458053.png" alt="image-20201104172458053" style="zoom:50%;" />
 
 在Tortoise上操作则比较简单，进入git log界面，选择要合并的三条记录，右键选择【combine into one commit】，编辑备注提交即可。注意：只能选择连续的提交记录才可以进行合并。
 
-<img src="Git学习笔记.assets/image-20201104212953581.png" alt="image-20201104212953581" style="zoom:50%;"/>
+<img src="git.assets/image-20201104212953581.png" alt="image-20201104212953581" style="zoom:50%;"/>
 
 **场景2：分支合并**
+
+
 
 ### git reset
 
 --soft: 放入暂存区，待提交
 
-![image-20201105102804936](Git学习笔记.assets/image-20201105102804936.png)
+![image-20201105102804936](git.assets/image-20201105102804936.png)
 
 --mixed: 默认，放入工作区，保留修改，not staged状态
 
-![image-20201105103227641](Git学习笔记.assets/image-20201105103227641.png)
+![image-20201105103227641](git.assets/image-20201105103227641.png)
 
 --hard: 重置 **暂存区** 和 **工作区**，暂存区和工作区中的任何修改都被 **丢弃**。
 
-![image-20201105103448742](Git学习笔记.assets/image-20201105103448742.png)
+![image-20201105103448742](git.assets/image-20201105103448742.png)
 
 
 
 Tortoise上的操作，右键菜单【show log】进入如下界面，选择一条提交，右键选择【reset xxx to this】菜单，可以看到有三种reset模式供选择
 
-![image-20201105104118282](Git学习笔记.assets/image-20201105104118282.png)
+![image-20201105104118282](git.assets/image-20201105104118282.png)
 
 
 
 ### git revert
 
-![image-20201105104433747](Git学习笔记.assets/image-20201105104433747.png)
+![image-20201105104433747](git.assets/image-20201105104433747.png)
 
 创建了一个新的提交记录，逆向修改。有冲突时需要手动修改冲突。
 
@@ -591,21 +617,21 @@ A---B---E feature*
 
 **解决方法：**
 
-```
-git commit --amend -m '新的提交信息'
+```bash
+$ git commit --amend -m '新的提交信息'
 ```
 
 **场景 2.** 最近的一次提交，发现遗漏了部分改动？
 
 **解决方法：**出于提交信息的完整性考虑，在不新增提交记录的情况下将遗漏的改动合并到本次提交中。
 
-```
-// 将遗漏的文件改动添加到暂存区
-git add <filename>
+```bash
+# 将遗漏的文件改动添加到暂存区
+$ git add <filename>
 
-// 将暂存区中的所有文件合并到最近一次提交中，
-// 如果不带 --no-edit 参数，则在合并之后会进入提交信息修改面板
-git commit --amend --no-edit
+# 将暂存区中的所有文件合并到最近一次提交中，
+# 如果不带 --no-edit 参数，则在合并之后会进入提交信息修改面板
+$ git commit --amend --no-edit
 ```
 
 ## 推送篇
@@ -614,20 +640,20 @@ git commit --amend --no-edit
 
 **解决方法：**
 
-```
-// 推送到远程指定分支，并创建关联
-git push -u origin <branchname>
+```bash
+# 推送到远程指定分支，并创建关联
+$ git push -u origin <branchname>
 
-// 若本地分支已经与远程分支关联，则可省略远程分支
-git push
+# 若本地分支已经与远程分支关联，则可省略远程分支
+$ git push
 ```
 
 **场景 2.** 怎么强制推送到远程分支？
 
 **解决方法：**
 
-```
-git push -f // --force 的缩写
+```bash
+$ git push -f	 # --force 的缩写
 ```
 
 若在强制推送的过程中，已经有其他人推送到该远程分支，则会使他人的提交记录丢失，**`为了更安全的推送`**，可用如下命令。**`在他人推送了新的提交的情况下，强制推送会被拒绝`**。
@@ -647,12 +673,12 @@ git push --force-with-lease
 
 解决办法：
 
-```shell
+```bash
 # git push <远程主机名> <本地分支名>:<远程分支名>
-# 远程分支不存在，则会被新建
-git push origin hucheng:hucheng
-# 如果省略远程分支名，则表示推送到与之存在“追踪关系”的远程分支
-git push origin master
+$ git push origin hucheng:hucheng
+# 若远程分支名省略，则会推送到同名的远程分支（远程分支不存在则会创建）
+# 将本地的hucheng分支推送到远程hucheng分支
+$ git push origin hucheng
 ```
 
 ## 撤销篇
@@ -723,6 +749,17 @@ $ git push
 扩展：`revert` 和 `reset` 的区别
 
 `revert` 是新增一次提交记录，其修改内容正好抵消指定的改动，而 `reset` 的撤销效果是重置了版本库。假设本地版本库和远程仓库一致，`reset` 撤销了一个提交，此时本地版本库落后远程仓库一个版本，`git push` 推送到远程会失败，而 `revert` 新增了一个提交，本地版本库领先远程仓库一个记录，此时 `git push` 可以正常推送到远程。
+
+**场景 5**. `git commit add .` 添加了所有修改到暂存区，但是想分开提交，把某些文件移除暂存区，该怎么把特定文件移除暂存区？
+
+**解决方法：**`restore` 移除暂存区。
+
+```bash
+# 文件移除暂存区
+$ git restore --staged <file>...
+```
+
+
 
 ## 日志篇
 
@@ -797,15 +834,15 @@ git stash clear
 
 ## 大文件
 
-如何永久删除文件？
+> 参考：
+>
+> - Removing sensitive data from a repository](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/removing-sensitive-data-from-a-repository)
+>
+> - Git如何永久删除文件(包括历史记录)](https://www.cnblogs.com/shines77/p/3460274.html)
 
-有些时候不小心上传了一些敏感文件(例如密码), 或者不想上传的文件(没及时或忘了加到.gitignore里的),
+如何永久删除文件？有些时候不小心上传了一些敏感文件(例如密码)，或者不想上传的文件(没及时或忘了加到`.gitignore`里的)，而且上传的文件又特别大的时候, 这将导致别人clone你的代码或下载zip包的时候也必须更新或下载这些无用的文件。因此，我们需要一个方法，永久的删除这些文件(包括该文件的历史记录).
 
-而且上传的文件又特别大的时候, 这将导致别人clone你的代码或下载zip包的时候也必须更新或下载这些无用的文件,
 
-因此, 我们需要一个方法, 永久的删除这些文件(包括该文件的历史记录).
-
-https://www.cnblogs.com/shines77/p/3460274.html
 
 ```bash
 # 第一步
@@ -813,21 +850,14 @@ https://www.cnblogs.com/shines77/p/3460274.html
 $ git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch path-to-your-remove-file' --prune-empty --tag-name-filter cat -- --all
 
 # 第二步：推送我们修改后的repo
-$ git push origin master --force --all
+$ git push origin --force --all
+# 如果tags中也要删除，则需要运行
+$ git push origin --force --tags
 
 # 第三步：清理和回收空间
 $ rm -rf .git/refs/original/
-
 $ git reflog expire --expire=now --all
-
 $ git gc --prune=now
-
-Counting objects: 2437, done.
-# Delta compression using up to 4 threads.
-# Compressing objects: 100% (1378/1378), done.
-# Writing objects: 100% (2437/2437), done.
-# Total 2437 (delta 1461), reused 1802 (delta 1048)
-
 $ git gc --aggressive --prune=now
 
 ```
@@ -878,7 +908,6 @@ style： 格式（不影响代码运行的变动）
 refactor：重构（即不是新增功能，也不是修改bug的代码变动）
 test：增加测试
 chore：构建过程或辅助工具的变动
-
 perf：提升页面性能
 deps: 升级依赖
 ```
@@ -933,9 +962,130 @@ validate-commit-msg，用于检查 Node 项目的 Commit message 是否符合格
 
 # Git版本管理规范
 
-![img](Git学习笔记.assets/1366859-eda8da6a7d2385ad.png)
+![img](git.assets/1366859-eda8da6a7d2385ad.png)
 
 https://blog.csdn.net/weixin_38809962/article/details/79814308
+
+## 分支解释
+
+https://www.jianshu.com/p/d46da933c180
+
+主分支，辅助分支
+
+
+
+**Master分支**
+
+这个分支最近发布到生产环境的代码，最近发布的Release， 这个分支只能从其他分支合并，不能在这个分支直接修改。所有在Master分支上的Commit应该打上Tag，一般情况下Master不存在Commit，Develop分支基于Master分支创建
+
+
+
+master分支存放的是随时可供在生产环境中部署的稳定版本代码
+
+master分支保存官方发布版本历史，release tag标识不同的发布版本
+
+一个项目只能有一个master分支
+
+**仅在发布新的可供部署的代码时才更新master分支上的代码**
+
+每次更新master，都需对master添加指定格式的tag，用于发布或回滚
+
+**master分支是保护分支，不可直接push到远程仓master分支**
+
+**master分支代码只能被release分支或hotfix分支合并**
+
+
+
+**Develop分支**
+
+这个分支是我们是我们的主开发分支，包含所有要发布到下一个Release的代码，这个主要合并与其他分支，比如Feature分支。
+
+
+
+develop分支是保存当前最新开发成果的分支
+
+一个项目只能有一个develop分支
+
+develop分支衍生出各个feature分支
+
+develop分支是保护分支，不可直接push到远程仓库develop分支
+
+develop分支不能与master分支直接交互
+
+
+
+**Feature分支**
+
+这个分支主要是用来开发一个新的功能，一旦开发完成，我们合并回Develop分支进入下一个Release
+
+**Release分支**
+
+当你需要一个发布一个新Release的时候，我们基于Develop分支创建一个Release分支，完成Release后，我们合并到Master和Develop分支。发布分支扮演的角色是功能开发（develop）与官方发布（master）之间的一个缓冲。
+
+**Hotfix分支**
+
+当我们在Production发现新的Bug时候，我们需要创建一个Hotfix, 完成Hotfix后，我们合并回Master和Develop分支，所以Hotfix的改动会进入下一个Release
+
+## git 命令演示
+
+1. 在gitlab网站手动创建一个develop分支
+
+2. git fetch更新远程分支信息，git fetch
+
+3. 基于远程develop分支创建一个本地develop分支，git checkout -b develop origin/develop
+
+4. 基于develop分支创建一个feature分支，如feature/user，git checkout -b feature/user develop
+
+5. 在feature上做些修改，进行commit操作
+
+6. 将远程的develop分支的最新修改合并到本分支 git pull origin develop （rebase ？）
+
+7. 准备release，git checkout -b release-0.1 develop
+
+8. 全面测试
+
+9. 合并到master和develop
+
+   ```
+   git checkout master
+   git merge release-0.1
+   git push
+   git checkout develop
+   git merge release-0.1
+   git push
+   git branch -d release-0.1
+   ```
+
+10. 在master上打上tag
+
+    ```
+    git tag -a 0.1 -m"Initial public release" master
+    git push --tags
+    ```
+    
+11. 用户发现一个bug，创建hotfix分支
+
+    ```
+    git checkout -b issue#001 master
+    // ...# fix bug
+    
+    // 合并到master
+    git checkout master
+    git merge issue#001
+    git push
+    
+    // 合并到develop
+    git checkout develop
+    git merge issue#001
+    git push
+    
+    git branch -d issue-#001
+    
+    
+    ```
+
+    
+
 
 ## 安装
 
