@@ -1,33 +1,12 @@
-<center><span style="font-size:2rem;font-weight:bold;">Git实战手册</span>
-</center>
-
-| 版本 | 作者   | 备注                          | 日期       |
-| ---- | ------ | ----------------------------- | ---------- |
-| V1.0.0 | 胡程 | 完成Git常用操作的学习 | 2020-10-26 |
-| V1.0.1 | 胡程 | 添加Git基础 | 2020-11-02 |
-
-<div style="page-break-after: always;"></div> 
-
-[toc]
-
-<div style="page-break-after: always;"></div> 
-
-# 前言
-
-先来说说 Git 最本质的工作流程吧，从远程仓库拉取代码到本地版本库，签出分支然后在本地工作区进行开发，通过暂存区将代码提交到版本库，最后再推送到远程仓库。这样的流程不难理解，但是在实际团队协作中，往往会涉及到自己的分支、其他成员的分支、公共分支等分支的合并、解决冲突、推送、回退之类的操作。为了梳理清楚 Git 的各种操作，本文将以 场景 + 解决方案 的形式组装成操作手册，便于自己日后查阅，以及团队新成员能快速上手。
-
-# 必备知识点
+# 基本概念
 
 Git 的核心概念分为四个区块，分别是远程仓库、本地版本库、暂存区以及工作区，下面这张图能清晰的描述出这四个区块之间的关系。
 
 ![Git 核心区块](git.assets/16fa2c170fa35547)
 
-## 基本概念
+## 分支 branch
 
-git的分支说起，git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。git 是如何知道你当前在哪个分支上工作的呢？
- 其实答案也很简单，它保存着一个名为 HEAD 的特别指针。在 git 中，它是一个指向你正在工作中的本地分支的指针，可以将 HEAD 想象为当前分支的别名。
-
-## 远程分支
+首先要从git的分支说起，git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。git 是如何知道你当前在哪个分支上工作的呢？其实答案也很简单，它保存着一个名为 **HEAD** 的特别指针。在 git 中，它是一个指向你正在工作中的本地分支的指针，可以将 HEAD 想象为当前分支的别名。（注：HEAD指针可以指向快照也可以指向branch）
 
 git clone 命令会为你自动将远程主机命名为 origin，拉取它的所有数据，创建一个指向它的 master 分支的指针，并且在本地将其命名为 origin/master。同时Git 也会给你一个与 origin 的master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础。
 
@@ -58,6 +37,9 @@ fetch 抓取到新的远程跟踪分支时，本地的工作区（workspace）�
 ```bash
 $ git chekout master
 $ git merge origin/master
+# 由于merge过后master分支会产生一条多余的merge记录
+# 这个时候我们更倾向于rebase变基操作
+$ git rebase origin/master
 ```
 
 ![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azE3enBuaHhqMzBvaTA5dWFhYy5qcGc)
@@ -66,9 +48,9 @@ $ git merge origin/master
 
 
 
-## 常用命令
+# 常用命令
 
-### git config
+## git config
 
 ```bash
 $ git config --list
@@ -82,13 +64,11 @@ $ git config user.name "username"
 $ git config user.email "email"
 ```
 
-
-
-### git clone
+## git clone
 
 git clone 命令会为你自动将远程主机命名为 origin，拉取它的所有数据，创建一个指向它的 master 分支的指针，并且在本地将其命名为 origin/master。同时Git 也会给你一个与 origin 的master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础。
 
-### git fetch/pull
+## git fetch/pull
 
 `git fetch`是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中。
 
@@ -111,30 +91,6 @@ $ git merge FETCH_HEAD    # 将拉取下来的最新内容合并到当前所在�
 将远程主机的某个分支的更新取回，并与本地指定的分支合并，完整格式可表示为:
 
 ```bash
-$ git pull <远程主机名> <远程分支名>:<本地分支名>
-```
-
-使用rebase方式
-
-```bash
-$ git pull origin master --rebase # 将远程master分支与本地合并（rebase方式），本地master分支不会合并
-```
-
-
-
-### git fetch
-
-```bash
-$ git fetch <远程主机名> <分支名>
-```
-
-
-
-### git pull
-
-基本用法
-
-```bash
 # 取回远程主机某个分支的更新，再与本地的指定分支合并。
 $ git pull <远程主机名> <远程分支名>:<本地分支名>
 
@@ -145,9 +101,14 @@ $ git pull origin master:hucheng
 $ git pull origin master
 ```
 
+如果本地分支有修改，上面的方式会在本地分支生成一个merge的提交记录，这通常不是我们需要的，为了保证提交记录的简洁性，我们推荐使用rebase方式，rebase过程中可能也会产生冲突，通过相关命令解决即可。
 
+```bash
+# 将远程master分支与本地合并（rebase方式），本地master分支不会合并
+$ git pull origin master --rebase
+```
 
-### git branch/checkout
+## git branch
 
 ```bash
 $ git branch # 查看本地所有分支 
@@ -170,14 +131,14 @@ $ git branch -m <oldbranch> <newbranch> # 重命名本地分支
 -a = --all 所有
 ```
 
-### git checkout
+## git checkout
 
 ```bash
 # 在本地新建一个与远程的分支b相同(被合并的版本)的分支b
-$ git checkout -b b origin/b
+$ git checkout -b <本地分支名> origin/<远程分支名>
 ```
 
-### git merge
+## git merge
 
 把一个分支或或某个commit的修改合并到现在的分支上
 
@@ -199,7 +160,7 @@ https://blog.csdn.net/qq_42780289/article/details/97945300
 
 下面是merge，按时间排序；上面是rebase，按逻辑排序
 
-### git rebase
+## git rebase
 
 **场景1：合并多次提交**
 
@@ -270,7 +231,7 @@ s 5bfaf7e modify b-3
 
 
 
-### git reset
+## git reset
 
 --soft: 放入暂存区，待提交
 
@@ -292,7 +253,7 @@ Tortoise上的操作，右键菜单【show log】进入如下界面，选择一�
 
 
 
-### git revert
+## git revert
 
 ![image-20201105104433747](git.assets/image-20201105104433747.png)
 
@@ -304,7 +265,7 @@ $ git reset --hard HEAD^
 $ git push origin master -f
 ```
 
-### git push
+## git push
 
 ```bash
 $ git push <远程主机名> <本地分支名>:<远程分支名>
