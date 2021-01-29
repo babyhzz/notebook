@@ -1,0 +1,10 @@
+@startuml
+skinparam classAttributeIconSize 0 
+class A {
+  +method(B b)
+}
+class B
+
+A -right..> B
+
+@enduml

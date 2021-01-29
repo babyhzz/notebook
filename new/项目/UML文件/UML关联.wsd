@@ -1,0 +1,10 @@
+@startuml
+skinparam classAttributeIconSize 0 
+class Teacher {
+  +Course
+}
+class Course
+
+Teacher -right--> Course
+
+@enduml

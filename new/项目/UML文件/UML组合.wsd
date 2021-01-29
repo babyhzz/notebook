@@ -1,0 +1,9 @@
+@startuml UML组合
+skinparam classAttributeIconSize 0
+class Human 
+class Leg
+class Head
+
+Human *-- Head
+Human *-- Leg
+@enduml
