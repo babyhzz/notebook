@@ -1088,6 +1088,25 @@ git rm --cached demo-project.iml  # 删除单个文件
 
 
 
+# Git原理
+
+参考：
+
+https://www.lzane.com/slide/git-under-the-hood/#/
+
+这里面讲的非常清楚
+
+.git/objects
+
+```bash
+# 获取类型
+$ git cat-file -t 58c9
+# 获取内容
+$ git cat-file -p 58c9
+```
+
+
+
 # 参考
 
 [Git：远程分支----git fetch命令的使用](https://blog.csdn.net/qq_42780289/article/details/98049574)
