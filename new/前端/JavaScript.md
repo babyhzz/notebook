@@ -56,10 +56,15 @@ var aBlob = new Blob( array, options );
 
 返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
 
-> - *array* 是一个由[`ArrayBuffer`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer), [`TypedArray`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`Blob`](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob), [`DOMString`](https://developer.mozilla.org/zh-CN/docs/Web/API/DOMString) 等对象构成的 [`Array`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Array) ，或者其他类似对象的混合体，它将会被放进 [`Blob`](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)。DOMStrings会被编码为UTF-8。
-> - options 可能会指定如下两个属性：
->   - `type`，默认值为 `""`，它代表了将会被放入到blob中的数组内容的MIME类型。
->   - `endings`，默认值为`"transparent"`，用于指定包含行结束符`\n`的字符串如何被写入。 它是以下两个值中的一个： `"native"`，代表行结束符会被更改为适合宿主操作系统文件系统的换行符，或者 `"transparent"`，代表会保持blob中保存的结束符不变 
+- **array** 是一个由[`ArrayBuffer`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer), [`TypedArray`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray), [`Blob`](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob), [`DOMString`](https://developer.mozilla.org/zh-CN/docs/Web/API/DOMString) 等对象构成的 [`Array`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Array) ，或者其他类似对象的混合体，它将会被放进 [`Blob`](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)。DOMStrings会被编码为UTF-8。
+- **options** 可能会指定如下两个属性：
+  - `type`，默认值为 `""`，它代表了将会被放入到blob中的数组内容的MIME类型。
+  - `endings`，默认值为`"transparent"`，用于指定包含行结束符`\n`的字符串如何被写入。 它是以下两个值中的一个： `"native"`，代表行结束符会被更改为适合宿主操作系统文件系统的换行符，或者 `"transparent"`，代表会保持blob中保存的结束符不变 
+
+```js
+var str = "这";	// 中文的utf-8编码为3个字节
+var blob = new Blob([str]); // blob.size = 3
+```
 
 常用方法：
 
@@ -67,7 +72,36 @@ var aBlob = new Blob( array, options );
 | ------------------ | ----------------------------------------------------------- |
 | Blob.arrayBuffer() | 返回一个promise且包含blob所有内容的二进制格式的 ArrayBuffer |
 | Blob.text()        | 返回一个promise且包含blob所有内容的UTF-8格式的 USVString。  |
-|                    |                                                             |
+| Blob.slice()       | 返回新的Blob对象，指向指定范围的数据                        |
+
+### Blob URL
+
+Blob协议的URL，由 `URL.createObjectURL(blob)` 生成，格式类似：`blob:域名/[uuid]`，当不再需要该URL时，调用 `URL.revokeObjectURL(url)` 使该链接失效。使用场景如前端生成数据文件，然后通过创建 `<a>` 标签下载该文件。
+
+> 个人理解blob url相当于内存中一个资源的引用，类似于指针
+
+### 视频网站blob链接
+
+参考：[为什么视频网站的视频链接地址是blob？](https://juejin.im/post/5d1ea7a8e51d454fd8057bea)
+
+```html
+<video preload="auto" src="blob:https://www.bilibili.com/522d9f38-5c6f-4575-ae1f-5a87f3df59f1"></video>
+```
+
+核心是运用 `URL.createObjectURL` 生成blob协议的链接。要使用BlobURL，则需要先获取原始的blob对象，但是视频很大这种方法肯定不行，所以出现了流媒体，常用有以下两种形式：HLS和MPEG DASH。
+
+**HLS（HTTP Live Streaming）**
+
+Apple 公司实现的基于 HTTP 的媒体流传输协议。HLS以ts为传输格式，m3u8为索引文件（文件中包含了所要用到的ts文件名称，时长等信息，可以用播放器播放）。优酷使用的是这种格式。
+
+**DASH（Dynamic Adaptive Streaming over HTTP）**
+
+DASH会通过media presentation description (MPD)将视频内容切片成一个很短的文件片段，每个切片都有多个不同的码率，DASH Client可以根据网络的情况选择一个码率进行播放，支持在不同码率之间无缝切换。索引文件通常是mpd，文件扩展名通常是 `.m4s`。Youtube，B站使用这种方案。
+
+**MediaSource**
+
+如何无缝切换视频地址，可以Blob URL指向一个视频二进制数据，然后不断将下一段视频的二进制数据添加拼接进去。要实现这个功能我们要通过MediaSource来实现，MediaSource接口功能也很纯粹，作为一个媒体数据容器可以和HTMLMediaElement进行绑定。
+基本流程就是通过URL.createObjectURL创建容器的BLob URL，设置到video标签的src上，在播放过程中，我们仍然可以通过MediaSource.appendBuffer方法往容器里添加数据，达到更新视频内容的目的。
 
 ## ArrayBuffer
 
@@ -100,7 +134,28 @@ var aBlob = new Blob( array, options );
 
 可利用`Buffer.from()`和`Buffer.toString()`方法进行字符转换。
 
+## FileReader
 
+FileReader主要用于将文件内容读入内存，通过一系列**异步接口**，可以在主线程中访问本地文件。
+
+```js
+var reader = new FileReader();
+// 通过四种方式读取文件
+//reader.readAsXXX(file);   
+reader.onload = function(){
+    //查看文件输出内容
+    console.log(this.result);
+    //查看文件内容字节大小
+    console.log(new Blob([this.result]))
+}
+```
+
+可通过如下方法解析即可：
+
+- **readAsArrayBuffer**：返回二进制缓冲区
+- readAsBinaryString：已废弃
+- **readAsDataURL**：返回base64 Data URL
+- readAsText：按指定的编码进行解析
 
 ## 转换
 
@@ -117,3 +172,112 @@ new Blob([buffer])
 **ArrayBuffer to Buffer**
 
 Buffer.from(arraybuffer)
+
+# 语法
+
+## 类型
+
+基本类型: number, string, boolean, null, undefined, symbol
+
+包装类型是特殊的引用类型。每当读取一个基本类型值的时候，**后台就会创建一个对应的基本包装类型**的对象，从而可能调用一些方法来操作这些数据。 
+
+基本包装类型：Boolean, Number, String
+
+## class
+
+```js
+class Person {
+
+  constructor() {
+    // 实例属性
+    this.name = 'xxx';
+    this.hi = function() {
+      console.log("hi");
+    }
+  }
+
+  // 实例属性
+  age = 80;
+
+  // 原型对象的属性
+  hello() {
+    console.log("hello");
+  }
+
+}
+
+// Person {age: 80, name: "xxx", hi: ƒ}
+```
+
+**继承**
+
+```js
+class SuperMan extends Person {
+  
+  constructor() {
+    // 注意必须调用此函数，执行父类的构造函数
+    super();
+    this.job = 'job';
+  }
+  
+  work() {
+    console.log("work");
+  }
+}
+
+var p = new SuperMan();
+```
+输出p对象，可看到如下结果：
+
+```
+SuperMan {age: 80, name: "xxx", job: "job", hi: ƒ}
+age: 80
+name: "xxx"
+hi: ƒ ()
+job: "job"
+__proto__: Person
+	constructor: class SuperMan
+	work: ƒ work()
+	__proto__:
+		constructor: class Person
+		hello: ƒ hello()
+		__proto__: Object
+```
+
+
+
+# 奇技淫巧
+
+**数组去除**
+
+```js
+// 去除重复元素
+Array.from(new Set([1,2,4,5,6,5,5,5]))
+// 字符字典
+Array.from(new Set("d3243dadsad22142121fdfs"))
+// ["d", "3", "2", "4", "a", "s", "1", "f"]
+```
+
+**数字和字符串转换**
+
+```js
+// 数字转字符串
+const a = 1;
+const b = a + "";
+
+// 字符串转数字
+const a = "15";
+const b = +a; // 15
+const c = true;
+const d = +c; // 1
+```
+
+**数字取整**
+
+```js
+// 通过位运算或两次取反，位运算会先转换成整型
+const num = "13.3333";
+const n = num | 0;
+const n = ~~num;
+```
+

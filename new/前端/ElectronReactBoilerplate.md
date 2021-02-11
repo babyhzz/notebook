@@ -2,6 +2,76 @@
 
 ## electron-builder
 
+electron-builder的所有配置放在了 `package.json` 中的 `build` 属性中配置。
+
+### directories属性
+
+```json
+"directories": {
+  "app": "src",
+  "buildResources": "assets",
+  "output": "release"
+},
+```
+
+
+
+
+
+### 打包的文件名
+
+
+
+### files属性
+
+指定要打包到App中的文件，可以是如下类型
+
+```tsx
+Array<String | FileSet> | String | FileSet
+
+// 其中FileSet类型
+[
+  {
+    "from": "path/to/source",
+    "to": "path/to/destination",
+    "filter": ["**/*", "!foo/*.js"]
+  }
+]
+```
+
+脚手架默认的配置如下，都是相对于**src**目录而言的。
+
+```json
+{
+    "files": [
+      "dist/",
+      "node_modules/",
+      "index.html",
+      "main.prod.js",
+      "main.prod.js.map",
+      "package.json"
+    ],
+}
+```
+
+使用asar命令 `asar extract app.asar app` 解压 `release\win-unpacked\resources\app.asar`，可看到如下文件结构，即将files属性指定的文件进行了打包。
+
+![image-20210208160222578](ElectronReactBoilerplate.assets/image-20210208160222578.png)
+
+### Windows打包配置
+
+具体可参考[官网win配置](https://www.electron.build/configuration/win)
+
+```json
+"win": {
+    "target": [
+        "nsis"
+    ]
+},
+```
+
+
+
 ## Jest & Enzyme
 
 
