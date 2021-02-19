@@ -3,7 +3,7 @@
 - [js中__proto__和prototype的区别和关系？](https://www.zhihu.com/question/34183746/answer/58068402)
 - [JavaScript实现继承的三种方式](https://segmentfault.com/a/1190000016525951)
 
-![原型](img/原型.jpg)
+<img src="img/原型.jpg" alt="原型"  />
 
 明确如下几点：  
 1. 每个对象都有一个[[prototype]]属性，这个属性是隐藏属性，不能直接访问，所以有的浏览器提供了一个__proto__属性来访问，然而这不是一个标准的访问方法，所以ES5中用 `Object.getPrototypeOf` 函数获得一个对象的[[prototype]]。ES6中，使用Object.setPrototypeOf可以直接修改一个对象的[[prototype]]。
@@ -23,6 +23,7 @@
 字面量方式、new的方式、Object.create
 
 #### new
+
 ```js
 var obj = {};
 obj.__proto__ = Car.prototype
@@ -44,6 +45,7 @@ Object.create =  function (o) {
 ```
 ### 类型判断
 #### instanceof
+
 instanceof 操作符的内部实现机制和隐式原型、显式原型有直接的关系。instanceof的左值一般是一个对象，右值一般是一个构造函数，用来判断左值是否是右值的实例。它的内部实现原理是这样的
 ```js
 // 设 L instanceof R 

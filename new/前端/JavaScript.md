@@ -175,13 +175,17 @@ Buffer.from(arraybuffer)
 
 # 语法
 
-## 类型
+## 基本类型
 
 基本类型: number, string, boolean, null, undefined, symbol
 
 包装类型是特殊的引用类型。每当读取一个基本类型值的时候，**后台就会创建一个对应的基本包装类型**的对象，从而可能调用一些方法来操作这些数据。 
 
 基本包装类型：Boolean, Number, String
+
+## 原型链
+
+![原型](JavaScript.assets/原型-1613036413899.jpg)
 
 ## class
 
@@ -209,7 +213,7 @@ class Person {
 // Person {age: 80, name: "xxx", hi: ƒ}
 ```
 
-**继承**
+### class与继承
 
 ```js
 class SuperMan extends Person {
@@ -242,6 +246,61 @@ __proto__: Person
 		constructor: class Person
 		hello: ƒ hello()
 		__proto__: Object
+```
+
+### function实现继承
+
+
+
+## 对象的创建
+
+对象的创建主要三种方式：字面量方式、new的方式、Object.create
+
+### new创建对象的原理
+
+```js
+var obj = {};
+obj.__proto__ = Car.prototype
+Car.call(obj)
+```
+
+1. 创建了一个空对象obj
+2. 将空对象的__proto__属性指向了Car函数的原型对象，obj的原型属性将拥有了Car.prototype中的属性和方法。
+3. 将Car函数中的this指针指向obj，obj有了Car构造函数中的属性和方法
+
+### Object.create
+
+Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+
+```js
+Object.create =  function (o) {
+    var F = function () {};
+    F.prototype = o;
+    return new F();
+};
+```
+
+## 类型判断
+
+### instanceof
+
+instanceof 操作符的内部实现机制和隐式原型、显式原型有直接的关系。instanceof的左值一般是一个**对象**，右值一般是一个构造函数，用来判断左值是否是右值的实例。它的内部实现原理是这样的
+
+```js
+// 设 L instanceof R 
+// 通过判断
+L.__proto__.__proto__ ..... === R.prototype ？
+// 最终返回true or false
+```
+
+也就是沿着L的__proto__一直寻找到原型链末端，直到等于R.prototype为止。知道了这个也就知道为什么以下这些奇怪的表达式为什么会得到相应的值了
+
+```js
+Function instanceof Object // true 
+Object instanceof Function // true 
+Function instanceof Function //true
+Object instanceof Object // true
+Number instanceof Number //false
 ```
 
 
