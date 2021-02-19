@@ -1,5 +1,9 @@
 # 字符编码
 
+## JS什么编码
+
+**JavaScript用的是UCS-2！**在ES6标准中，可以认为基本上是**UTF-16**的编码方式。
+
 ## encodeURI
 
 对应解码函数：decodeURI
