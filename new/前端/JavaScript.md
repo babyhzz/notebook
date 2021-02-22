@@ -190,8 +190,42 @@ Buffer.from(arraybuffer)
 ## 原型链
 
 ![原型](JavaScript.assets/原型-1613036413899.jpg)
+## Object方法
 
-## class
+**Object.seal**：封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。 
+
+**Object.freeze**：封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。不能修改已有属性的值。 比seal作用更强。
+
+## 对象的创建
+
+对象的创建主要三种方式：字面量方式、new的方式、Object.create
+
+### new创建对象的原理
+
+```js
+var obj = {};
+obj.__proto__ = Car.prototype
+Car.call(obj)
+```
+
+1. 创建了一个空对象obj
+2. 将空对象的__proto__属性指向了Car函数的原型对象，obj的原型属性将拥有了Car.prototype中的属性和方法。
+3. 将Car函数中的this指针指向obj，obj有了Car构造函数中的属性和方法
+
+### Object.create
+
+Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+
+```js
+Object.create =  function (o) {
+    var F = function () {};
+    F.prototype = o;
+    return new F();
+};
+
+```
+
+## Class
 
 ```js
 class Person {
@@ -253,36 +287,42 @@ __proto__: Person
 ```
 
 ### function实现继承
+最佳实践组合继承，关键点：
 
-
-
-## 对象的创建
-
-对象的创建主要三种方式：字面量方式、new的方式、Object.create
-
-### new创建对象的原理
+- 属性使用构造函数继承 —— 避免了原型继承中Parent引用属性被所有Child实例共享的缺陷。
+- 方法使用原型继承 —— 避免了构造函数继承中方法重复拷贝、浪费内存的缺陷。
 
 ```js
-var obj = {};
-obj.__proto__ = Car.prototype
-Car.call(obj)
+// 属性放在构造函数中
+function Parent(name) {
+  this.name = name; 
+  this.hobby = []; 
+}
+// 方法放在原型中
+Parent.prototype.say = function() { 
+  console.log("Parent say");
+}
+
+function Child(name, type) {
+  Parent.call(this, name);  // 构造函数继承
+  this.type = type;  // Child扩展属性
+}
+// Child继承Parent方法（原型继承）
+// 注意此处可以进行原型扩展
+Child.prototype = Object.create(Parent.prototype);  
+// Child扩展方法
+Child.prototype.speak = function() { 
+  console.log("Child speak");
+}
+// 修复Child的constructor指向，否则Child的constructor会指向Parent
+Child.prototype.constructor = Child; 
 ```
 
-1. 创建了一个空对象obj
-2. 将空对象的__proto__属性指向了Car函数的原型对象，obj的原型属性将拥有了Car.prototype中的属性和方法。
-3. 将Car函数中的this指针指向obj，obj有了Car构造函数中的属性和方法
+对于组合继承代码中的Child.prototype = Object.create(Parent.prototype)，还有两种常见的类似写法是Child.prototype = Parent.prototype和Child.prototype = new Parent()，但这两种写法都是有缺陷的，需要避免：
 
-### Object.create
+- Child.prototype = Parent.prototype，<font color="red"> 修改Child.prototype就等于修改Parent.prototype</font>，会干扰所有Parent实例。
 
-Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
-
-```js
-Object.create =  function (o) {
-    var F = function () {};
-    F.prototype = o;
-    return new F();
-};
-```
+- Child.prototype = new Parent()，Parent构造函数重复调用了两次（另一处调用是Child构造函数中的Parent.call(this)），浪费效率，且如果Parent构造函数有副作用，重复调用可能造成不良后果
 
 ## 类型判断
 
@@ -299,7 +339,7 @@ L.__proto__.__proto__ ..... === R.prototype ？
 
 也就是沿着L的__proto__一直寻找到原型链末端，直到等于R.prototype为止。知道了这个也就知道为什么以下这些奇怪的表达式为什么会得到相应的值了
 
-```js
+​```js
 Function instanceof Object // true 
 Object instanceof Function // true 
 Function instanceof Function //true
@@ -307,9 +347,26 @@ Object instanceof Object // true
 Number instanceof Number //false
 ```
 
+## 对象的遍历
 
+**for...in**: 遍历对象自身和继承的可枚举属性（不含Symbol属性）
 
-# 奇技淫巧
+**Object.keys(obj)**：返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol），同类型还有**Object.entries**、**Object.values**
+
+**Object.getOwnPropertyNames(obj)**： 返回一个由指定对象的所有**自身**属性的属性名（包括不可枚举属性但不包括Symbol值作为名称的属性）组成的数组 
+
+**Object.getOwnPropertySymbols(obj)**：返回一个数组，包含对象自身的所有Symbol属性
+
+>  在JavaScript中，对象的属性分为可枚举和不可枚举之分，它们是由属性的enumerable值决定的。 
+>
+>  ```
+>  Object.defineProperty(kxy, "sex", {
+>   value: "female",
+>   enumerable: false
+>  });
+>  ```
+
+# 进阶
 
 **数组去除**
 
@@ -344,3 +401,40 @@ const n = num | 0;
 const n = ~~num;
 ```
 
+**幂运算操作符**
+
+```js
+const b = Math.pow(m, n);
+// ** 为幂运算符
+const b = m ** n;
+```
+
+**nullish运算符与可选链**
+
+```js
+// 当a为null或者undefined时，则返回后面的值
+const b = a ?? "default";
+// 前面为null或者undefined，返回undefined，否则调用表达式
+const bat = obj?.foo?.bat;
+const baz = obj?.foo?.bar?.();
+```
+
+# 异步
+
+## 协程
+
+
+
+## Generator
+
+
+
+## Promise
+
+
+
+## Async/Await
+
+
+
+# 手写代码
