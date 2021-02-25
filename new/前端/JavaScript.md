@@ -4,6 +4,20 @@
 
 **JavaScript用的是UCS-2！**在ES6标准中，可以认为基本上是**UTF-16**的编码方式。
 
+codePointAt
+
+charCodeAt
+
+𡃁妹 𠂒 👦👩
+
+String.fromCodePoint
+
+疑问：
+
+为啥 "𠂒".codePointAt(1).toString(16) 还有值，而且返回的是dc92，unicode保留点
+
+
+
 ## encodeURI
 
 对应解码函数：decodeURI
@@ -339,7 +353,7 @@ L.__proto__.__proto__ ..... === R.prototype ？
 
 也就是沿着L的__proto__一直寻找到原型链末端，直到等于R.prototype为止。知道了这个也就知道为什么以下这些奇怪的表达式为什么会得到相应的值了
 
-​```js
+```js
 Function instanceof Object // true 
 Object instanceof Function // true 
 Function instanceof Function //true
@@ -370,7 +384,7 @@ Number instanceof Number //false
 
 **数组去除**
 
-```js
+​```js
 // 去除重复元素
 Array.from(new Set([1,2,4,5,6,5,5,5]))
 // 字符字典
