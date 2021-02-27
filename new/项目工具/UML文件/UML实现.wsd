@@ -1,0 +1,6 @@
+@startuml
+interface IDog
+class Dog
+
+IDog <|.. Dog
+@enduml

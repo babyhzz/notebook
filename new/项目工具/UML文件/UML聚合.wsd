@@ -1,0 +1,11 @@
+@startuml UML聚合
+skinparam classAttributeIconSize 0 
+left to right direction
+class Teacher {
+  +Course
+  +Students
+}
+class Students 
+
+Teacher::Students o-- Students
+@enduml

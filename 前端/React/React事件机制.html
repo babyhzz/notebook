@@ -1,0 +1,924 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>React 事件机制 · 笔记</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="hzz">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="开发实战.html" />
+    
+    
+    <link rel="prev" href="React虚拟DOM.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    前端
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" >
+            
+                <span>
+            
+                    
+                    面试题
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../面试题/http协议.md">
+            
+                <span>
+            
+                    
+                    http 协议
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" >
+            
+                <span>
+            
+                    
+                    浏览器
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../浏览器/浏览器基础.html">
+            
+                <a href="../浏览器/浏览器基础.html">
+            
+                    
+                    浏览器基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../浏览器/浏览器缓存.html">
+            
+                <a href="../浏览器/浏览器缓存.html">
+            
+                    
+                    浏览器缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../浏览器/DOM基础.html">
+            
+                <a href="../浏览器/DOM基础.html">
+            
+                    
+                    DOM 基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../浏览器/页面渲染.html">
+            
+                <a href="../浏览器/页面渲染.html">
+            
+                    
+                    页面渲染
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../浏览器/Chrome调试技巧.html">
+            
+                <a href="../浏览器/Chrome调试技巧.html">
+            
+                    
+                    Chrome 调试技巧
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../浏览器/EventLoop.html">
+            
+                <a href="../浏览器/EventLoop.html">
+            
+                    
+                    Event Loop
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" >
+            
+                <span>
+            
+                    
+                    React
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="React基础.html">
+            
+                <a href="React基础.html">
+            
+                    
+                    React 基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="React最佳实践.html">
+            
+                <a href="React最佳实践.html">
+            
+                    
+                    React 最佳实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="React虚拟DOM.html">
+            
+                <a href="React虚拟DOM.html">
+            
+                    
+                    React 虚拟 DOM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3.4" data-path="React事件机制.html">
+            
+                <a href="React事件机制.html">
+            
+                    
+                    React 事件机制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="开发实战.html">
+            
+                <a href="开发实战.html">
+            
+                    
+                    开发实战
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" >
+            
+                <span>
+            
+                    
+                    JS
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.1" data-path="../JS/Blob.md">
+            
+                <span>
+            
+                    
+                    Blob
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.2" data-path="../JS/JS用法.md">
+            
+                <span>
+            
+                    
+                    JS 用法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3" data-path="../JS/ES6.md">
+            
+                <span>
+            
+                    
+                    ES6
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.4" data-path="../JS/javascript.md">
+            
+                <span>
+            
+                    
+                    Javascript
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.5" data-path="../JS/异步.md">
+            
+                <span>
+            
+                    
+                    异步
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.6" data-path="../JS/手写代码.html">
+            
+                <a href="../JS/手写代码.html">
+            
+                    
+                    手写代码
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" >
+            
+                <span>
+            
+                    
+                    CSS 基础
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../CSS/CSS基础.html">
+            
+                <a href="../CSS/CSS基础.html">
+            
+                    
+                    CSS 基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../CSS/Flex.html">
+            
+                <a href="../CSS/Flex.html">
+            
+                    
+                    Flex
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../CSS/BFC.html">
+            
+                <a href="../CSS/BFC.html">
+            
+                    
+                    BFC
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" >
+            
+                <span>
+            
+                    
+                    Typescript
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../TS/TS基础.md">
+            
+                <span>
+            
+                    
+                    TS 基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" >
+            
+                <span>
+            
+                    
+                    Webpack
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../webpack/webpack.html">
+            
+                <a href="../webpack/webpack.html">
+            
+                    
+                    webpack
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../webpack/配置.html">
+            
+                <a href="../webpack/配置.html">
+            
+                    
+                    配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../webpack/plugin.html">
+            
+                <a href="../webpack/plugin.html">
+            
+                    
+                    plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../webpack/loader.html">
+            
+                <a href="../webpack/loader.html">
+            
+                    
+                    loader
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.5" data-path="../webpack/优化.html">
+            
+                <a href="../webpack/优化.html">
+            
+                    
+                    优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" >
+            
+                <span>
+            
+                    
+                    性能优化
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../性能优化/基础.html">
+            
+                <a href="../性能优化/基础.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../性能优化/雅虎军规.html">
+            
+                <a href="../性能优化/雅虎军规.html">
+            
+                    
+                    雅虎军规
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../性能优化/React性能优化.html">
+            
+                <a href="../性能优化/React性能优化.html">
+            
+                    
+                    React 性能优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    源码
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../源码/redux-4.0.5.html">
+            
+                <a href="../../源码/redux-4.0.5.html">
+            
+                    
+                    redux 4.0.5
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../源码/react-redux-7.2.0.html">
+            
+                <a href="../../源码/react-redux-7.2.0.html">
+            
+                    
+                    react redux 7.2.0
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../源码/react-router-5.1.2.html">
+            
+                <a href="../../源码/react-router-5.1.2.html">
+            
+                    
+                    react router 5.1.2
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../后端/SUMMARY.html">
+            
+                <a href="../../后端/SUMMARY.html">
+            
+                    
+                    后端
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../DevOps/SUMMARY.html">
+            
+                <a href="../../DevOps/SUMMARY.html">
+            
+                    
+                    DevOps
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../DevOps/nginx.html">
+            
+                <a href="../../DevOps/nginx.html">
+            
+                    
+                    nginx
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >React 事件机制</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h4 id="&#x6982;&#x5FF5;">&#x6982;&#x5FF5;</h4>
+<p>React &#x7684;&#x6240;&#x6709;&#x4E8B;&#x4EF6;&#x5E76;&#x6CA1;&#x6709;&#x7ED1;&#x5B9A;&#x5230;&#x5177;&#x4F53;&#x7684;dom&#x8282;&#x70B9;&#x4E0A;&#x800C;&#x662F;&#x7ED1;&#x5B9A;&#x5728;&#x4E86;document &#x4E0A;&#xFF0C;&#x7136;&#x540E;&#x7531;&#x7EDF;&#x4E00;&#x7684;&#x4E8B;&#x4EF6;&#x5904;&#x7406;&#x7A0B;&#x5E8F;&#x6765;&#x5904;&#x7406;&#xFF0C;&#x540C;&#x65F6;&#x4E5F;&#x662F;&#x57FA;&#x4E8E;&#x6D4F;&#x89C8;&#x5668;&#x7684;&#x4E8B;&#x4EF6;&#x673A;&#x5236;&#xFF08;&#x5192;&#x6CE1;&#xFF09;&#xFF0C;&#x6240;&#x6709;&#x8282;&#x70B9;&#x7684;&#x4E8B;&#x4EF6;&#x90FD;&#x4F1A;&#x5728; document &#x4E0A;&#x89E6;&#x53D1;</p>
+<p>&#x7531;&#x4E8E;&#x539F;&#x751F;&#x4E8B;&#x4EF6;&#x5148;&#x4E8E;&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#xFF0C;&#x6240;&#x4EE5;&#x539F;&#x751F;&#x4E8B;&#x4EF6;&#x963B;&#x6B62;&#x5192;&#x6CE1;&#x80AF;&#x5B9A;&#x4F1A;&#x963B;&#x6B62;&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x7684;&#x89E6;&#x53D1;&#xFF0C;&#x4F46;&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x7684;&#x963B;&#x6B62;&#x5192;&#x6CE1;&#x4E0D;&#x4F1A;&#x5F71;&#x54CD;&#x539F;&#x751F;&#x4E8B;&#x4EF6;&#x3002;</p>
+<p>react&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x505A;&#x7684;&#x4E8B;&#x60C5;&#xFF1A;</p>
+<ol>
+<li>&#x5BF9;&#x539F;&#x751F;&#x4E8B;&#x4EF6;&#x7684;&#x5C01;&#x88C5;&#xFF0C;e.nativeEvent&#x8868;&#x793A;&#x539F;&#x751F;&#x4E8B;&#x4EF6;</li>
+<li>&#x5BF9;&#x67D0;&#x4E9B;&#x4E8B;&#x4EF6;&#x7684;&#x5347;&#x7EA7;&#x548C;&#x6539;&#x9020;&#xFF0C;&#x5982;onChange&#x4E8B;&#x4EF6;&#xFF0C;&#x539F;&#x751F;&#x53EA;&#x4F1A;&#x5728;&#x5931;&#x53BB;&#x7126;&#x70B9;&#x65F6;&#x89E6;&#x53D1;&#xFF0C;React&#x4F1A;&#x6CE8;&#x518C;&#x5F88;&#x591A;&#x5176;&#x4ED6;&#x7684;&#x4E8B;&#x4EF6;&#x4E0A;&#x53BB;</li>
+<li>&#x4E0D;&#x540C;&#x6D4F;&#x89C8;&#x5668;&#x4E8B;&#x4EF6;&#x517C;&#x5BB9;&#x5904;&#x7406;&#xFF0C;&#x5982;IE&#x7684;AttachEvent</li>
+</ol>
+<p>SyntheticEvent&#x662F;react&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x7684;&#x57FA;&#x7C7B;&#xFF0C;&#x5B9A;&#x4E49;&#x4E86;&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x7684;&#x57FA;&#x7840;&#x516C;&#x5171;&#x5C5E;&#x6027;&#x548C;&#x65B9;&#x6CD5;&#x3002;</p>
+<p>react&#x4F1A;&#x6839;&#x636E;&#x5F53;&#x524D;&#x7684;&#x4E8B;&#x4EF6;&#x7C7B;&#x578B;&#x6765;&#x4F7F;&#x7528;&#x4E0D;&#x540C;&#x7684;&#x5408;&#x6210;&#x4E8B;&#x4EF6;&#x5BF9;&#x8C61;&#xFF0C;&#x6BD4;&#x5982;&#x9F20;&#x6807;&#x5355;&#x673A;&#x4E8B;&#x4EF6; - SyntheticMouseEvent&#xFF0C;&#x7126;&#x70B9;&#x4E8B;&#x4EF6;-SyntheticFocusEvent&#x7B49;&#xFF0C;&#x4F46;&#x662F;&#x90FD;&#x662F;&#x7EE7;&#x627F;&#x81EA;SyntheticEvent&#x3002;</p>
+<p>&#x4E8B;&#x4EF6;&#x6CE8;&#x518C;&#x5230;listenerBank&#x4E2D;&#xFF0C;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x4E8C;&#x7EA7;map&#xFF0C;&#x7B2C;&#x4E00;&#x7EA7;&#x662F;&#x4E8B;&#x4EF6;&#x540D;&#x79F0;&#xFF0C;&#x7B2C;&#x4E8C;&#x7EA7;&#x662F;key</p>
+<p>EventPluginHub</p>
+<h3 id="&#x53C2;&#x8003;">&#x53C2;&#x8003;</h3>
+<p> <a href="https://www.cnblogs.com/pingan8787/p/11838083.html" target="_blank">https://www.cnblogs.com/pingan8787/p/11838083.html</a> </p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="React虚拟DOM.html" class="navigation navigation-prev " aria-label="Previous page: React 虚拟 DOM">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="开发实战.html" class="navigation navigation-next " aria-label="Next page: 开发实战">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"React 事件机制","level":"1.2.3.4","depth":3,"next":{"title":"开发实战","level":"1.2.3.5","depth":3,"path":"前端/React/开发实战.md","ref":"前端/React/开发实战.md","articles":[]},"previous":{"title":"React 虚拟 DOM","level":"1.2.3.3","depth":3,"path":"前端/React/React虚拟DOM.md","ref":"前端/React/React虚拟DOM.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters","code","github","splitter","-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/babyhzz/notebook"},"search-pro":{},"expandable-chapters":{},"code":{"copyButtons":true},"splitter":{},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"hzz","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"笔记","language":"zh-hans","links":{"siderbar":{"GitHub":"https://github.com/babyhzz"}},"gitbook":"*","description":"记录个人的一些笔记"},"file":{"path":"前端/React/React事件机制.md","mtime":"2021-02-27T14:55:38.187Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-02-27T14:56:20.025Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
