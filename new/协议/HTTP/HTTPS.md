@@ -1,3 +1,9 @@
+# 参考
+
+证书的原理，这个作者讲得非常清楚，一遍就看懂了：https://www.zhihu.com/question/24294477
+
+
+
 # TLS/SSL
 
 **SSL**： Secure Socket Layer，安全套接层

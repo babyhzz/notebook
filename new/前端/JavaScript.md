@@ -384,7 +384,7 @@ Number instanceof Number //false
 
 **数组去除**
 
-​```js
+```js
 // 去除重复元素
 Array.from(new Set([1,2,4,5,6,5,5,5]))
 // 字符字典
@@ -394,7 +394,7 @@ Array.from(new Set("d3243dadsad22142121fdfs"))
 
 **数字和字符串转换**
 
-```js
+​```js
 // 数字转字符串
 const a = 1;
 const b = a + "";
@@ -450,5 +450,3 @@ const baz = obj?.foo?.bar?.();
 ## Async/Await
 
 
-
-# 手写代码
