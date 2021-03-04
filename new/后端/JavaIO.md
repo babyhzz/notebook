@@ -36,6 +36,40 @@ Java的标准库新加了一套用于访问code point的API，而这套API就表
 
 
 
+## String
+
+`String.getBytes()` 是一个用于将String的内码转换为指定的外码的方法。
+
+```java
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+
+public class Base64Util {
+
+    public static void main(String[] args) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        Base64.Decoder decoder = Base64.getDecoder();
+
+        // 7个汉字
+        String text = "这是一个字符串";
+        // 使用不同的编码方式，数组长度不同。
+        // UTF-8: 21 一个汉字三个字节
+        // UTF-16: 16(with BOM) UTF-16BE/LE: 14
+        byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+        System.out.println(bytes.length);
+        System.out.println(Arrays.toString(bytes));
+        String encodedText = encoder.encodeToString(bytes);
+        System.out.println(encodedText);
+
+        byte[] decodedBytes = decoder.decode(encodedText);
+        System.out.println(new String(decodedBytes, StandardCharsets.UTF_8));
+
+    }
+
+}
+```
+
 
 
 ## 流的概念和作用
