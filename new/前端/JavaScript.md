@@ -66,6 +66,8 @@ Base64编码会把3字节的二进制数据编码为4字节的文本数据，长
 
 # 二进制
 
+https://zhuanlan.zhihu.com/p/97768916  这个有图片讲的很好
+
 ## Blob
 
 ```js
@@ -174,6 +176,10 @@ reader.onload = function(){
 - readAsBinaryString：已废弃
 - **readAsDataURL**：返回base64 Data URL
 - readAsText：按指定的编码进行解析
+
+## TextEncoder/TextDecoder
+
+可以将字符串转换成[`Uint8Array`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array)，文本使用UTF-8编码
 
 ## 转换
 
