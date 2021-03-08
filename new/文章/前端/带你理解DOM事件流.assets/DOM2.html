@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn" type="button">点我</button>
+    <script>
+      var btn = document.getElementById('btn');
+      function showFn1() {
+        alert('Hello1');
+      }
+      function showFn2() {
+        alert('Hello2');
+      }
+      btn.addEventListener('click', showFn1, false);
+      btn.addEventListener('click', showFn2, false);
+    </script>
+  </body>
+</html>
