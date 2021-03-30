@@ -18,6 +18,14 @@ String.fromCodePoint
 
 
 
+| 方法             | 作用                                 |
+| ---------------- | ------------------------------------ |
+| charAt(pos)      | utf-16编码字符，非基本面字符不能识别 |
+| charCodeAt(pos)  | 同charAt，这里是返回编码值           |
+| codePointAt(pos) | 返回unicode码点，所有平面均会考虑    |
+
+
+
 ## encodeURI
 
 对应解码函数：decodeURI
