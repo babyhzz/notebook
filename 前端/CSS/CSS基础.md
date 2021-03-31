@@ -16,15 +16,6 @@
 }
 ```
 
-### 包裹的两个元素左右分开
-
-可以使用如下样式：
-
-```css
-display: flex;
-justify-content: space-between;
-```
-
 
 
 ## 布局
