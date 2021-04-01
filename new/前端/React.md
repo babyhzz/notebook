@@ -89,3 +89,85 @@ React 的所有事件并没有绑定到具体的dom节点上而是绑定在了**
 由于原生事件先于合成事件，所以原生事件阻止冒泡肯定会阻止合成事件的触发，但合成事件的阻止冒泡不会影响原生事件。
 
 SyntheticEvent是react合成事件的基类，定义了合成事件的基础公共属性和方法。React会根据当前的事件类型来使用不同的合成事件对象，比如鼠标单机事件 - SyntheticMouseEvent，焦点事件-SyntheticFocusEvent等，但是都是继承自SyntheticEvent。
+
+
+
+# 代码分割
+
+## React.lazy
+
+官网([这里](https://zh-hans.reactjs.org/docs/code-splitting.html#reactlazy))推荐是用 `React.lazy`
+
+```jsx
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+```
+
+`React.lazy` 接受一个函数，这个函数需要动态调用 `import()`。它必须返回一个 `Promise`，该 Promise 需要 resolve 一个 `default` export 的 React 组件。 
+
+ 然后应在 `Suspense` 组件中渲染 lazy 组件，如此使得我们可以使用在等待加载 lazy 组件时做优雅降级（如 loading 指示器等）。 
+
+```jsx
+import React, { Suspense } from 'react';
+
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+function MyComponent() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <OtherComponent />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+`React.lazy` 和 Suspense 技术还不支持服务端渲染。
+
+该特性需要依赖如下babel插件，该插件已经包含在@babel/preset-env里
+
+```json
+"plugins": ["@babel/plugin-syntax-dynamic-import"]
+```
+
+
+
+## 路由中使用代码分割
+
+**React.lazy版本**
+
+```jsx
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+const Home = lazy(() => import('./routes/Home'));
+const About = lazy(() => import('./routes/About'));
+
+const App = () => (
+  <Router>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
+        <Route exact path="/" component={Home}/>
+        <Route path="/about" component={About}/>
+      </Switch>
+    </Suspense>
+  </Router>
+);
+```
+
+**loadable 版本**
+
+```jsx
+import loadable from "@loadable/component";
+import Loading from "./Loading.js";
+
+const LoadableComponent = loadable(() => import("./Dashboard.js"), {
+  fallback: <Loading />
+});
+
+export default class LoadableDashboard extends React.Component {
+  render() {
+    return <LoadableComponent />;
+  }
+}
+```

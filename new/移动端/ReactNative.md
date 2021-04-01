@@ -1,23 +1,12 @@
-# 更新策略
+# 编译更新
 
-1. 原始没有集成更新功能，添加入口指导下载
-2. 新版本添加自动更新功能，versionCode=3, versionName=1.1.0
+## 更新策略
 
-办法：
+热更新：使用CodePush方式更新
 
-1. 编译master版本，书写版本号，上传到Appcenter
-2. 将下载地址放入到1.0版本下面，要求更新
-3. 福佑App下载地址，更新为最新app
+全量更新：需要重新下载App进行更新
 
-
-
-新的下载地址
-
-https://appcenter-filemanagement-distrib5ede6f06e.azureedge.net/88845073-9e67-4f94-9d9c-7f61abb36459/ForyouToolkit_3.1.1.0-release.apk?sv=2019-02-02&sr=c&sig=c8vuIyN9sdDz2RDRMv%2FJas%2BVs75VwI80DWTfpmUpWEw%3D&se=2020-06-08T01%3A50%3A53Z&sp=r
-
-https://appcenter-filemanagement-distrib5ede6f06e.azureedge.net/88845073-9e67-4f94-9d9c-7f61abb36459/ForyouToolkit_3.1.1.0-release.apk?sv=2019-02-02&sr=c&sig=VHGanUcbWHlpmfRMX9cK60tthKUONhaCYpZFWWEVddg%3D&se=2020-06-08T03%3A43%3A23Z&sp=r&download_origin=appcenter
-
-# Android编译
+## Android编译
 
 ```
 gradlew assembleRelease
@@ -41,7 +30,7 @@ def enableSeparateBuildPerCPUArchitecture = true
 
 
 
-# App配置修改
+## App配置修改
 
 **修改App名称**
 
@@ -56,7 +45,7 @@ android/app/src/main/res/values/strings.xml
 
 
 
-# KeyStore的生成
+## KeyStore的生成
 
 ```
 keytool -genkey -validity 36000 -alias ForyouToolkit -keyalg RSA -keystore D:\\cheng.hu\\ForyouToolkit.jks  
@@ -72,7 +61,7 @@ keytool -genkey -validity 36000 -alias ForyouToolkit -keyalg RSA -keystore D:\\c
 
 
 
-# 集成AppCenter
+## 集成AppCenter
 
 依赖的包
 
@@ -82,7 +71,7 @@ npm install appcenter appcenter-analytics appcenter-crashes --save-exact
 
 
 
-# 集成CodePush
+## 集成CodePush
 
 codepush发布更新，**不写-d默认是Staging**
 
@@ -135,7 +124,7 @@ appcenter codepush deployment list -k
 
 - 只能更新Javascript文件和图片资源
 
-# 集成in-app update
+## 集成in-app update
 
 app级build.gradle添加如下
 
@@ -155,3 +144,22 @@ AppCenter.setLogLevel(Log.VERBOSE);
 AppCenter.start(Distribute.class);
 ```
 
+# 问题汇总
+
+## 底部元素防止键盘顶起
+
+指定该属性即可android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+
+```xml
+<activity
+  android:name=".MainActivity"
+  android:label="@string/app_name"
+  android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+  android:launchMode="singleTask"
+  android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+  <intent-filter>
+  <action android:name="android.intent.action.MAIN" />
+  <category android:name="android.intent.category.LAUNCHER" />
+  </intent-filter>
+ </activity>
+```
