@@ -1,3 +1,24 @@
+# 常见定义
+
+## ArrayLike
+
+```typescript
+// lib.es5.d.ts
+interface ArrayLike<T> {
+    readonly length: number;
+  	// 可索引属性
+    readonly [n: number]: T;
+}
+```
+
+对于一些类数组的调用，只能通过原型的方法去调用数组的一些方法，如下面slice方法
+
+```js
+Array.prototype.slice.call(obj, ...)
+```
+
+
+
 # 基础
 
 ## 接口
