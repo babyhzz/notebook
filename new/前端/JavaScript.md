@@ -1,82 +1,77 @@
-# 字符编码
+# 数据格式
 
-## JS什么编码
+## JS内部什么编码
 
-**JavaScript用的是UCS-2！**在ES6标准中，可以认为基本上是**UTF-16**的编码方式。
+**JavaScript用的是UCS-2！**在ES6标准中，可以认为基本上是**UTF-16**的编码方式存储的。这里我们要区分 codePointAt，charAt，charCodeAt 的区别
 
-codePointAt
-
-charCodeAt
+| 方法             | 作用                                                         |
+| ---------------- | ------------------------------------------------------------ |
+| charAt(pos)      | 返回指定位置字符，只针对UTF-16编码，非主平面字符会被拆分读取 |
+| charCodeAt(pos)  | 同charAt，返回UTF-16的编码值，非主平面由两个charCode组成     |
+| codePointAt(pos) | 返回unicode码点，所有平面均会考虑，兼容unicode非基本平面     |
 
 𡃁妹 𠂒 👦👩
 
-String.fromCodePoint
-
-疑问：
-
-为啥 "𠂒".codePointAt(1).toString(16) 还有值，而且返回的是dc92，unicode保留点
+> 疑问？？？ "𠂒".codePointAt(1).toString(16) 还有值，而且返回的是dc92，unicode保留点
 
 
 
-| 方法             | 作用                                 |
-| ---------------- | ------------------------------------ |
-| charAt(pos)      | utf-16编码字符，非基本面字符不能识别 |
-| charCodeAt(pos)  | 同charAt，这里是返回编码值           |
-| codePointAt(pos) | 返回unicode码点，所有平面均会考虑    |
+## URI编码
 
-
-
-## encodeURI
-
-对应解码函数：decodeURI
-
-假定 URI 中的任何保留字符都有特殊意义，所有不会编码它们
+**encodeURI：** 是对统一资源标识符（URI）进行编码的方法
+**encodeURIComponent：** 是对统一资源标识符（URI）的**组成部分**进行编码的方法。例如url参数为一个URI地址，需要中此函数进行包装
 
 ```js
-/* 编码 */
-encodeURI('http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor❤')
-// "http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor%E2%9D%A4"
+// 输出："-_.!~*'(),;/?:@&=+$#"
+encodeURI("-_.!~*'(),;/?:@&=+$#")
 
-/* 解码 */
-decodeURI("http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor%E2%9D%A4")
-// "http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor❤"
+// 输出："-_.!~*'()%2C%3B%2F%3F%3A%40%26%3D%2B%24%23"
+encodeURIComponent("-_.!~*'(),;/?:@&=+$#")
 ```
 
-## encodeURIComponent
+区别在于 `,;/?:@&=+$#` 这几个字符，为uri中的保留字符。
 
-对应解码函数：decodeURIComponent
-
-假定任何保留字符都代表普通文本，所以必须编码它们。
-
-故当给后端传递URL地址时，需用该函数进行编码。
-
-```js
-/* 编码 */
-encodeURIComponent('http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor')
-// "http%3A%2F%2Fusername%3Apassword%40www.example.com%3A80%2Fpath%2Fto%2Ffile.php%3Ffoo%3D316%26bar%3Dthis%2Bhas%2Bspaces%23anchor"
-
-/* 解码 */
-decodeURIComponent('http%3A%2F%2Fusername%3Apassword%40www.example.com%3A80%2Fpath%2Fto%2Ffile.php%3Ffoo%3D316%26bar%3Dthis%2Bhas%2Bspaces%23anchor')
-// "http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor"
-```
 
 ## Base64
 
 Base64是一种用64个字符来表示任意二进制数据的方法。对二进制数据进行处理，每3个字节一组，一共是24bit，划为4组，每组正好6个bit（2^6 = 64）
 
-Base64编码会把3字节的二进制数据编码为4字节的文本数据，长度增加33%
-
-如果要编码的二进制数据不是3的倍数，最后会剩下1个或2个字节，Base64用`\x00`字节在末尾补足后，再在编码的末尾加上1个或2个`=`号，表示补了多少字节，解码的时候，会自动去掉。
+Base64编码会把3字节的二进制数据编码为4字节的文本数据，长度增加33%。如果要编码的二进制数据不是3的倍数，最后会剩下1个或2个字节，Base64用`\x00`字节在末尾补足后，再在编码的末尾加上1个或2个`=`号，表示补了多少字节，解码的时候，会自动去掉。
 
 可使用 window下的两个函数，btoa，atob
 
-
-
-# 二进制
+## 二进制相关
 
 https://zhuanlan.zhihu.com/p/97768916  这个有图片讲的很好
 
-## Blob
+![image-20210401174942616](JavaScript.assets/image-20210401174942616.png)
+
+### ArrayBuffer
+
+**`ArrayBuffer`** 对象用来表示通用的、固定长度的原始二进制数据缓冲区。它是一个字节数组，通常在其他语言中称为“byte array”。与Array类似，但是不能修改。
+
+不能直接操作 `ArrayBuffer` 的内容，而是要通过[类型数组对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)或 [`DataView`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/DataView) 对象来操作，它们会将缓冲区中的数据表示为特定的格式，并通过这些格式来读写缓冲区的内容。
+
+### FileReader
+
+如果想要读取**Blob**或者**文件对象**，并转化为其他格式的数据，可以借助FileReader对象的API进行操作。可通过如下方法解析即可：
+
+- **readAsArrayBuffer**：返回二进制缓冲区
+- readAsBinaryString：已废弃
+- **readAsDataURL**：返回base64 Data URL
+- readAsText：按指定的编码进行解析
+
+```js
+var reader = new FileReader();
+reader.onload = function(){
+    //查看文件输出内容
+    console.log(reader.result);
+}
+// 通过四种方式读取文件
+reader.readAsXXX(file);  
+```
+
+### Blob
 
 ```js
 var aBlob = new Blob( array, options );
@@ -102,13 +97,51 @@ var blob = new Blob([str]); // blob.size = 3
 | Blob.text()        | 返回一个promise且包含blob所有内容的UTF-8格式的 USVString。  |
 | Blob.slice()       | 返回新的Blob对象，指向指定范围的数据                        |
 
-### Blob URL
+#### Blob URL
 
 Blob协议的URL，由 `URL.createObjectURL(blob)` 生成，格式类似：`blob:域名/[uuid]`，当不再需要该URL时，调用 `URL.revokeObjectURL(url)` 使该链接失效。使用场景如前端生成数据文件，然后通过创建 `<a>` 标签下载该文件。
 
 > 个人理解blob url相当于内存中一个资源的引用，类似于指针
 
-### 视频网站blob链接
+#### Blob图片预览
+
+window.URL.createObjectURL生成的Blob URL还可以赋给img.src，从而实现图片的显示
+
+```html
+  <!-- html部分 -->
+  <input id="f" type="file" />
+  <img id="img" />
+  <!-- js部分 -->
+  <script>
+    document.getElementById('f').addEventListener('change', function (e) {
+      const file = this.files[0];
+      const url = URL.createObjectURL(file);
+      const img = document.getElementById('img');
+      img.src = url;
+      img.onload = function() {
+        URL.revokeObjectURL(url);
+      }
+    }, false);
+  </script>
+```
+
+#### Blob实现下载文件
+
+```js
+  <input id="f" type="file" />
+  <a id="a">下载</a>
+  <script>
+    document.getElementById('f').addEventListener('change', function (e) {
+      const file = this.files[0];
+      const url = URL.createObjectURL(file);
+      const a = document.getElementById('a');
+      a.href = url;
+      a.download = file.name; // 下载的文件名
+    }, false);
+  </script>
+```
+
+#### 视频网站blob链接
 
 参考：[为什么视频网站的视频链接地址是blob？](https://juejin.im/post/5d1ea7a8e51d454fd8057bea)
 
@@ -131,15 +164,7 @@ DASH会通过media presentation description (MPD)将视频内容切片成一个�
 如何无缝切换视频地址，可以Blob URL指向一个视频二进制数据，然后不断将下一段视频的二进制数据添加拼接进去。要实现这个功能我们要通过MediaSource来实现，MediaSource接口功能也很纯粹，作为一个媒体数据容器可以和HTMLMediaElement进行绑定。
 基本流程就是通过URL.createObjectURL创建容器的BLob URL，设置到video标签的src上，在播放过程中，我们仍然可以通过MediaSource.appendBuffer方法往容器里添加数据，达到更新视频内容的目的。
 
-## ArrayBuffer
-
-**`ArrayBuffer`** 对象用来表示通用的、固定长度的原始二进制数据缓冲区。
-
-它是一个字节数组，通常在其他语言中称为“byte array”。
-
-你不能直接操作 `ArrayBuffer` 的内容，而是要通过[类型数组对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)或 [`DataView`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/DataView) 对象来操作，它们会将缓冲区中的数据表示为特定的格式，并通过这些格式来读写缓冲区的内容。
-
-## TypedArray
+### TypedArray
 
 一个**类型化数组**（**TypedArray）**对象描述了一个底层的[二进制数据缓冲区](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer)（binary data buffer）的一个类数组视图（view）。
 
@@ -156,54 +181,30 @@ DASH会通过media presentation description (MPD)将视频内容切片成一个�
 > Float64Array();
 > ```
 
-## Buffer(Node)
+### Buffer(Node)
 
 `Buffer` 类是 JavaScript 的 [`Uint8Array`](http://nodejs.cn/s/ZbDkpm) 类的子类，且继承时带上了涵盖额外用例的方法。 只要支持 `Buffer` 的地方，Node.js API 都可以接受普通的 [`Uint8Array`](http://nodejs.cn/s/ZbDkpm)。
 
 可利用`Buffer.from()`和`Buffer.toString()`方法进行字符转换。
 
-## FileReader
+### 转换
 
-FileReader主要用于将文件内容读入内存，通过一系列**异步接口**，可以在主线程中访问本地文件。
-
-```js
-var reader = new FileReader();
-// 通过四种方式读取文件
-//reader.readAsXXX(file);   
-reader.onload = function(){
-    //查看文件输出内容
-    console.log(this.result);
-    //查看文件内容字节大小
-    console.log(new Blob([this.result]))
-}
-```
-
-可通过如下方法解析即可：
-
-- **readAsArrayBuffer**：返回二进制缓冲区
-- readAsBinaryString：已废弃
-- **readAsDataURL**：返回base64 Data URL
-- readAsText：按指定的编码进行解析
-
-## TextEncoder/TextDecoder
-
-可以将字符串转换成[`Uint8Array`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array)，文本使用UTF-8编码
-
-## 转换
-
-**ArrayBuffer to Blob**
+**ArrayBuffer  =>  Blob**
 
 ```
 new Blob([buffer])
 ```
 
-**Blob to ArrayBuffer**
+**Blob  =>  ArrayBuffer**
 
 直接调用 `Blob.arrayBuffer()`方法
 
-**ArrayBuffer to Buffer**
+**ArrayBuffer  =>  Buffer**
 
 Buffer.from(arraybuffer)
+
+
+
 
 # 语法
 
