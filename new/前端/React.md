@@ -92,9 +92,86 @@ SyntheticEvent是react合成事件的基类，定义了合成事件的基础公�
 
 
 
-# 代码分割
+# React Fiber
 
-## React.lazy
+
+
+Reconcilation 协调，CPU密集型操作
+
+之前：递归找出变动节点，同步更新它们
+
+通过Fiber，让Reconciliation变得可被中断
+
+协程和线程并不一样，协程并没有并发或并行的能力，只是一种控制流程让出机制
+
+
+
+Fiber的思想：React的渲染过程可被中断，将控制权交给浏览器
+
+Fiber是我们所说的工作单元，performUnitOfWork负责对Fiber进行操作
+
+由于使用了链表结果，即使处理流程终端，也随时可以从上次未处理完的Fiber继续遍历
+
+
+
+
+
+- 协调阶段，可认为是diff阶段，可被中断
+- 提交阶段，必须同步执行，不能被打断
+
+
+
+Fiber包含5个部分
+
+- 结构信息
+- 节点类型信息
+- 节点状态
+- 副作用
+- 替身 workInProgress tree，alternate指向旧树的同等节点
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# React优化
+
+## 代码分割
+
+### React.lazy
 
 官网([这里](https://zh-hans.reactjs.org/docs/code-splitting.html#reactlazy))推荐是用 `React.lazy`
 
@@ -130,9 +207,7 @@ function MyComponent() {
 "plugins": ["@babel/plugin-syntax-dynamic-import"]
 ```
 
-
-
-## 路由中使用代码分割
+### 路由中使用代码分割
 
 **React.lazy版本**
 
