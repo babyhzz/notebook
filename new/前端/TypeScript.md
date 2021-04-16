@@ -17,6 +17,18 @@ interface ArrayLike<T> {
 Array.prototype.slice.call(obj, ...)
 ```
 
+## Partial
+
+Make all properties in T optional
+
+```tsx
+type Partial<T> = {
+    [P in keyof T]?: T[P];
+};
+
+columns: Array<Partial<Column>>;
+```
+
 
 
 # 基础

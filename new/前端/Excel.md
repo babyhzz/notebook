@@ -1,6 +1,10 @@
-# 基础对象
+# XLSX
 
-## Workbook Obejct
+注意：只有商业版才支持单元格样式，社区版不支持！！！
+
+## 基础对象
+
+### Workbook Obejct
 
 `workbook`里面有什么东西呢，我们打印出来看一下：
 
@@ -8,7 +12,7 @@
 
 可以看到，`SheetNames`里面保存了所有的sheet名字，然后`Sheets`则保存了每个sheet的具体内容（我们称之为`Sheet Object`）。每一个`sheet`是通过类似`A1`这样的键值保存每个单元格的内容，我们称之为单元格对象（`Cell Object`）：
 
-## Sheet Object
+### Sheet Object
 
 每一个`Sheet Object`表示一张表格，只要不是`!`开头的都表示普通`cell`，否则，表示一些特殊含义，具体如下：
 
@@ -19,7 +23,7 @@
 
 
 
-## Cell Object
+### Cell Object
 
 每一个单元格是一个对象（`Cell Object`），主要有`t`、`v`、`r`、`h`、`w`等字段
 
@@ -29,9 +33,9 @@ https://github.com/SheetJS/sheetjs#cell-object
 
 
 
-# 文件操作
+## 文件操作
 
-## 数组导出Excel文件
+### 数组导出Excel文件
 
 XLSX.utils.aoa_to_sheet
 
@@ -50,6 +54,18 @@ XLSX.writeFile：在Node环境下会生成文件，在Browser中，会触发下�
 > Content-Disposition: attachment; filename="filename.jpg"; filename*="filename.jpg"
 > Content-Length: <size in bytes>
 > ```
+
+
+
+# ExcelJS
+
+为解决单元格样式问题不得换一个库
+
+## Workbook
+
+## Worksheet
+
+### columns
 
 
 
