@@ -492,6 +492,12 @@ var a = /abc.*?/g
 "abcaxcabcc".match(a)
 ```
 
+## 其他
+
+如何判断当前域名是qq.com还是xxx.qq.com，我的解答：`/^([a-z0-9-]+\.)*(qq.com)$/`
+
+
+
 
 
 # 异步
@@ -511,5 +517,4 @@ Promise是一个状态机，当 pending 变化的时候，Promise 对象会根�
 
 
 ## Async/Await
-
 

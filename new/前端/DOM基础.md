@@ -1,4 +1,4 @@
-
+# DOM节点
 
 ## DOM节点类型
 
@@ -23,7 +23,7 @@ DTD声明节点            Node.NOTATION_NODE(12)
 
 其中Node为js内建接口，枚举节点类型。
 
-#### 元素节点
+### 元素节点
 
 以body为例：
 
@@ -33,7 +33,7 @@ nodeName = 'BODY'
 nodeValue = null
 ```
 
-#### 属性节点
+### 属性节点
 
 ```js
 nodeType = 2 // Node.ATTRIBUTE_NODE
@@ -41,7 +41,7 @@ nodeName = [属性名]
 nodeValue = [属性值]
 ```
 
-#### 文本节点
+### 文本节点
 
 ```js
 nodeType = 3 // Node.TEXT_NODE
@@ -51,7 +51,7 @@ nodeValue = [文本值]
 
 > node.firstChild 会返回第一个节点类型，而node.firstElementChild则只会选择元素节点返回
 
-#### 文档节点
+### 文档节点
 
 ```js
 nodeType = 9 // Node.DOCUMENT_NODE
@@ -61,21 +61,15 @@ nodeValue = null
 
 
 
-## Document.readyState
+## document
 
-当这个属性的值变化时，document对象上的readystatechange事件被触发
+### document.readyState
 
-#### loading / 加载
+当这个属性的值变化时，document对象上的readystatechange事件被触发。
 
-document仍在加载。
-
-#### interactive / 互动
-
-文档已经完成加载，文档已被解析，但是诸如图像，样式表和框架之类的字资源仍在加载。
-
-#### complete / 完成
-
-文档和所有子资源已完成加载。状态表示load事件即将被触发。
+- loading：加载，document仍在加载。
+- interactive：互动，文档已经完成加载，文档已被解析，但是诸如图像、样式表和框架之类的子资源仍在加载。
+- complete：完成，文档和所有子资源已完成加载。状态表示load事件即将被触发。
 
 ```html
 <!DOCTYPE html>
@@ -129,36 +123,48 @@ document仍在加载。
 > readystate: complete
 > load
 
+### querySelector/querySelectorAll
+
+querySelector
+
+文档对象模型[`Document`](https://developer.mozilla.org/zh-CN/docs/Web/API/Document)引用的 querySelector 方法返回文档中与指定选择器或选择器组匹配的**第一个** [`HTMLElement`](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement)对象。 如果找不到匹配项，则返回`null`。**注意这里返回的是第一个！**
+
+querySelectorAll
+
+返回与指定的选择器组匹配的文档中的元素列表 (使用深度优先的先序遍历文档的节点)。返回的对象是 [`NodeList`](https://developer.mozilla.org/zh-CN/docs/Web/API/NodeList) 。
+
+> 什么叫深度优先的先序遍历？
+
 
 
 ## DOM高度宽度等属性
 
 **偏移量-offset开头的**
 
-所有的offset都是以DOM节点的offsetParent进行定位的，和定位上下文有关，及父元素position属性是否为absolute/relative 。
+所有的offset都是以DOM节点的**offsetParent**进行定位的，和定位上下文有关，即父元素position属性是否为absolute/relative。
 
-<img src="img/domoffset.png" alt="domoffset" style="zoom: 75%;" />
+![image-20210809231420163](DOM基础.assets/image-20210809231420163.png)
 
 **谈谈offsetParent**
 
 我们看到上面的定位信息都是基于offsetParent进行定位的，offsetParent具体对应关系如下：
 
-1. 如果当前元素的祖先级元素没有进行CSS定位（position为absolute或relative），offsetParent为body。
-2. 如果当前元素的祖先级元素中有CSS定位（position为absolute或relative），offsetParent取最近的那个祖先级元素。
+1. 如果当前元素的**祖先**级元素没有进行CSS定位（position为absolute或relative），offsetParent为body。
+2. 如果当前元素的祖先级元素中有CSS定位（position为absolute或relative），offsetParent取**最近**的那个祖先级元素。
 
 
 
 **客户区-client开头的**
 
-客户区client相对于offset，其widthd和height不包括border边框
+客户区client相对于offset，其width和height**不包括border边框**
 
-<img src="img/domclient.png" alt="domclient" style="zoom: 75%;" />
+![image-20210809231434595](DOM基础.assets/image-20210809231434595.png)
 
 **滚动大小-scroll开头**
 
 
 
-<img src="img/domscroll.png" alt="domscroll" style="zoom: 75%;" />
+![image-20210809231445037](DOM基础.assets/image-20210809231445037.png)
 
 **window-inner、outer开头**
 
@@ -180,7 +186,7 @@ window.outerWidth, window.outerHeight 整个窗口的宽高，**包括导航工�
 
 还可以做其他事情提升页面的性能
 
-##### DNS Prefetch
+### DNS Prefetch
 
 ```html
 <link rel="dns-prefetch" href="//example.com">
@@ -190,7 +196,7 @@ DNS解析，简单来说就是把域名转化为ip地址。我们在网页里使
 
 什么时候使用呢？当我们页面中使用了其他域名的资源时，比如我们的静态资源都放在cdn上，那么我们可以对cdn的域名进行预解析。浏览器的支持情况也不错。
 
-##### Preconnect
+### Preconnect
 
 预链接 
 
@@ -207,7 +213,7 @@ DNS解析，简单来说就是把域名转化为ip地址。我们在网页里使
 
 使用preconnect后，浏览器会针对特定的域名，提前初始化链接(执行上述三个步骤)，节省了我们访问第三方资源的耗时。需要注意的是，我们一定要确保preconnect的站点是网页必需的，否则会浪费浏览器、网络资源。
 
-##### Prefetch
+### Prefetch
 
 预拉取
 
@@ -239,7 +245,7 @@ document: 网页
 
 这里需要注意的是，使用了prefetch，<font color='red'>资源仅仅被提前下载，下载后不会有任何操作，比如解析资源。</font>
 
-##### Prerender
+### Prerender
 
 预渲染
 
@@ -248,3 +254,22 @@ document: 网页
 ```
 
 prerender比prefetch更进一步。不仅仅会下载对应的资源，还会对资源进行解析。解析过程中，如果需要其他的资源，**可能**会直接下载这些资源。这样，用户在从当前页面跳转到目标页面时，浏览器可以更快的响应。 
+
+
+
+# DOM属性
+
+## data-*自定义数据属性
+
+它赋予我们在所有 HTML 元素上嵌入自定义数据属性的能力，并可以通过脚本在 [HTML](https://developer.mozilla.org/zh-CN/docs/Web/HTML) 与 [DOM](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model) 表现之间进行专有数据的交换。可以在DOM上保存数据，可以通过元素的dataset属性来访问。
+
+```html
+<ul>
+    <li data-id="10784">Jason Walters, 003: Found dead in "A View to a Kill".</li>
+    <li data-id="97865">Alex Trevelyan, 006: Agent turned terrorist leader; James' nemesis in "Goldeneye".</li>
+    <li data-id="45732">James Bond, 007: The main man; shaken but not stirred.</li>
+</ul>
+```
+
+
+
