@@ -43,6 +43,7 @@ $ git fetch
 ```bash
 $ git chekout master
 $ git merge origin/master
+
 # 由于merge过后master分支会产生一条多余的merge记录
 # 这个时候我们更倾向于rebase变基操作
 $ git rebase origin/master
@@ -123,16 +124,28 @@ $ git pull origin master --rebase
 ## git branch
 
 ```bash
-$ git branch # 查看本地所有分支 
-$ git branch -r # 查看远程所有分支
-$ git branch -a # 查看本地和远程的所有分支
-$ git branch <branchname> # 新建分支
-$ git branch -d <branchname> # 删除本地分支
+# 查看本地所有分支 
+$ git branch
 
-$ git branch -d -r <branchname> # 删除远程分支，删除后还需推送到服务器
-$ git push origin:<branchname>  # 删除后推送至服务器
+# 查看远程所有分支
+$ git branch -r 
 
-$ git branch -m <oldbranch> <newbranch> # 重命名本地分支
+# 查看本地和远程的所有分支
+$ git branch -a 
+
+# 新建分支
+$ git branch <branchname>
+
+# 删除本地分支
+$ git branch -d <branchname> 
+
+# 删除远程分支，删除后还需推送到服务器
+$ git branch -d -r <branchname> 
+# 删除后推送至服务器
+$ git push origin:<branchname>  
+
+# 重命名本地分支
+$ git branch -m <oldbranch> <newbranch> 
 
 -d = --delete 删除
 -D = --delete --force 的快捷键
@@ -640,16 +653,7 @@ $ git push
 $ git push -f	 # --force 的缩写
 ```
 
-若在强制推送的过程中，已经有其他人推送到该远程分支，则会使他人的提交记录丢失，**`为了更安全的推送`**，可用如下命令。**`在他人推送了新的提交的情况下，强制推送会被拒绝`**。
-
-```
-git push --force-with-lease
-```
-
-扩展：需要强制推送的场景可能如下
-
-- 分支 `git rebase` 变基操作后
-- 将错误代码推送到了远程，想要丢弃此提交记录（建议用下文介绍的 `git revert` 操作）
+若在强制推送的过程中，已经有其他人推送到该远程分支，则会使他人的提交记录丢失，**为了更安全的推送**，可用如下命令。**在他人推送了新的提交的情况下，强制推送会被拒绝**。
 
 > 强制推送到远程分支会覆盖远程，若不熟悉此命令，请慎用！
 
@@ -660,6 +664,7 @@ git push --force-with-lease
 ```bash
 # git push <远程主机名> <本地分支名>:<远程分支名>
 $ git push origin hucheng:hucheng
+
 # 若远程分支名省略，则会推送到同名的远程分支（远程分支不存在则会创建）
 # 将本地的hucheng分支推送到远程hucheng分支
 $ git push origin hucheng
@@ -667,7 +672,7 @@ $ git push origin hucheng
 
 ## 撤销篇
 
-**场景 1.** 怎么撤销本地工作区文件的改动？
+**场景 1.** 怎么撤销本地**工作区**文件的改动？
 
 **解决方法：**
 
@@ -742,8 +747,6 @@ $ git push
 # 文件移除暂存区
 $ git restore --staged <file>...
 ```
-
-
 
 ## 日志篇
 
@@ -946,7 +949,7 @@ validate-commit-msg，用于检查 Node 项目的 Commit message 是否符合格
 
 # Git版本管理规范
 
-![img](git.assets/1366859-eda8da6a7d2385ad.png)
+<img src="git.assets/1366859-eda8da6a7d2385ad.png" alt="img" style="zoom:50%;" />
 
 https://blog.csdn.net/weixin_38809962/article/details/79814308
 
