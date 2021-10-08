@@ -8,7 +8,9 @@ Git 的核心概念分为四个区块，分别是远程仓库、本地版本库�
 
 首先要从git的分支说起，git 中的分支，其实本质上仅仅是个指向 commit 对象的可变指针。git 是如何知道你当前在哪个分支上工作的呢？其实答案也很简单，它保存着一个名为 **HEAD** 的特别指针。在 git 中，它是一个指向你正在工作中的本地分支的指针，可以将 HEAD 想象为当前分支的别名。（注：HEAD指针可以指向快照也可以指向branch）
 
-git clone 命令会为你自动将远程主机命名为 origin，拉取它的所有数据，创建一个指向它的 master 分支的指针，并且在本地将其命名为 origin/master。同时Git 也会给你一个与 origin 的master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础。
+git clone 命令会为你自动将远程主机命名为 `origin`，拉取它的所有数据，创建一个指向它的 `master` 分支的指针，并且在本地将其命名为 `origin/master`。同时Git 也会给你一个与 origin 的 master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础。
+
+> HC：origin/xxx 是远程分支在本地仓库的一个指针，指示远程分支所在的结点
 
 ![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azA4dGl6ZXNqMzBudzBlb3Q5NS5qcGc)
 
@@ -29,6 +31,10 @@ git clone 命令会为你自动将远程主机命名为 origin，拉取它的所
 fetch 抓取到新的远程跟踪分支时，本地的工作区（workspace）不会自动生成一份可编辑的副本，抓取结果是直接送到版本库（Repository）中
 
 如果想要在 origin/master 分支上工作，可以新建分支 test 并将其建立在远程跟踪分支之上：
+
+```bash
+$ git fetch
+```
 
 ![img](git.assets/aHR0cHM6Ly93czEuc2luYWltZy5jbi9sYXJnZS8wMDZWckpBSmd5MWc1azMzcnp2b3FqMzBtbDBiaW14Zi5qcGc)
 
@@ -72,20 +78,26 @@ git clone 命令会为你自动将远程主机命名为 origin，拉取它的所
 
 `git fetch`是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中。
 
-而`git pull` 则是将远程主机的最新内容拉下来后直接合并，即：`git pull = git fetch + git merge`，这样可能会产生冲突，需要手动解决。
+`git pull` 则是将远程主机的最新内容拉下来后直接合并，即：`git pull = git fetch + git merge`，这样可能会产生冲突，需要手动解决。
 
 ```bash
-$ git fetch <远程主机名> # 将某个远程主机的更新全部取回本地
-$ git fetch <远程主机名> <分支名> # 取回特定分支的更新
+# 将某个远程主机的更新全部取回本地
+$ git fetch <远程主机名> 
+
+# 取回特定分支的更新
+$ git fetch <远程主机名> <分支名> 
 ```
 
-取回更新后，会返回一个`FETCH_HEAD` ，指的是某个branch在服务器上的最新状态，我们可以在本地通过它查看刚取回的更新信息
+取回更新后，会返回一个`FETCH_HEAD` ，指的是某个branch在服务器上的最新状态（必须要指明主机和分支，不然 `FETCH_HEAD` 的指向未知？）
 
-`git pull` 的过程可以理解为：
+`git pull` 的过程可以理解为拉取所有的远程分支，并与本地的当前分支以 `merge` 方式合并（当前分支要有追踪分支）
 
 ```bash
-$ git fetch origin master # 从远程主机的master分支拉取最新内容 
-$ git merge FETCH_HEAD    # 将拉取下来的最新内容合并到当前所在的分支中
+$ git pull origin master
+
+# 和下面这两句等价
+$ git fetch origin master
+$ git merge FETCH_HEAD
 ```
 
 将远程主机的某个分支的更新取回，并与本地指定的分支合并，完整格式可表示为:
@@ -133,6 +145,8 @@ $ git branch -m <oldbranch> <newbranch> # 重命名本地分支
 
 ## git checkout
 
+切换分支
+
 ```bash
 # 在本地新建一个与远程的分支b相同(被合并的版本)的分支b
 $ git checkout -b <本地分支名> origin/<远程分支名>
@@ -140,33 +154,27 @@ $ git checkout -b <本地分支名> origin/<远程分支名>
 
 ## git merge
 
-把一个分支或或某个commit的修改合并到现在的分支上
+两种方式：分快进模式和非快进模式。
 
-![image-20201105102322966](git.assets/image-20201105102322966.png)
+**1. 快进模式**
 
-![image-20201105102413091](git.assets/image-20201105102413091.png)
+dev合并到master分支，由于master是dev的直接上游，所以只需要简单的将master指针向前移动
 
-两种模git式：
+![image-20211008164824836](git.assets/image-20211008164824836.png)
 
-https://www.cnblogs.com/lyy-2016/p/6511930.html
+**2. 非快进模式**
 
-https://blog.csdn.net/qq_42780289/article/details/97945300
+Git会使用两个分支的末端所指的快照（B3 和 B4）以及这两个分支的公共祖先（B2），做一个简单的三方合并。注意这里合并后 `master` 自动 `commit` 提交了一次，产生了提交B5。而B5中的结果是三方合并的结果。
 
-讲清楚即可
+这里分有冲突和无冲突两种情况，无冲突自动完成上述动作，有重续需要手动解决冲突。
 
-
-
-![image-20201110105314686](git.assets/image-20201110105314686.png)
-
-下面是merge，按时间排序；上面是rebase，按逻辑排序
+![image-20211008165122229](git.assets/image-20211008165122229.png)
 
 ## git rebase
 
 **场景1：合并多次提交**
 
-常见的是一个功能修修补补commit了n次，导致提交记录过多过杂，不够直观，究竟哪些提交对应这个功能？如果功能需要迁移，需要一个个commit去cherry-pick？这个时候需要将提交合并。
-
-> 注意：合并记录时，注意不要已经push到远程的记录
+常见的是一个功能修修补补commit了n次，导致提交记录过多过杂，不够直观，究竟哪些提交对应这个功能？如果功能需要迁移，需要一个个commit去cherry-pick？这个时候需要将提交合并。（注意：合并记录时，注意不要合并已经push到远程的记录）
 
 如下图，修改同一个文件同一个问题修改3次
 
@@ -227,9 +235,11 @@ s 5bfaf7e modify b-3
 
 <img src="git.assets/image-20201104212953581.png" alt="image-20201104212953581" style="zoom:50%;"/>
 
-**场景2：分支合并**
+**场景2：分支合并，变基？**
 
+待补充...
 
+目前想到的是变基 `git pull origin master --rebase` 
 
 ## git reset
 
@@ -327,8 +337,8 @@ A---B---E---F  branchA*
 
 **解决方法：**
 
-```
-git pull --rebase
+```bash
+$ git pull --rebase
 ```
 ```
       origin/branchA
@@ -376,7 +386,7 @@ $ git branch --unset-upstream [<origin/branchname>]
 **解决方法：**
 
 ```
-git branch -vv
+$ git branch -vv
 ```
 
 **场景 5.** 怎么删除本地分支？
@@ -384,17 +394,17 @@ git branch -vv
 **解决方法：**
 
 ```
-git branch -D <branchname>
+$ git branch -D <branchname>
 ```
 
 **场景 6.** 怎么删除远程分支？
 
 **解决方法：**
 
-```
-git push -d origin <branchname>
-// 或者
-git push origin :branchname
+```bash
+$ git push -d origin <branchname>
+# 或者
+$ git push origin :branchname
 ```
 
 **场景 7.** 怎么移动/重命名分支？
@@ -450,19 +460,19 @@ A---B---E---F master*
 
 **解决方法：**`cherry-pick` 遴选
 
-```
-// 合并指定提交记录
-git cherry-pick <commit>
+```bash
+# 合并指定提交记录
+$ git cherry-pick <commit>
 
-// 合并多个提交记录
-git cherry-pick <commit1> <commit2> <commit3>
+# 合并多个提交记录
+$ git cherry-pick <commit1> <commit2> <commit3>
 
-// 若提交记录在同一分支上，则可以采用区间形式(start, end]，commit1不包含，commit3包含
-// 等价于合并了 commit2、commit3
-git cherry-pick <commit1>..<commit3>
+# 若提交记录在同一分支上，则可以采用区间形式(start, end]，commit1不包含，commit3包含
+# 等价于合并了 commit2、commit3
+$ git cherry-pick <commit1>..<commit3>
 
-// 若省略了区间形式的起点，则起点默认为两个分支的交点
-git cherry-pick ..<commit3>
+# 若省略了区间形式的起点，则起点默认为两个分支的交点
+$ git cherry-pick ..<commit3>
 ```
 
 原始提交记录
@@ -532,9 +542,9 @@ A---B---E  master
 
 **解决方法：**`git rebase --interactive` 或者缩写形式 `git rebase -i`交互式变基
 
-```
-// commit 为需要处理的提交记录区间的父节点
-git rebase -i <commit>
+```bash
+# commit 为需要处理的提交记录区间的父节点
+$ git rebase -i <commit>
 ```
 
 原始提交记录
@@ -594,6 +604,19 @@ $ git add <filename>
 # 如果不带 --no-edit 参数，则在合并之后会进入提交信息修改面板
 $ git commit --amend --no-edit
 ```
+
+**场景 3.** 突然发现最近一次提交信息的作者和邮箱不正确，如何修改？
+
+```bash
+# 先修正为正确的作者和邮箱
+$ git config user.name 'xxx'
+$ git config user.email 'xxx@email.com'
+
+# 再次提交
+$ git commit --amend --reset-author
+```
+
+
 
 ## 推送篇
 
