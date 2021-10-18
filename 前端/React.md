@@ -332,6 +332,7 @@ const OtherComponent = React.lazy(() => import('./OtherComponent'));
 function MyComponent() {
   return (
     <div>
+      {/* 这里必须要加Suspense，并且fallback必填，不然会报错 */}
       <Suspense fallback={<div>Loading...</div>}>
         <OtherComponent />
       </Suspense>
