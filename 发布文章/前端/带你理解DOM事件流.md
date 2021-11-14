@@ -204,9 +204,10 @@ DOM3级事件在DOM2级事件的基础上添加了更多的事件类型，全部
       e.stopPropagation();
     }, true);
     child.addEventListener('click', function () {
-      alert('我是目标 a');
-      // 阻止传播，"事件冒泡至 p" 不执行
-      // e.stopPropagation();
+      alert('我是捕获目标 a');
+    }, true);
+    child.addEventListener('click', function () {
+      alert('我是冒泡目标 a');
     }, false);
     parent.addEventListener('click', function () {
       alert('事件冒泡至 p');
@@ -217,13 +218,13 @@ DOM3级事件在DOM2级事件的基础上添加了更多的事件类型，全部
 </html>
 ```
 
-运行点击 a 标签，我们可以看到如注释那样的效果。只要看明白了事件流的那张图，了解了捕获/目标/冒泡这三个阶段，其实就很容易理解了  `stopPropagation` 阻止事件流所引起的这些现象。这里需要注意的是  `stopPropagation` 这个函数是阻止事件传播（从单词中可以明白），而不单单只是阻止冒泡，在其他的文章中没有解释清楚。
+运行点击 a 标签，我们可以看到如注释那样的效果。只要看明白了事件流的那张图，了解了捕获/目标/冒泡这三个阶段，其实就很容易理解了 `stopPropagation` 阻止事件流所引起的这些现象。这里需要注意的是 `stopPropagation` 这个函数是阻止事件传播（从单词中可以明白），而不单单只是阻止冒泡，在其他的文章中没有解释清楚。
 
 
 
 # 疑问❓
 
-**onclick是在哪些阶段执行？**
+## onclick执行时期
 
 这里我们针对的是**非目标阶段**，修改上述例子，我们 id=parent 节点，即 p 标签添加一个onclick事件。
 

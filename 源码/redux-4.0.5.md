@@ -1,3 +1,139 @@
+# Redux的使用
+
+
+
+## 基础示例
+
+```js
+import { createStore } from 'redux'
+
+// 这里注意一点，不能直接操作state对象，应该返回一个全新的state对象
+function counterReducer(state = { value: 0 }, action) {
+  switch (action.type) {
+    case 'counter/incremented':
+      return { value: state.value + 1 }
+    case 'counter/decremented':
+      return { value: state.value - 1 }
+    default:
+      return state
+  }
+}
+
+// 创建一个store来保存全局状态
+// 它的API有 { subscribe, dispatch, getState }.
+let store = createStore(counterReducer)
+
+// 可以订阅来更新UI，但一般使用库来绑定view，如React Redux
+// 这里或许你可以做些其他操作
+store.subscribe(() => console.log(store.getState()))
+
+// 唯一改变状态的方法是dispatch一个action
+store.dispatch({ type: 'counter/incremented' })
+// {value: 1}
+store.dispatch({ type: 'counter/incremented' })
+// {value: 2}
+store.dispatch({ type: 'counter/decremented' })
+// {value: 1}
+```
+
+
+
+## 使用toolkit简化
+
+```js
+import { createSlice, configureStore } from '@reduxjs/toolkit'
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {
+    value: 0
+  },
+  reducers: {
+    incremented: state => {
+      // 这里允许直接修改对象，因为这里使用了immer库，其把change放到一个草稿状态，然后生成一个新的state
+      state.value += 1
+    },
+    decremented: state => {
+      state.value -= 1
+    }
+  }
+})
+
+export const { incremented, decremented } = counterSlice.actions
+
+const store = configureStore({
+  reducer: counterSlice.reducer
+})
+
+// Can still subscribe to the store
+store.subscribe(() => console.log(store.getState()))
+
+// Still pass action objects to `dispatch`, but they're created for us
+store.dispatch(incremented())
+// {value: 1}
+store.dispatch(incremented())
+// {value: 2}
+store.dispatch(decremented())
+// {value: 1}
+```
+
+
+
+## 为什么要使用redux
+
+Redux is more useful when:
+
+- You have large amounts of application state that are needed in many places in the app
+- The app state is updated frequently over time
+- The logic to update that state may be complex
+- The app has a medium or large-sized codebase, and might be worked on by many people
+
+
+
+使用场景：
+
+- 有大量的状态在大量的地方使用
+- 状态的更新很频繁
+- 状态的更新较复杂
+- 有中等或大的代码量，并且需要与其他人协作
+
+
+
+## 哪些数据放入redux
+
+> By now you might be wondering, "Do I always have to put all my app's state into the Redux store?"
+>
+> The answer is **NO. Global state that is needed across the app should go in the Redux store. State that's only needed in one place should be kept in component state.**
+
+
+
+
+
+
+
+## 概念
+
+### Immutability
+
+```js
+const obj = { a: 1, b: 2 }
+// still the same object outside, but the contents have changed
+obj.b = 3
+
+const arr = ['a', 'b']
+// In the same way, we can change the contents of this array
+arr.push('c')
+arr[1] = 'd'
+```
+
+
+
+
+
+# 源码解析
+
+
+
 本文是基于redux 4.0.5的源码做的解析，源码不多，目录结构如下所示：
 
 ![redux目录 ](img/redux-4.0.5-src.png)

@@ -1,5 +1,89 @@
 # 属性
 
+## margin
+
+### 深入理解 margin:auto
+
+在讲 `margin: auto` 的作用机制之前，我们需要了解如下两个事实：
+
+1. 有时候元素没有设置 `width` 和 `height`，也会自动填充。如 `<div></div>`
+
+2. 有时候元素没有设置 `width` 和 `height`，也会自动填充对应的方位。如下，此时的div宽度就会自动填满包含块容器。若此时 div 宽度被限制为200px，外部容器为300px，那么 `margin: auto` 就是为了处理这个闲置尺寸而设计的。
+
+   ```
+   div {
+     position: absolute;
+     left: 0;
+     right: 0;
+   }
+   ```
+
+`margin: auto` 的填充规则：
+
+- 如果一侧为定值，一侧为auto，则auto为剩余空间大小。
+
+- 如果两侧均为auto，则平分剩余空间。
+
+上述规则可用于**块级元素左右对齐**，这个比float属性要好用的多，与内联元素的 text-align 控制左右对齐遥相呼应。
+
+
+
+**触发 `margin: auto` 有一个很重要的前提：当 `width` 或 `height` 为 `auto` 时，元素必须具有对应方向的填充特性！！！**
+
+如下 html 结构，来了解这个居中的特性。
+
+```html
+  <div class="father">
+    <div class="son"></div>
+  </div>
+```
+
+如下样式是否能使 son 水平垂直居中呢？
+
+```css
+.father {
+  width: 100px;
+  height: 100px;
+  background-color: aquamarine;
+  position: relative;
+}
+
+.son {
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  background-color: brown;
+}
+```
+
+<img src="CSS.assets/image-20211114165007859.png" alt="image-20211114165007859" style="zoom:50%;" />
+
+可以看到元素仅在水平方向居中，并没有在垂直方向居中。根据前面的前提：当 width 为 auto 时，son 具有水平方向的填充特性；而当 height 为 auto 时（height为0），son 没有垂直方向的填充特性。故 `margin: auto` 只能触发水平方向的居中。
+
+我们将 son 的样式改成如下形式，可以看到元素实现了水平垂直居中了。
+
+```css
+.son {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: brown;
+  margin: auto;
+} 
+```
+
+<img src="CSS.assets/image-20211114170119872.png" alt="image-20211114170119872" style="zoom:50%;" />
+
+为什么呢？还是继续前面的前提，当 width 和 height 为 auto 时，son 这个子元素能填充整个父元素，故能水平垂直居中。
+
+
+
+
+
 ## display
 
 `flex` 和 `inline-flex` 的区别，前者宽度默认100%，后者具有包裹性。
