@@ -2,21 +2,99 @@
 
 ## margin
 
+### 同级元素间的margin
+
+水平方向 margin **不会**进行合并，为相邻元素的 margin 之和
+
+垂直方向 margin **会**进行合并，取较大值。有趣的情况，若元素高度为0（或内容为空），同时设置了 `margin-top` 和 `margin-bottom`，这两个margin也会叠加，取较大一个。
+
+### 父子元素间的margin
+
+**水平方向**
+
+- 若水平方向没有设置 padding，实际上是子元素距离父元素 `border` 内侧的距离
+- 若水平方向设置了 padding，实际上是子元素距离父元素 `padding` 内侧的距离
+
+如下示例：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>margin</title>
+    <style>
+        *{padding:0; margin:0; box-sizing: border-box;}
+        .father{
+            width: 500px;
+            height: 500px;
+            background: rgb(255, 128, 128);
+            border: 10px solid #ddd;
+        }
+        .son{
+            width: 100px;
+            height: 100px;
+            background: green;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="father">
+        <div class="son">宽度为100px，margin-left为100px。</div>
+    </div>
+</body>
+</html>
+```
+
+效果图
+
+<img src="CSS.assets/截屏2022-04-03 07.37.45.png" alt="截屏2022-04-03 07.37.45" style="zoom:50%;" />
+
+当父元素设置了padding时的效果图
+
+<img src="CSS.assets/截屏2022-04-03 07.41.23.png" alt="截屏2022-04-03 07.41.23" style="zoom:50%;" />
+
+**垂直方向**
+
+当父元素没有设置 padding 或 border 值时，父元素与子元素重合，margin作用到父元素（是否可以理解为margin溢出？？？），注意水平方向不会出现该情况。
+
+上面示例将 margin-left 改为 margin-top，效果如下
+
+![截屏2022-04-03 07.47.52](CSS.assets/截屏2022-04-03 07.47.52.png)
+
+对于这种问题的解决办法：
+
+- **方法一：给父元素添加padding-top值**
+- **方法二：给父元素添加border值**
+- **方法三：给父元素添加属性overflow:hidden;**(推荐)
+- **方法四：给父元素或者子元素声明浮动float**
+- **方法五：使父元素或子元素声明为绝对定位：position:absolute;**
+- **方法六：给父元素添加属性** overflow:auto; positon:relative；
+
+### margin中的百分比 %
+
+不论是父子元素还是同级元素之间，且不论是水平还是垂直方向的 margin ，都是基于**父元素的宽度**进行计算。
+
+
+
 ### 深入理解 margin:auto
 
 在讲 `margin: auto` 的作用机制之前，我们需要了解如下两个事实：
 
-1. 有时候元素没有设置 `width` 和 `height`，也会自动填充。如 `<div></div>`
+1. 有时候元素没有设置 `width`，也会自动填充。如 `<div></div>` 等 block 元素。
 
-2. 有时候元素没有设置 `width` 和 `height`，也会自动填充对应的方位。如下，此时的div宽度就会自动填满包含块容器。若此时 div 宽度被限制为200px，外部容器为300px，那么 `margin: auto` 就是为了处理这个闲置尺寸而设计的。
+2. 有时候元素没有设置 `width`，也会自动填充对应的**方位**。如下，此时的div宽度就会自动填满包含块容器。
 
-   ```
+   ```css
    div {
      position: absolute;
      left: 0;
      right: 0;
    }
    ```
+
+在上述第二种情况中，若此时 div 宽度被限制为200px，外部容器为300px，那么 `margin: auto` 就是为了处理多余的100px这个闲置尺寸而设计的。
 
 `margin: auto` 的填充规则：
 
@@ -72,7 +150,7 @@
   top: 0;
   bottom: 0;
   background-color: brown;
-  margin: auto;
+  margin: auto;	// 会触发计算实现居中
 } 
 ```
 

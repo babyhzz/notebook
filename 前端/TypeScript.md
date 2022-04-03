@@ -249,6 +249,8 @@ type Record<K extends keyof any, T> = {
 在一个声明好的对象中，挑选一部分出来组成一个新的声明对象。
 
 > 对以下的声明有点疑问？K extends keyof T：代表 K 要继承 T 的所有属性？
+>
+> 答：不是，见下面截图
 
 ```ts
 /**
@@ -258,6 +260,8 @@ type Pick<T, K extends keyof T> = {
     [P in K]: T[P];
 };
 ```
+
+![截屏2022-02-13 15.40.09](TypeScript.assets/截屏2022-02-13 15.40.09.png)
 
 ## `Omit<T, K>`
 
