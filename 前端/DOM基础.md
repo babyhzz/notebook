@@ -59,8 +59,6 @@ nodeName = '#document' // 注释节点此位置为 "#comment"
 nodeValue = null
 ```
 
-
-
 ## document
 
 ### document.readyState
@@ -115,7 +113,6 @@ nodeValue = null
     </script>
   </body>
 </html>
-
 ```
 
 > readystate: interactive
@@ -135,8 +132,6 @@ querySelectorAll
 
 > 什么叫深度优先的先序遍历？
 
-
-
 ## DOM高度宽度等属性
 
 **偏移量-offset开头的**
@@ -152,8 +147,6 @@ querySelectorAll
 1. 如果当前元素的**祖先**级元素没有进行CSS定位（position为absolute或relative），offsetParent为body。
 2. 如果当前元素的祖先级元素中有CSS定位（position为absolute或relative），offsetParent取**最近**的那个祖先级元素。
 
-
-
 **客户区-client开头的**
 
 客户区client相对于offset，其width和height**不包括border边框**
@@ -162,17 +155,13 @@ querySelectorAll
 
 **滚动大小-scroll开头**
 
-
-
 ![image-20210809231445037](DOM基础.assets/image-20210809231445037.png)
 
 **window-inner、outer开头**
 
 window.innerWidth, window.innerHeight 可视区域的宽高
 
-window.outerWidth, window.outerHeight 整个窗口的宽高，**包括导航工具栏以及F12调试面板都在内部**	
-
-
+window.outerWidth, window.outerHeight 整个窗口的宽高，**包括导航工具栏以及F12调试面板都在内部**    
 
 ## link标签
 
@@ -255,8 +244,6 @@ document: 网页
 
 prerender比prefetch更进一步。不仅仅会下载对应的资源，还会对资源进行解析。解析过程中，如果需要其他的资源，**可能**会直接下载这些资源。这样，用户在从当前页面跳转到目标页面时，浏览器可以更快的响应。 
 
-
-
 # DOM属性
 
 ## data-*自定义数据属性
@@ -270,6 +257,3 @@ prerender比prefetch更进一步。不仅仅会下载对应的资源，还会对
     <li data-id="45732">James Bond, 007: The main man; shaken but not stirred.</li>
 </ul>
 ```
-
-
-

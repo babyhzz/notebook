@@ -2,13 +2,7 @@
 
 ProTable的属性基本上继承了Table的所有属性
 
-
-
-
-
 Form 的列是根据 `valueType` 来生成不同的类型。
-
-
 
 **不翻页 + 关键字搜索**
 
@@ -48,4 +42,3 @@ Form 的列是根据 `valueType` 来生成不同的类型。
       size="middle"
     />
 ```
-

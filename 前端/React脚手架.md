@@ -8,10 +8,6 @@ https://www.taniarascia.com/how-to-use-webpack/
 
 https://github.com/taniarascia/webpack-boilerplate
 
-
-
-
-
 # Webpack
 
 webpack和webpack-cli的关系：
@@ -27,8 +23,6 @@ https://github.com/postcss/postcss
 # babel
 
 https://www.babeljs.cn/docs/usage
-
-
 
 @babel/core：核心库
 
@@ -62,27 +56,17 @@ https://babeljs.io/docs/en/babel-plugin-proposal-decorators
 }
 ```
 
-
-
-
-
 jsx -> js , webpack + babel
 
 https://blog.csdn.net/m0_37890289/article/details/105421173
-
-
 
 这个更详细
 
 https://juejin.cn/post/6884912991859867662
 
-
-
 这个更好，webpack5的
 
 https://www.jb51.net/article/202257.htm
-
-
 
 # 初始化项目
 
@@ -193,8 +177,6 @@ yarn add clean-webpack-plugin -D
 yarn add style-loader css-loader less-loader less -D
 ```
 
-
-
 friendly-errors-webpack-plugin
 
 https://github.com/geowarin/friendly-errors-webpack-plugin#readme
@@ -207,25 +189,13 @@ webpack5.x中需要通过webpack serve启动项目
 
 `Error: Cannot find module 'webpack-cli/bin/config-yargs'`
 
-
-
 webpack5中移除了nodejs核心模块的polyfill自动引入
 
 `webpack < 5 used to include polyfills for node.js core modules by default`
 
-
-
-
-
-
-
-
-
 https://github.com/javaLuo/react-luo
 
 https://github.com/mikechabot/react-boilerplate
-
-
 
 参考这个
 

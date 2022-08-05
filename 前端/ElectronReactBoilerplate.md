@@ -14,13 +14,7 @@ electron-builder的所有配置放在了 `package.json` 中的 `build` 属性中
 },
 ```
 
-
-
-
-
 ### 打包的文件名
-
-
 
 ### files属性
 
@@ -70,11 +64,7 @@ Array<String | FileSet> | String | FileSet
 },
 ```
 
-
-
 ## Jest & Enzyme
-
-
 
 # 脚手架
 
@@ -100,7 +90,6 @@ $ yarn cross-env OPEN_ANALYZER=true yarn build
 编译主进程的webpack配置文件为 `webpack.config.main.prod.babel.js`，这里注意两个地方，entry和output属性。入口文件为  `main.dev.ts`，编译输出文件为 同级目录下的`main.prod.js`
 
 ```js
-
 export default merge(baseConfig, {
   // .... 省略
 
@@ -114,10 +103,9 @@ export default merge(baseConfig, {
     path: path.join(__dirname, '../../'),
     filename: './src/main.prod.js',
   },
-    
+
   // .... 省略
 });
-
 ```
 
 编译渲染进程的webpack配置文件为 `webpack.config.renderer.prod.babel.js`，这里注意两个地方，entry和output属性。入口文件为三个，其中一个为  `src/index.tsx`，编译输出文件为 `src/dist/renderer.prod.js`
@@ -146,8 +134,6 @@ export default merge(baseConfig, {
 });
 ```
 
-
-
 ## 打包
 
 相关脚本，由于脚本使用了rm，在git bash上使用
@@ -171,8 +157,6 @@ $ yarn package --win
 $ yarn cross-env DEBUG_PROD=true yarn build
 $ yarn cross-env DEBUG_PROD=true yarn start
 ```
-
-
 
 ## 样式
 
@@ -246,15 +230,10 @@ exec(`echo '${pythonScript}' | ${pythonBinary}`, (error, stdout) => {
 
 脚手架时双package.json结构，根目录下的package.json和src目录下的package.json。如果模块是和Native相关的模块，则放在src下的package.json。其余放在根目录下的package.json
 
-
-
 ## 测试
 
 暂省略。。。
 
-
-
 # 常见问题
 
 ## 将sass改造为less
-

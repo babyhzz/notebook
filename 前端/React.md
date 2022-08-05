@@ -1,11 +1,5 @@
 # 概念
 
-
-
-
-
-
-
 # React VS Vue
 
 ## 相同点
@@ -17,8 +11,6 @@
 
 1. vue使用模版语法，而React注重函数式编程思想
 2. 数据响应上，**Push-based**和**Pull-based**，Push-based就是说，改动数据之后，数据本身会把这个改动推送出去，告知渲染系统自动进行渲染。在React里面，它是一个Pull的形式，用户要给系统一个明确的信号说明现在需要重新渲染了，这个系统才会重新渲染。并没有优劣之分。
-
-
 
 # React基础
 
@@ -35,8 +27,6 @@
 StrictMode 是一个用来突出显示应用程序中潜在问题的工具。与 Fragment 一样，StrictMode 不会渲染任何可见的 UI。它为其后代元素触发额外的检查和警告。
 
 > 注意：严格模式检查仅在开发模式下运行；*它们不会影响生产构建*。
-
-
 
 ## class组件生命周期
 
@@ -56,25 +46,17 @@ StrictMode 是一个用来突出显示应用程序中潜在问题的工具。与
 
 ![image-20211009150953730](React.assets/image-20211009150953730.png)
 
-
-
-
-
-
-
 # React Hooks
 
 下面的三篇文章，作者用动画的形式完全的诠释了React Hooks的原理，受益匪浅。
 
 > [用动画和实战打开 React Hooks（一）：useState 和 useEffect](https://juejin.cn/post/6844904127110053895)
->
+> 
 > [用动画和实战打开 React Hooks（二）：自定义 Hook 和 useCallback](https://juejin.cn/post/6844904132164190221)
->
+> 
 > [用动画和实战打开 React Hooks（三）：useReducer 和 useContext](https://juejin.cn/post/6844904149746728973)
 
 函数式组件思想：**每一次渲染都是完全独立的**，这一点很重要。
-
-
 
 **useEffect**
 
@@ -82,8 +64,6 @@ StrictMode 是一个用来突出显示应用程序中潜在问题的工具。与
 - 在运行每个 Effect 之前，运行前一次渲染的 Effect Cleanup 函数（如果有的话）
 - 当组件销毁时，运行最后一次 Effect 的 Cleanup 函数
 - `useEffect` 约定 Effect 函数要么没有返回值，要么返回一个 Cleanup 函数。而 async 函数会隐式地返回一个 Promise，直接违反了这一约定，会造成不可预测的结果。
-
-
 
 **Hook的本质是通过一个链表记录所有Hook**
 
@@ -94,8 +74,6 @@ StrictMode 是一个用来突出显示应用程序中潜在问题的工具。与
 ![img](React.assets/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC80LzE0LzE3MTc4NjYwNjg5YzczMDE)
 
 **自定义 Hook 本质上只是把调用内置 Hook 的过程封装成一个个可以复用的函数，并不影响 Hook 链表的生成和读取**
-
-
 
 **useEffect** 的无限循环
 
@@ -113,8 +91,6 @@ true === true // true
 () => {} === () => {} // false
 ```
 
-
-
 **useCallback**：为了解决**函数**在多次渲染中的**引用相等**。在大多数情况下，我们都是传入空数组 `[]` 作为 `deps` 参数，这样 `useCallback` 返回的就**始终是同一个函数，永远不会更新**。
 
 **useMemo**：`useCallback` 只能缓存函数相比，`useMemo` 可以缓存任何类型的值（当然也包括函数）
@@ -129,8 +105,6 @@ useCallback(fn, deps);
 useMemo(() => fn, deps);
 ```
 
-
-
 useState有一个**函数式更新(<span style="color: red">没使用过，可以尝试下</span>)**，参数为上一次state值。其实现用了 userReducer
 
 ```js
@@ -140,13 +114,9 @@ function basicStateReducer(state, action) {
 }
 ```
 
-
-
 **userReducer & useContext**
 
 等用过了再来看第三篇文章。
-
-
 
 # React事件机制
 
@@ -156,8 +126,6 @@ React 的所有事件并没有绑定到具体的dom节点上而是绑定在了 *
 
 SyntheticEvent是react合成事件的基类，定义了合成事件的基础公共属性和方法。React会根据当前的事件类型来使用不同的合成事件对象，比如鼠标单机事件 - SyntheticMouseEvent，焦点事件-SyntheticFocusEvent等，但是都是继承自SyntheticEvent。
 
-
-
 # React Fiber
 
 React 框架内部的运作可以分为 3 层：
@@ -165,8 +133,6 @@ React 框架内部的运作可以分为 3 层：
 - Virtual DOM 层，描述页面长什么样。引入虚拟DOM，是因为原生DOM元素很复杂，耗费资源较多。
 - Reconciler 层，负责调用组件生命周期方法，进行 Diff 运算等。
 - Renderer 层，根据不同的平台，渲染出相应的页面，比较常见的是 ReactDOM 和 ReactNative。
-
-
 
 Fiber 其实指的是一种数据结构，它可以用一个纯 JS 对象来表示（16.10.0）：
 
@@ -257,8 +223,6 @@ type Fiber = {|
 |};
 ```
 
-
-
 Reconcilation 协调，CPU密集型操作
 
 之前：递归找出变动节点，同步更新它们
@@ -267,22 +231,14 @@ Reconcilation 协调，CPU密集型操作
 
 协程和线程并不一样，协程并没有并发或并行的能力，只是一种控制流程让出机制
 
-
-
 Fiber的思想：React的渲染过程可被中断，将控制权交给浏览器
 
 Fiber是我们所说的工作单元，performUnitOfWork负责对Fiber进行操作
 
 由于使用了链表结果，即使处理流程终端，也随时可以从上次未处理完的Fiber继续遍历
 
-
-
-
-
 - 协调阶段，可认为是diff阶段，可被中断
 - 提交阶段，必须同步执行，不能被打断
-
-
 
 Fiber包含5个部分
 
@@ -291,44 +247,6 @@ Fiber包含5个部分
 - 节点状态
 - 副作用
 - 替身 workInProgress tree，alternate指向旧树的同等节点
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # React优化
 

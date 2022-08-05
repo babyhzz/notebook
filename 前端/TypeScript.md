@@ -1,8 +1,4 @@
-
-
 # 基础类型
-
-
 
 主要有：`boolean` `number` `string` `array` `enum` `any` `unknown` `void` `tuple` `null` `undefined` `never`
 
@@ -13,11 +9,11 @@
 ```ts
 let value: any;
 
-value.foo.bar; 	// OK
-value.trim(); 	// OK
-value(); 				// OK
-new value(); 		// OK
-value[0][1]; 		// OK
+value.foo.bar;     // OK
+value.trim();     // OK
+value();                 // OK
+new value();         // OK
+value[0][1];         // OK
 ```
 
 在许多场景下，这太宽松了。使用 `any` 类型，可以很容易地编写类型正确但在运行时有问题的代码。如果我们使用 `any` 类型，就无法使用 TypeScript 提供的大量的保护机制。为了解决 `any` 带来的问题，TypeScript 3.0 引入了 `unknown` 类型。
@@ -91,8 +87,6 @@ function infiniteLoop(): never {
 }
 ```
 
-
-
 # 断言
 
 有时候你会遇到这样的情况，你会比 TypeScript 更了解某个值的详细信息。通常这会发生在你清楚地知道一个实体具有比它现有类型更确切的类型。
@@ -115,8 +109,6 @@ let someValue: any = "this is a string";
 let strLength: number = (someValue as string).length;
 ```
 
-
-
 # 操作符及类型工具
 
 ## `typeof`
@@ -138,8 +130,6 @@ function toArray(x: number): Array<number> {
 
 type Func = typeof toArray; // -> (x: number) => number[]
 ```
-
-
 
 ## `keyof`
 
@@ -173,7 +163,6 @@ type Keys = "a" | "b" | "c"
 type Obj =  {
   [p in Keys]: any
 } // -> { a: any, b: any, c: any }
-
 ```
 
 ## `infer`
@@ -249,7 +238,7 @@ type Record<K extends keyof any, T> = {
 在一个声明好的对象中，挑选一部分出来组成一个新的声明对象。
 
 > 对以下的声明有点疑问？K extends keyof T：代表 K 要继承 T 的所有属性？
->
+> 
 > 答：不是，见下面截图
 
 ```ts
@@ -303,8 +292,6 @@ type T0 = "b" | "c"
 type Extract<T, U> = T extends U ? T : never;
 ```
 
-
-
 ## `NonNullable<T>`
 
 去除T中的 null 和 undefined 类型
@@ -315,8 +302,6 @@ type Extract<T, U> = T extends U ? T : never;
  */
 type NonNullable<T> = T extends null | undefined ? never : T;
 ```
-
-
 
 ## `Parameters<T>`
 
@@ -363,15 +348,11 @@ https://juejin.cn/post/6844904182843965453#heading-56
 declare type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
 ```
 
-
-
 ## 属性装饰器（Property decorators）
 
 ```ts
 declare type PropertyDecorator = (target: Object, propertyKey: string | symbol) => void;
 ```
-
-
 
 ## 方法装饰器（Method decorators）
 
@@ -379,19 +360,13 @@ declare type PropertyDecorator = (target: Object, propertyKey: string | symbol) 
 declare type MethodDecorator = <T>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
 ```
 
-
-
 ## 参数装饰器（Parameter decorators）
 
 ```ts
 declare type ParameterDecorator = (target: Object, propertyKey: string | symbol, parameterIndex: number) => void;
 ```
 
-
-
 # tsconfig
-
-
 
 # 常见类型定义
 
@@ -401,7 +376,7 @@ declare type ParameterDecorator = (target: Object, propertyKey: string | symbol,
 // lib.es5.d.ts
 interface ArrayLike<T> {
     readonly length: number;
-  	// 可索引属性
+      // 可索引属性
     readonly [n: number]: T;
 }
 ```
@@ -413,8 +388,6 @@ Array.prototype.slice.call(obj, ...)
 ```
 
 ## 
-
-
 
 # 疑问
 
@@ -450,4 +423,3 @@ let o = {
 let v = prop(o, 'p1') // is number, K is of type 'p1'
 let v2 = prop2(o, 'p1') // is number | string, no extra info is captured
 ```
-

@@ -2,15 +2,7 @@
 
 <img src="WebGL.assets/image-20211122202645727.png" alt="image-20211122202645727" style="zoom:50%;" />
 
-
-
 # WebGL基础概念
-
-
-
-
-
-
 
 ## 裁剪空间
 
@@ -26,23 +18,15 @@
 
 <center style="color:#000;text-decoration:underline">透视投影</center>
 
-
-
 ![<image2>](WebGL.assets/Center-20211205110407946.png)
+
 <center style="color:#000;text-decoration:underline">正交投影</center>
-
-
-
-
-
 
 WebGL在电脑的GPU中运行，因此你需要使用能够在GPU上运行的代码。 这样的代码需要提供成对的方法，每对方法中一个叫顶点着色器， 另一个叫片断着色器，并且使用一种和C或C++类似的强类型的语言 [GLSL](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html)。 (GL着色语言)。 每一对组合起来称作一个 `program`（着色程序）。
 
 顶点着色器的作用是计算顶点的位置。根据计算出的一系列顶点位置，WebGL可以对点， 线和三角形在内的一些图元进行光栅化处理。当对这些图元进行光栅化处理时需要使用片断着色器方法。 片断着色器的作用是计算出当前绘制图元中每个像素的颜色值。
 
 几乎整个WebGL API都是关于如何设置这些成对方法的状态值以及运行它们。 对于想要绘制的每一个对象，都需要先设置一系列状态值，然后通过调用 `gl.drawArrays` 或 `gl.drawElements` 运行一个着色方法对，使得你的着色器对能够在GPU上运行。这些方法对所需的任何数据都需要发送到GPU，
-
-
 
 ## 着色器获取数据
 
@@ -66,13 +50,9 @@ WebGL在电脑的GPU中运行，因此你需要使用能够在GPU上运行的代
 
 想要从顶点着色器传值到片断着色器，我们可以定义“可变量（varying）”。在顶点着色器和片断着色器中定义相同的varying变量，WebGL会将同名的可变量从顶点着色器输入到片断着色器中。WebGL先获得顶点着色器中计算的三个颜色值，在光栅化三角形时将会根据这三个值进行插值。
 
-
-
 ## 着色器
 
 ### 片断着色器
-
-
 
 #### 数据获取方式
 
@@ -82,13 +62,9 @@ WebGL在电脑的GPU中运行，因此你需要使用能够在GPU上运行的代
 2. [Textures 纹理](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#textures-) (data from pixels/texels)
 3. [Varyings 可变量](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#varyings-) (data passed from the vertex shader and interpolated)
 
-
-
 **Uniform 全局变量（片断着色器中）**
 
 同 [Uniforms 全局变量](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-shaders-and-glsl.html#uniforms-).
-
-
 
 **Textures 纹理（片断着色器中）**
 
@@ -96,9 +72,9 @@ WebGL在电脑的GPU中运行，因此你需要使用能够在GPU上运行的代
 
 ```glsl
 precision mediump float;
- 
+
 uniform sampler2D u_texture;
- 
+
 void main() {
    vec2 texcoord = vec2(0.5, 0.5)  // 获取纹理中心的值
    gl_FragColor = texture2D(u_texture, texcoord);
@@ -121,16 +97,11 @@ gl.texImage2D(gl.TEXTURE_2D, level, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIG
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 ```
 
-
-
 **Varyings 可变量**
 
 在[工作原理](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-how-it-works.html)提到过，可变量是一种顶点着色器给片断着色器传值的方式。
 
 为了使用可变量，要在两个着色器中定义同名的可变量。 给顶点着色器中可变量设置的值，会作为参考值进行内插，在绘制像素时传给片断着色器的可变量。
-
-
-
 
 ## webgl常用函数
 
@@ -155,13 +126,15 @@ void gl.bindBuffer(target, buffer);
 **参数**
 
 - target
-
+  
   A [`GLenum`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the binding point (target). Possible values:
-
+  
   - `gl.ARRAY_BUFFER`: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
-
+  
   - `gl.ELEMENT_ARRAY_BUFFER`: Buffer used for element indices.
+  
   - When using a [WebGL 2 context](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext)（针对 OpenGL ES 3.0）, the following values are available additionally:
+    
     - `gl.COPY_READ_BUFFER`: Buffer for copying from one buffer object to another.
     - `gl.COPY_WRITE_BUFFER`: Buffer for copying from one buffer object to another.
     - `gl.TRANSFORM_FEEDBACK_BUFFER`: Buffer for transform feedback operations.
@@ -170,7 +143,7 @@ void gl.bindBuffer(target, buffer);
     - `gl.PIXEL_UNPACK_BUFFER`: Buffer used for pixel transfer operations.
 
 - buffer
-
+  
   A [`WebGLBuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLBuffer) to bind.
 
 ### gl.bufferData()
@@ -189,8 +162,6 @@ void gl.bufferData(target, ArrayBufferView srcData, usage);
 void gl.bufferData(target, ArrayBufferView srcData, usage, srcOffset, length);
 ```
 
-
-
 ### gl.getAttribLocation()
 
 ```glsl
@@ -200,11 +171,11 @@ GLint gl.getAttribLocation(program, name);
 **参数**
 
 - program
-
+  
   A [`WebGLProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLProgram) containing the attribute variable.
 
 - name
-
+  
   A [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString) specifying the name of the attribute variable whose location to get.
 
 **返回值**
@@ -226,7 +197,7 @@ void gl.enableVertexAttribArray(index);
 **参数**
 
 - index
-
+  
   A [`GLuint`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the index number that uniquely identifies the vertex attribute to enable. If you know the name of the attribute but not its index, you can get the index by calling [`getAttribLocation()`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation).
 
 ### gl.vertexAttribPointer()
@@ -243,17 +214,17 @@ void gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
 **参数**
 
 - `index`
-
+  
   A [`GLuint` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the index of the vertex attribute that is to be modified. 指定要修改的顶点属性的索引。
 
 - `size`
-
+  
   A [`GLint` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the number of components per vertex attribute. Must be 1, 2, 3, or 4. 指定每个顶点属性的组成数量，必须是1，2，3或4。
 
 - `type`
-
+  
   A [`GLenum` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the data type of each component in the array. Possible values: 指定数组中每个元素的数据类型可能是：
-
+  
   - `gl.BYTE`: signed 8-bit integer, with values in [-128, 127] 有符号的8位整数，范围[-128, 127]
   - `gl.SHORT`: signed 16-bit integer, with values in [-32768, 32767] 有符号的16位整数，范围[-32768, 32767]
   - `gl.UNSIGNED_BYTE`: unsigned 8-bit integer, with values in [0, 255] 无符号的8位整数，范围[0, 255]
@@ -262,21 +233,21 @@ void gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
   - `gl.HALF_FLOAT`: 16-bit IEEE floating point number 16位IEEE标准的浮点数
 
 - `normalized`
-
+  
   A [`GLboolean` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying whether integer data values should be normalized into a certain range when being casted to a float. 当转换为浮点数时是否应该将整数数值归一化到特定的范围。
-
+  
   - For types `gl.BYTE` and `gl.SHORT`, normalizes the values to [-1, 1] if true. 对于类型`gl.BYTE`和`gl.SHORT`，如果是true则将值归一化为[-1, 1]
   - For types `gl.UNSIGNED_BYTE` and `gl.UNSIGNED_SHORT`, normalizes the values to [0, 1] if true. 对于类型`gl.UNSIGNED_BYTE`和`gl.UNSIGNED_SHORT`，如果是true则将值归一化为[0, 1]
   - For types `gl.FLOAT` and `gl.HALF_FLOAT`, this parameter has no effect. 对于类型`gl.FLOAT`和`gl.HALF_FLOAT`，此参数无效
 
 - `stride`
-
+  
   A [`GLsizei` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying the offset in bytes between the beginning of consecutive vertex attributes. Cannot be larger than 255. If stride is 0, the attribute is assumed to be tightly packed, that is, the attributes are not interleaved but each attribute is in a separate block, and the next vertex' attribute follows immediately after the current vertex.
-
+  
   一个GLsizei，以字节为单位指定连续顶点属性开始之间的偏移量(即数组中一行长度)。不能大于255。如果stride为0，则假定该属性是紧密打包的，即不交错属性，每个属性在一个单独的块中，下一个顶点的属性紧跟当前顶点之后。
 
 - `offset`
-
+  
   A [`GLintptr` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types) specifying an offset in bytes of the first component in the vertex attribute array. Must be a multiple of the byte length of `type`.
-
+  
   [`GLintptr` (en-US)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Types)指定顶点属性数组中第一部分的字节偏移量。必须是类型的字节长度的倍数。

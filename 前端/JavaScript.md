@@ -4,17 +4,15 @@
 
 **JavaScript用的是UCS-2！**在ES6标准中，可以认为基本上是**UTF-16**的编码方式存储的。这里我们要区分 codePointAt，charAt，charCodeAt 的区别
 
-| 方法             | 作用                                                         |
-| ---------------- | ------------------------------------------------------------ |
-| charAt(pos)      | 返回指定位置字符，只针对UTF-16编码，非主平面字符会被拆分读取 |
-| charCodeAt(pos)  | 同charAt，返回UTF-16的编码值，非主平面由两个charCode组成     |
-| codePointAt(pos) | 返回unicode码点，所有平面均会考虑，兼容unicode非基本平面     |
+| 方法               | 作用                                     |
+| ---------------- | -------------------------------------- |
+| charAt(pos)      | 返回指定位置字符，只针对UTF-16编码，非主平面字符会被拆分读取      |
+| charCodeAt(pos)  | 同charAt，返回UTF-16的编码值，非主平面由两个charCode组成 |
+| codePointAt(pos) | 返回unicode码点，所有平面均会考虑，兼容unicode非基本平面    |
 
 𡃁妹 𠂒 👦👩
 
 > 疑问？？？ "𠂒".codePointAt(1).toString(16) 还有值，而且返回的是dc92，unicode保留点
-
-
 
 ## URI编码
 
@@ -30,7 +28,6 @@ encodeURIComponent("-_.!~*'(),;/?:@&=+$#")
 ```
 
 区别在于 `,;/?:@&=+$#` 这几个字符，为uri中的保留字符。
-
 
 ## Base64
 
@@ -85,17 +82,17 @@ var aBlob = new Blob( array, options );
   - `endings`，默认值为`"transparent"`，用于指定包含行结束符`\n`的字符串如何被写入。 它是以下两个值中的一个： `"native"`，代表行结束符会被更改为适合宿主操作系统文件系统的换行符，或者 `"transparent"`，代表会保持blob中保存的结束符不变 
 
 ```js
-var str = "这";	// 中文的utf-8编码为3个字节
+var str = "这";    // 中文的utf-8编码为3个字节
 var blob = new Blob([str]); // blob.size = 3
 ```
 
 常用方法：
 
-| 方法               | 描述                                                        |
-| ------------------ | ----------------------------------------------------------- |
-| Blob.arrayBuffer() | 返回一个promise且包含blob所有内容的二进制格式的 ArrayBuffer |
-| Blob.text()        | 返回一个promise且包含blob所有内容的UTF-8格式的 USVString。  |
-| Blob.slice()       | 返回新的Blob对象，指向指定范围的数据                        |
+| 方法                 | 描述                                         |
+| ------------------ | ------------------------------------------ |
+| Blob.arrayBuffer() | 返回一个promise且包含blob所有内容的二进制格式的 ArrayBuffer  |
+| Blob.text()        | 返回一个promise且包含blob所有内容的UTF-8格式的 USVString。 |
+| Blob.slice()       | 返回新的Blob对象，指向指定范围的数据                       |
 
 #### Blob URL
 
@@ -203,9 +200,6 @@ new Blob([buffer])
 
 Buffer.from(arraybuffer)
 
-
-
-
 # 语法
 
 ## 基本类型
@@ -219,6 +213,7 @@ Buffer.from(arraybuffer)
 ## 原型链
 
 ![原型](JavaScript.assets/原型-1613036413899.jpg)
+
 ## Object方法
 
 **Object.seal**：封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。 
@@ -251,7 +246,6 @@ Object.create =  function (o) {
     F.prototype = o;
     return new F();
 };
-
 ```
 
 ## Class
@@ -284,13 +278,13 @@ class Person {
 
 ```js
 class SuperMan extends Person {
-  
+
   constructor() {
     // 注意必须调用此函数，执行父类的构造函数
     super();
     this.job = 'job';
   }
-  
+
   work() {
     console.log("work");
   }
@@ -298,6 +292,7 @@ class SuperMan extends Person {
 
 var p = new SuperMan();
 ```
+
 输出p对象，可看到如下结果：
 
 ```
@@ -307,15 +302,16 @@ name: "xxx"
 hi: ƒ ()
 job: "job"
 __proto__: Person
-	constructor: class SuperMan
-	work: ƒ work()
-	__proto__:
-		constructor: class Person
-		hello: ƒ hello()
-		__proto__: Object
+    constructor: class SuperMan
+    work: ƒ work()
+    __proto__:
+        constructor: class Person
+        hello: ƒ hello()
+        __proto__: Object
 ```
 
 ### function实现继承
+
 最佳实践组合继承，关键点：
 
 - 属性使用构造函数继承 —— 避免了原型继承中Parent引用属性被所有Child实例共享的缺陷。
@@ -387,13 +383,13 @@ Number instanceof Number //false
 **Object.getOwnPropertySymbols(obj)**：返回一个数组，包含对象自身的所有Symbol属性
 
 >  在JavaScript中，对象的属性分为可枚举和不可枚举之分，它们是由属性的enumerable值决定的。 
->
->  ```
->  Object.defineProperty(kxy, "sex", {
->   value: "female",
->   enumerable: false
->  });
->  ```
+> 
+> ```
+> Object.defineProperty(kxy, "sex", {
+>  value: "female",
+>  enumerable: false
+> });
+> ```
 
 # 常用操作
 
@@ -440,7 +436,7 @@ const b = m ** n;
 
 ## **nullish运算符与可选链**
 
-```# 基础
+```#
 // 当a为null或者undefined时，则返回后面的值
 const b = a ?? "default";
 // 前面为null或者undefined，返回undefined，否则调用表达式
@@ -454,11 +450,11 @@ const baz = obj?.foo?.bar?.();
 
 ### 特殊字符
 
-|      | 描述                                                         |
-| ---- | ------------------------------------------------------------ |
-| ^    | 匹配输入字符串的开始位置，除非在方括号表达式中使用，当该符号在**方括号表达式中使用**时，表示不接受该方括号表达式中的字符集合。要匹配 ^ 字符本身，请使用 \^。 |
-|      |                                                              |
-|      |                                                              |
+|     | 描述                                                                                  |
+| --- | ----------------------------------------------------------------------------------- |
+| ^   | 匹配输入字符串的开始位置，除非在方括号表达式中使用，当该符号在**方括号表达式中使用**时，表示不接受该方括号表达式中的字符集合。要匹配 ^ 字符本身，请使用 \^。 |
+|     |                                                                                     |
+|     |                                                                                     |
 
 ## 常见
 
@@ -483,8 +479,6 @@ Patter p="ab.*c";
 
 **默认是贪婪模式；在量词后面直接加上一个问号？就是非贪婪模式。**
 
-
-
 JS的String.match，返回匹配的字符串
 
 ```js
@@ -496,8 +490,6 @@ var a = /abc.*?/g
 ## 其他
 
 如何判断当前域名是qq.com还是xxx.qq.com，我的解答：`/^([a-z0-9-]+\.)*(qq.com)$/`
-
-
 
 # ES7装饰器（Decorator）
 
@@ -521,8 +513,6 @@ function loggingDecorator(wrapped) {
 
 const wrapped = loggingDecorator(doSomething);
 ```
-
-
 
 ## 类的装饰
 
@@ -607,8 +597,6 @@ Object.defineProperty(Person.prototype, 'name', descriptor);
 - 第二个参数是 **所要装饰的属性名**
 - 第三个参数是 **该属性的描述对象**
 
-
-
 ## 使用场景
 
 ### React中的connect
@@ -628,13 +616,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MyReactComponent);
 class MyReactComponent extends React.Component {}
 ```
 
-
-
 ### loading
 
 在 React 项目中，我们可能需要在向后台请求数据时，页面出现 loading 动画。这个时候，你就可以使用装饰器，优雅地实现功能。
-
-
 
 ### log日志
 
@@ -660,8 +644,6 @@ function log(name) {
 }
 ```
 
-
-
 # 异步
 
 ## 协程
@@ -670,15 +652,8 @@ function log(name) {
 
 ## Generator
 
-
-
 ## Promise
 
 Promise是一个状态机，当 pending 变化的时候，Promise 对象会根据最终的状态调用不同的处理函数。
 
-
-
 ## Async/Await
-
-
-

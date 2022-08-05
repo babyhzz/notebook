@@ -1,12 +1,10 @@
 # 概念
 
-| 概念                       | 含义                                                         |
-| -------------------------- | ------------------------------------------------------------ |
+| 概念                   | 含义                                          |
+| -------------------- | ------------------------------------------- |
 | 代码分割（Code Splitting） | 分割打包后的资源，首屏只加载必要的部分，不太重要的功能放在后面去加载，提升首屏渲染速度 |
-|                            |                                                              |
-|                            |                                                              |
-
-
+|                      |                                             |
+|                      |                                             |
 
 # 模块化
 
@@ -18,20 +16,16 @@
 
 commonjs 中有几个特别的变量，`module`、`exports`、`require`、`global`、`__filename`、`__dirname`。
 
-
-
 CommonJS在每个模块的首部默认添加了以下代码：
 
 ```js
 var module = {
-	exports: { },
+    exports: { },
 };
 var exports = module.exports;
 ```
 
 因此不要给 `exports` 直接赋值，否则会导致其失效。
-
-
 
 模块会有一个 `module` 对象用来存放信息，这个对象中有一个 `loaded` 属性用来记录该模块是否加载过。默认值为false，加载和执行后变为true，再次执行时不会执行模块代码
 
@@ -196,7 +190,6 @@ function __webpack_require__(moduleId) {
   };
   ...
 }
-
 ```
 
 再看ES6 Module针对循环依赖的场景，这里是在Node环境下运行：
@@ -250,7 +243,6 @@ var calculator = {
 
 ### AMD
 
-
 ## AMD & CMD
 
 AMD：Asynchromous Module Definition，即异步模块定义。不是JS原生支持，JavaScript社区标准，使用AMD规范需要用到 `RequireJS` 。
@@ -278,7 +270,7 @@ CMD：Common Module Definition，国内发展出来，类似AMD的requireJS，CM
 define(id?, deps?, factory);
 // factory有三个参数
 // function(require, exports, module)
-       
+
 // 定义模块 myModule.js
 define(function(require, exports, module) {
   var $ = require('jquery.js')
@@ -294,14 +286,10 @@ seajs.use(['myModule.js'], function(my){
 1. 一个文件一个模块，所以经常就用文件名作为模块id
 2. CMD推崇依赖就近，所以一般不在define的参数中写依赖，在factory中写
 
-
-
 AMD 与 CMD 都是异步加载，主要区别：
 
 1. 针对define，AMD推崇依赖前置，在定义模块的时候就要声明其依赖的模块；CMD推崇就近依赖，只有在用到某个模块的时候再去require。
 2. 都是异步加载，执行时机不一样。AMD在加载模块完成后就会执行该模块，模块执行顺序不确定，RequireJS2.0可以延迟执行；CMD加载完某个依赖模块后并不执行，require时才执行，保证按书写顺序执行
-
-
 
 # 资源输入输出
 
@@ -321,7 +309,7 @@ AMD 与 CMD 都是异步加载，主要区别：
 
 module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。
 
-## filename/chunkFilename 
+## filename/chunkFilename
 
 **filename**
 
@@ -353,13 +341,13 @@ chunkFilename 指未列在 entry 中，却又需要被打包出来的文件的�
 
 首先来个背景介绍，哈希一般是结合 CDN 缓存来使用的。如果文件内容改变的话，那么对应文件哈希值也会改变，对应的 HTML 引用的 URL 地址也会改变，触发 CDN 服务器从源服务器上拉取对应数据，进而更新本地缓存。 
 
-| 类型        | 描述                                                         |
-| ----------- | ------------------------------------------------------------ |
-| hash        | 跟整个项目的构建相关，生成文件的hash都一样                   |
+| 类型          | 描述                                              |
+| ----------- | ----------------------------------------------- |
+| hash        | 跟整个项目的构建相关，生成文件的hash都一样                         |
 | chunkhash   | 它根据不同的入口文件(Entry)进行依赖文件解析、构建对应的 chunk，生成对应的哈希值。 |
-| contenthash | 根据资源内容创建出唯一 hash，也就是说文件内容不变，hash 就不变 |
-| id          | 当前 chunk 的 id，一个数字                                   |
-|             |                                                              |
+| contenthash | 根据资源内容创建出唯一 hash，也就是说文件内容不变，hash 就不变            |
+| id          | 当前 chunk 的 id，一个数字                              |
+|             |                                                 |
 
 ## publicPath
 
@@ -369,22 +357,18 @@ chunkFilename 指未列在 entry 中，却又需要被打包出来的文件的�
 - Host相关，publicPath为绝对路径，是以hostname为基础的
 - CDN相关，public以协议头或者相对协议的形式开始，如 "http://cdn.com/", "//cdn.com/assets/"
 
-
-
 # 预处理器
 
 常用的 loader 如下：
 
-| Loader         | 作用                                                         |
-| -------------- | ------------------------------------------------------------ |
-| style-loader   | 将 css 代码以`style`标签的形式插入到 html 中                 |
-| css-loader     | 仅处理 CSS 的各种加载语法，如 JS 中的 `import`、`require` 和 CSS 中的 `@import`、`url`，通常和 style-loader 配合使用 |
-| postcss-loader | 用于 css 的兼容性处理，具有众多功能，例如 **添加前缀，单位转换** 等 |
-| less-loader    | CSS 预处理器，在 CSS 中新增了许多语法，提高了开发效率        |
-| file-loader    | 解析文件的 `import/require()` ，转换成一个url，并且输出到指定目录。 |
+| Loader         | 作用                                                                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| style-loader   | 将 css 代码以`style`标签的形式插入到 html 中                                                                                                                                         |
+| css-loader     | 仅处理 CSS 的各种加载语法，如 JS 中的 `import`、`require` 和 CSS 中的 `@import`、`url`，通常和 style-loader 配合使用                                                                               |
+| postcss-loader | 用于 css 的兼容性处理，具有众多功能，例如 **添加前缀，单位转换** 等                                                                                                                                 |
+| less-loader    | CSS 预处理器，在 CSS 中新增了许多语法，提高了开发效率                                                                                                                                         |
+| file-loader    | 解析文件的 `import/require()` ，转换成一个url，并且输出到指定目录。                                                                                                                           |
 | url-loader     | url-loader内部封装了file-loader。<br />url-loader工作分两种情况：<br />1.文件大小小于limit参数，url-loader将会把文件转为DataURL；<br />2.文件大小大于limit，url-loader会调用file-loader进行处理，参数也会直接传给file-loader。 |
-
-
 
 # 常见配置
 
@@ -394,29 +378,25 @@ chunkFilename 指未列在 entry 中，却又需要被打包出来的文件的�
 
 #### chunks
 
-
-
-| 值      | 含义                                |
-| ------- | ----------------------------------- |
-| all     | 对所有 chunks 生效（入口和异步）    |
-| async   | 默认值，只对异步 chunks 生效        |
+| 值       | 含义                    |
+| ------- | --------------------- |
+| all     | 对所有 chunks 生效（入口和异步）  |
+| async   | 默认值，只对异步 chunks 生效    |
 | initial | 只对入口 chunk 生效（异步将不生效） |
 
 #### cacheGroups
 
 TODO...
 
-
-
-| 配置项                          | 作用                                                         |
-| ------------------------------- | ------------------------------------------------------------ |
-| resolve.alias                   | 创建 import 或 require 的别名，来确保模块引入变得更简单。    |
-| resolve.extensions              | 自动解析确定的扩展，能够使用户在引入模块时不带扩展。默认为['.js', '.json']。 |
-| resolve.mainFiles               | 解析**目录**时要使用的文件名，默认`mainFiles: ["index"]`     |
-| resolve.modules                 | 告诉 webpack 解析模块时应该搜索的目录。默认是node_modules。  |
-| externals                       | 打包时排除某些依赖，而由用户环境提供。                       |
+| 配置项                             | 作用                                                                                           |
+| ------------------------------- | -------------------------------------------------------------------------------------------- |
+| resolve.alias                   | 创建 import 或 require 的别名，来确保模块引入变得更简单。                                                        |
+| resolve.extensions              | 自动解析确定的扩展，能够使用户在引入模块时不带扩展。默认为['.js', '.json']。                                               |
+| resolve.mainFiles               | 解析**目录**时要使用的文件名，默认`mainFiles: ["index"]`                                                    |
+| resolve.modules                 | 告诉 webpack 解析模块时应该搜索的目录。默认是node_modules。                                                     |
+| externals                       | 打包时排除某些依赖，而由用户环境提供。                                                                          |
 | optimization.splitChunks        | [SplitChunksPlugin](https://webpack.docschina.org/plugins/split-chunks-plugin/)的配置，用于指定分块策略。 |
-| optimization.splitChunks.chunks | 指定哪些chunks进行优化，默认为async。<br />async: 作用？？？<br />all: 作用？？？ |
+| optimization.splitChunks.chunks | 指定哪些chunks进行优化，默认为async。<br />async: 作用？？？<br />all: 作用？？？                                   |
 
 ## minimize
 
@@ -433,24 +413,22 @@ module.exports = {
 };
 ```
 
-
-
 # 常见Plugin
 
-| Plugin                           | 描述                                                         |
-| -------------------------------- | ------------------------------------------------------------ |
-| `HotModuleReplacementPlugin`     | webpack自带插件，可以在调试阶段只更新修改的部分，而不用刷新整个页面。 |
-| `HtmlWebpackPlugin`              | 生成html文件                                                 |
-| `CleanWebpackPlugin`             | 清理上一次打包的结果                                         |
-| `MiniCssExtractPlugin`           | 将 `CSS` 提取为独立的文件，有利于客户端进行**缓存**          |
-| `OptimizeCssAssetsWebpackPlugin` | 对 `CSS` 文件进行压缩，减小 `CSS` 打包后的体积。对于Webpack V5或以上使用 CssMinimizerWebpackPlugin |
-| `CssMinimizerWebpackPlugin`      | 这个插件使用 [cssnano](https://cssnano.co/) 优化和压缩 CSS。 |
-| `TerserWebpackPlugin`            | webpack自带的JS代码压缩插件                                  |
-| `CompressionWebpackPlugin`       | 压缩资源为gzip格式插件，对js/css有很多的压缩效果，需要后端配置支持 |
-| `DefinePlugin`                   | webpack自带插件，可以定义一些全局变量，可以在模块中直接使用  |
+| Plugin                           | 描述                                                                              |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| `HotModuleReplacementPlugin`     | webpack自带插件，可以在调试阶段只更新修改的部分，而不用刷新整个页面。                                          |
+| `HtmlWebpackPlugin`              | 生成html文件                                                                        |
+| `CleanWebpackPlugin`             | 清理上一次打包的结果                                                                      |
+| `MiniCssExtractPlugin`           | 将 `CSS` 提取为独立的文件，有利于客户端进行**缓存**                                                 |
+| `OptimizeCssAssetsWebpackPlugin` | 对 `CSS` 文件进行压缩，减小 `CSS` 打包后的体积。对于Webpack V5或以上使用 CssMinimizerWebpackPlugin      |
+| `CssMinimizerWebpackPlugin`      | 这个插件使用 [cssnano](https://cssnano.co/) 优化和压缩 CSS。                                |
+| `TerserWebpackPlugin`            | webpack自带的JS代码压缩插件                                                              |
+| `CompressionWebpackPlugin`       | 压缩资源为gzip格式插件，对js/css有很多的压缩效果，需要后端配置支持                                          |
+| `DefinePlugin`                   | webpack自带插件，可以定义一些全局变量，可以在模块中直接使用                                               |
 | `ProvidePlugin`                  | webpack自带插件，自动加载模块定义。如React项目中，每个组件的头部都必须import一次，是用该插件，可以省略该步，在需要引入时插件帮我们自动引入。 |
-| DllPlugin/DllReferencePlugin     | 预打包某些不会变的资源，然后创建manifest文件链接，可提高编译速度。 |
-| IgnorePlugin                     | webpack自带插件，忽略第三方包指定目录。                      |
+| DllPlugin/DllReferencePlugin     | 预打包某些不会变的资源，然后创建manifest文件链接，可提高编译速度。                                           |
+| IgnorePlugin                     | webpack自带插件，忽略第三方包指定目录。                                                         |
 
 ## IgnorePlugin
 
@@ -567,11 +545,7 @@ import(/* webpackChunkName: 'tool', webpackPrefetch:true */ "./tool").then(
 
 preload chunk会在父chunk加载时以并行方式加载。这个尝试了下，没有起作用，跟没有设置一样。
 
-
-
 # 常见问题
-
-
 
 # Webpack工作流程
 

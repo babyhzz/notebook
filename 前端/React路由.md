@@ -10,8 +10,6 @@
 
 > 需要注意的是调用`history.pushState()`或`history.replaceState()`不会触发`popstate`事件。只有在做出浏览器动作时，才会触发该事件，如用户点击浏览器的回退按钮（或者在Javascript代码中调用`history.back()`或者`history.forward()`方法）
 
-
-
 # History
 
 在 H5 之前，即使采用的是脚本语言的方式，只要浏览器地址栏中的 URL 地址被切换，都会触发一个页面刷新的过程，这个过程将耗费一些时间与资源。在很多时候，尤其是两个大部分内容相同的页面之间进行切换时，这个过程往往被视为一种浪费。
@@ -28,8 +26,6 @@ H5 的 History API 允许在不刷新页面的前提下，通过脚本语言的�
 
 作为这个处理的结果，我们将看见浏览器的地址栏中从页面 A 的 URL 地址切换到页面 B 的 URL 地址，并且显示的页面也完全为页面 B 的页面，从而实现在**不刷新页面**的前提下将浏览器中的页面切换到另一个页面的功能。
 
-
-
 ```ts
 interface History {
     readonly length: number;
@@ -45,8 +41,6 @@ interface History {
 
 `back`、`forward`、`go` 和用户点击浏览器的前进后退按钮，会触发 `popstate` 事件，`pushState` 和 `replaceState` 则不会出发 `popstate` 事件
 
-
-
 `history`是由Facebook维护的，`react-router`依赖于`history`，区别于浏览器的`window.history`，`history`是包含`window.history`的，让开发者可以在任何环境都能使用`history`的api（例如`Node`、`React Native`等）。
 
 history有三种方法创建history对象
@@ -54,8 +48,6 @@ history有三种方法创建history对象
 - createBrowserHistory：支持h5 history api的现代浏览器
 - createHashHistory：传统浏览器
 - createMemoryHistory ：Node, React Native
-
-
 
 # React Router
 
@@ -69,12 +61,10 @@ class BrowserRouter extends React.Component {
 }
 ```
 
-
-
 ```tsx
 class Router extends React.Component {
 
-	// ...
+    // ...
 
   render() {
     return (
@@ -96,8 +86,6 @@ class Router extends React.Component {
 }
 ```
 
-
-
 ```tsx
 class Route extends React.Component {
   render() {
@@ -106,7 +94,7 @@ class Route extends React.Component {
         {context => {
           // 拿到上级的数据
           const props = { ...context, location, match };
-        	
+
           // 构造子Route的上下文数据，也就是每个Route都是新的上下文
           return (
             <RouterContext.Provider value={props}>
@@ -119,4 +107,3 @@ class Route extends React.Component {
   }
 }
 ```
-

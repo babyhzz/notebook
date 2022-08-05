@@ -324,8 +324,6 @@ export function defineReactive (
 
 疑问1：为啥props不用调用observe？
 
-
-
 ### 依赖收集
 
 #### Dep
@@ -688,7 +686,4 @@ addDep (dep: Dep) {
 
 #### 派发更新
 
-
-
 #### 疑问
-

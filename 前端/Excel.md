@@ -21,8 +21,6 @@
 
 ![img](Excel.assets/352797-20180706101220647-923643638.png)
 
-
-
 ### Cell Object
 
 每一个单元格是一个对象（`Cell Object`），主要有`t`、`v`、`r`、`h`、`w`等字段
@@ -30,8 +28,6 @@
 CellObject每个字段定义如下：
 
 https://github.com/SheetJS/sheetjs#cell-object
-
-
 
 ## 文件操作
 
@@ -44,18 +40,16 @@ XLSX.utils.new_book
 XLSX.writeFile：在Node环境下会生成文件，在Browser中，会触发下载文件。
 
 > 下载原理：
->
+> 
 > 可以配合 `file-saver` 这个库来使用。
->
+> 
 > FileSaver.js 在客户端下载文件。如果是服务端下载文件，使用Content-Disposition消息头，更好的兼容性
->
+> 
 > ```http
 > Content-Type: 'application/octet-stream; charset=utf-8'
 > Content-Disposition: attachment; filename="filename.jpg"; filename*="filename.jpg"
 > Content-Length: <size in bytes>
 > ```
-
-
 
 # ExcelJS
 
@@ -66,13 +60,3 @@ XLSX.writeFile：在Node环境下会生成文件，在Browser中，会触发下�
 ## Worksheet
 
 ### columns
-
-
-
-
-
-
-
-
-
-
